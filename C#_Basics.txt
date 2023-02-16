@@ -413,3 +413,77 @@ namespace ArrayApplication {
       }
    }
 }
+
+File I/O:
+
+// See https://aka.ms/new-console-template for more information
+using System;
+using System.IO;
+using System.Net.Http.Headers;
+using System.Text;
+
+namespace FileIOApplication
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //FileStream fileStream  = new FileStream("intro" , FileMode.OpenOrCreate,FileAccess.ReadWrite);
+
+            // for (int i = 0; i <= 20; i++)
+            // {
+            //     fileStream.WriteByte((byte)i);
+            // }
+            // fileStream.Position = 0;
+
+            // for (int i = 0; i <= 20; i++)
+            // {
+            //     Console.WriteLine(fileStream.ReadByte() + " "); 
+            // }
+
+            //try
+            //{
+            //    using (StreamReader sr = new StreamReader("D:\\intro.txt"))
+            //    {
+            //        string line;
+            //        while ((line = sr.ReadLine()) != null  )
+            //        {
+            //            Console.WriteLine(line);
+            //        }
+            //    } 
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("This file can not be accessed.");
+            //    Console.WriteLine(e.Message);
+
+            //}
+
+            string[] names = { "ABC", "DEF", "GHI" };
+
+            using(StreamWriter sw = new StreamWriter("D:\\intro.txt"))
+            {
+                foreach (var item in names)
+                {
+                    sw.WriteLine(item);
+                }
+            }
+
+            using (StreamReader sr = new StreamReader("D:\\intro.txt"))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                }
+            }
+
+
+
+
+        }
+    }
+}
+
+
+

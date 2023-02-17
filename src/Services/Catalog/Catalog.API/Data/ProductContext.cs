@@ -1,8 +1,8 @@
 ﻿using MongoDB.Driver;
-using Products.API.Data.Interfaces;
-using Products.API.Entities;
+using Catalog.API.Data.Interfaces;
+using Catalog.API.Entities;
 
-namespace Products.API.Data
+namespace Catalog.API.Data
 {
     public class ProductContext : IProductContext
     {
@@ -11,10 +11,11 @@ namespace Products.API.Data
             var client = new MongoClient(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
             var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
 
-            ProductList = database.GetCollection<Product>(configuration.GetValue<string>("DatabaseSettings:CollectionName"));
-
+            CategoryList = database.GetCollection<Category>(configuration.GetValue<string>("DatabaseSettings:CollectionName"));
+            ProductContextSeed.SeedData(CategoryList);
         }
-        public IMongoCollection<Product> ProductList { get; }
+        public IMongoCollection<Category> CategoryList { get; }
+
 
     }
 }

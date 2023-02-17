@@ -5,11 +5,11 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EA3B01AC-D553-4216-A3CD-B6450EFBF422}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{D0EFBC6D-94BC-4451-A280-FB96BCE34A9A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{D0EFBC6D-94BC-4451-A280-FB96BCE34A9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.API", "Services\Products\Products.API\Products.API.csproj", "{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Services\Catalog\Catalog.API\Catalog.API.csproj", "{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{88130EE2-AC73-468B-A9E8-7CF64AE0BC16}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F7CE2252-3968-4101-8535-FAC943A9DBA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,10 @@ Global
 		{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88130EE2-AC73-468B-A9E8-7CF64AE0BC16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88130EE2-AC73-468B-A9E8-7CF64AE0BC16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88130EE2-AC73-468B-A9E8-7CF64AE0BC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88130EE2-AC73-468B-A9E8-7CF64AE0BC16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

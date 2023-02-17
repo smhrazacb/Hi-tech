@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  catalogdb:
-    container_name: catalogdb
+  Catalogdb:
+    container_name: Catalogdb
     restart: always
     ports:
         - "27017:27017"

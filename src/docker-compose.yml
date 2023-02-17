@@ -1,9 +1,10 @@
 version: '3.4'
 
 services:
-  catalogdb:
+  Catalogdb:
     image: mongo
 
 
 volumes:
   mongo_data:
+  

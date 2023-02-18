@@ -1,0 +1,147 @@
+Attributes:
+
+[AttributeUsage(AttributeTargets.Class)]
+class MyClass : Attribute
+{
+
+}
+[MyClass]
+class MyClass2
+{
+   // [MyClass]
+    public int MyProperty { get; set; }
+    //[MyClass]
+    public void Method()
+    {
+
+    }
+}
+******************************************************
+
+[AttributeUsage(AttributeTargets.Class)]
+class MyClass : Attribute
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    
+}
+[MyClass (Id = 5 , Name = "Mohib")]
+class MyClass2
+{
+   // [MyClass]
+    public int MyProperty { get; set; }
+    //[MyClass]
+    public void Method()
+    {
+
+    }
+}
+
+Serialization:
+
+using System.Runtime.Serialization.Formatters.Binary;
+[Serializable]
+class Employee
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    
+
+    public Employee(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+}
+
+class MyClass
+{
+    public static void Main(string[] args)
+    {
+	//Serialization
+
+        string path = @"D:\Serialize\Sample.txt";
+        Employee employee = new Employee(8667, "Mohib");
+
+        FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
+
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(fs, employee);
+        fs.Close();
+
+        Console.WriteLine($"File created -> {path}");
+
+    }
+}
+
+De-Serialization:
+
+       //De-Serialization
+
+        string path = @"D:\Serialize\Sample.txt";
+        FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
+        BinaryFormatter bf = new BinaryFormatter();
+        Employee emp = (Employee)bf.Deserialize(fs);
+        fs.Close();
+        Console.WriteLine($"Employee Id : {emp.Id}\nEmployee Name : {emp.Name}");
+
+Indexers:
+
+
+class Employee
+{
+    private int[] Age = new int[5];
+
+    public int this[int index]
+    {
+        set 
+        {
+            if (index >= 0 && index < Age.Length)
+            {
+                if (value >= 0)
+                {
+                    Age[index] = value;
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid value");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid index");
+            }
+
+            
+        }
+        get 
+        {
+            return Age[index];
+        }
+
+    }
+    public int this[int index , int i]
+    {
+        get 
+        {
+            return Age[index];
+        }
+        set 
+        {
+            Age[index] = value + i;
+        }
+    }
+}
+
+class MyClass
+{
+    public static void Main(string[] args)
+    {
+        Employee emp = new Employee();
+        emp[0] = 5;
+        emp[1, 1] = 5;
+        Console.WriteLine(emp[0]);
+        Console.WriteLine(emp[1]);
+    }
+}

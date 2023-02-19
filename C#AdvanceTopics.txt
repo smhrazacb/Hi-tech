@@ -145,3 +145,132 @@ class MyClass
         Console.WriteLine(emp[1]);
     }
 }
+
+Delegates:
+
+
+public delegate void Calculation(int a, int b);
+
+
+class MyClass
+{
+    public static void Addition (int a, int b)
+    {
+        int result = a + b;
+        Console.WriteLine($"Result : {result}");
+    }
+
+    public static void Subtraction(int a, int b)
+    {
+        int result = a - b;
+        Console.WriteLine($"Result : {result}");
+    }
+
+    public static void Multiplication(int a, int b)
+    {
+        int result = a * b;
+        Console.WriteLine($"Result : {result}");
+    }
+
+    public static void Division(int a, int b)
+    {
+        int result = a / b;
+        Console.WriteLine($"Result : {result}");
+    }
+
+    public static void Main(string[] args)
+    {
+        Calculation obj = new Calculation(MyClass.Addition);
+        obj += Subtraction;
+        obj += Multiplication;
+        obj += Division;
+        
+
+        obj(1, 22);
+    }
+}
+
+Anonymous Functions:
+
+
+public delegate int Calculation(int a);
+
+
+class MyClass
+{
+    public static int MyMethod(int a)
+    {
+        Console.WriteLine($"{a} my method");
+        return a;
+    }
+
+    public static void Main(string[] args)
+    {
+        Calculation obj = delegate (int i)
+        {
+            return i;
+            
+        };
+        obj += MyMethod;
+
+        obj(43);
+
+        
+    }
+}
+
+
+
+public delegate void Calculation(int a);
+
+
+class MyClass
+{
+    public static void MyMethod(Calculation obj, int a)
+    {
+        a += 10;
+        obj(a);
+    }
+
+    public static void Main(string[] args)
+    {
+        MyClass.MyMethod(
+            
+            delegate (int a) 
+            {   
+                a += 10; 
+                Console.WriteLine(a); 
+            }, 0);
+
+        
+    }
+}
+
+Lambda Expressions:
+
+
+public delegate void Calculation(int a);
+public delegate int Calculation1(int a);
+
+
+class MyClass
+{
+    public static void MyMethod(Calculation obj, int a)
+    {
+        a += 10;
+        obj(a);
+    }
+
+    public static void Main(string[] args)
+    {
+        Calculation1 obj = (a) => { return a * a; };
+        Calculation obj1 = (a) =>
+        {
+            a = a * a * a;
+            Console.WriteLine(a);
+        };
+
+        Console.WriteLine(obj(3));
+        obj1(2);
+    }
+}

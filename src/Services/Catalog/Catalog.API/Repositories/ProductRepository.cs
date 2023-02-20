@@ -16,82 +16,68 @@ namespace Catalog.API.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IEnumerable<Category>> GetProducts()
+        public async Task<IEnumerable<CategoryWithCount>> GetProducts()
         {
             return await _context
-                                .CategoryList
-                                .Find(p => true)
-                                .ToListAsync();
+                                 .CategoryList
+                                 .Aggregate()
+                                 .Group(
+                 a => new { a.CategoryName, a.SubCategory.SubCategoryName },
+                 b => new CategoryWithCount
+                 {
+                     CategoryName = b.Key.CategoryName,
+                     SubCategoryName = b.Key.SubCategoryName,
+                     SubCategoryCount = b.Count()
+                 })
+                                 .ToListAsync();
         }
-        public async Task<IEnumerable<Category>> GetProductsById(string id)
-        {
-            return null;
-                //await _context
-                //.CategoryList
-                //.Find(p => p.Id == id)
-                //.ToListAsync();
-        }
-        public async Task<IEnumerable<Category>> GetProductsByCategory(string category)
+        public async Task<IEnumerable<Category>> GetProductsById(string _id)
         {
             return await _context
                 .CategoryList
-                .Find(p => p.CategoryName == category)
+                .Find(p => p.Id == _id)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Category>> GetProductsBySubCategory(string subCategory)
+        public async Task<IEnumerable<Category>> GetProductsByCategory(string _categoryName)
         {
-            //return await _context
-            //    .CategoryList
-            //    .Find(p => p.SubCategories.Where(a=>a.SubCategoryName == subCategory).ToList())
-            //    .ToListAsync();
-            return null;
+            return await _context
+                .CategoryList
+                .Find(p => p.CategoryName == _categoryName)
+                .ToListAsync();
         }
-        public async Task CreateProduct(Category product)
+        public async Task<IEnumerable<Category>> GetProductsBySubCategory(string _subCategoryName)
         {
-            await _context.CategoryList.InsertOneAsync(product);
+            return await _context
+                .CategoryList
+                .Find(a => a.SubCategory.SubCategoryName == _subCategoryName)
+                .ToListAsync();
         }
-        public async Task DeleteProduct(string id)
+        public async Task CreateProduct(Category _product)
         {
-            await _context.CategoryList.DeleteOneAsync(id);
+            await _context.CategoryList.InsertOneAsync(_product);
         }
-        public async Task<bool> UpdateProduct(Category product)
+        public async Task<bool> DeleteProduct(string _id)
         {
-            //var updateResult = await _context
-            //                            .CategoryList
-            //                            .ReplaceOneAsync(filter: g => g.Id == product.Id, replacement: product);
-
-            //return updateResult.IsAcknowledged
-            //                   && updateResult.ModifiedCount > 0;
-            return false;
+            var filter = Builders<Category>.Filter.Eq(p => p.Id, _id);
+            DeleteResult deleteResult = await _context.CategoryList.DeleteOneAsync(filter);
+            return deleteResult.IsAcknowledged
+                && deleteResult.DeletedCount > 0;
         }
-
-        public async Task<IEnumerable<Category>> GetProductsByName(string name)
+        public async Task<bool> UpdateProduct(Category _product)
         {
-            return null;
-            //return await _context
-            //             .CategoryList
-            //             .Find(p => p.SubCategoryName == name)
-            //             .ToListAsync();
+            var updateResult = await _context
+                                        .CategoryList
+                                        .ReplaceOneAsync(filter: g => g.Id == _product.Id, replacement: _product);
+            return updateResult.IsAcknowledged
+                               && updateResult.ModifiedCount > 0;
         }
 
-        public async Task<IEnumerable<CategoryWithCount>> GetCategoryList()
+        public async Task<IEnumerable<Category>> GetProductsByName(string _name)
         {
-            var pp = _context
-                           .CategoryList
-                           .Aggregate()
-                           .Group(
-                x => new { x.SubCategory,},
-                g => new CategoryWithCount
-                {
-                    SubCategory = g.Key.SubCategory.SubCategoryName,
-                    Count = g.Count(),
-                }).ToListAsync();
-            return null;
-        }
-
-        public Task<IEnumerable<Category>> GetSubCategoryList()
-        {
-            throw new NotImplementedException();
+            return await _context
+                         .CategoryList
+                         .Find(p => p.SubCategory.Product.Name.ToLower().Contains(_name))
+                         .ToListAsync();
         }
     }
 }

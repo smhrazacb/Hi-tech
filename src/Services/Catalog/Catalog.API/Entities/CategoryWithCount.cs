@@ -2,8 +2,8 @@
 {
     public class CategoryWithCount
     {
-        public string SubCategory { get; set; }
-        public string Category { get; set; }
-        public int Count { get; set; }
+        public string CategoryName { get; set; }
+        public string SubCategoryName { get; set; }
+        public int SubCategoryCount { get; set; }
     }
 }

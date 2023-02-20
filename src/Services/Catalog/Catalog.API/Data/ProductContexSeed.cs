@@ -60,7 +60,7 @@ namespace Catalog.API.Data
                             }
                         }
                 },
-                new Category()
+                 new Category()
                  {
                      CategoryName = "Mechanical",
                      SubCategory = new SubCategory()

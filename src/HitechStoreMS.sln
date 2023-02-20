@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Services\Cat
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F7CE2252-3968-4101-8535-FAC943A9DBA4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototype", "Prototype", "{553F25EC-E58E-489B-A8C3-5F9C0FF6E9C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoTest", "Prototype\MongoTest\MongoTest.csproj", "{E0356E9C-98CE-4265-8F7E-6A0518988ECC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,10 @@ Global
 		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7CE2252-3968-4101-8535-FAC943A9DBA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0356E9C-98CE-4265-8F7E-6A0518988ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0356E9C-98CE-4265-8F7E-6A0518988ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0356E9C-98CE-4265-8F7E-6A0518988ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0356E9C-98CE-4265-8F7E-6A0518988ECC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D0EFBC6D-94BC-4451-A280-FB96BCE34A9A} = {EA3B01AC-D553-4216-A3CD-B6450EFBF422}
 		{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418} = {D0EFBC6D-94BC-4451-A280-FB96BCE34A9A}
+		{E0356E9C-98CE-4265-8F7E-6A0518988ECC} = {553F25EC-E58E-489B-A8C3-5F9C0FF6E9C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11877BE3-12D8-484A-A5AE-40FA17A62C62}

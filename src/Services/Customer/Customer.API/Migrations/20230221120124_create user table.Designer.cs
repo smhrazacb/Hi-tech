@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Customer.API.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20230221105106_createusertable")]
+    [Migration("20230221120124_create user table")]
     partial class createusertable
     {
         /// <inheritdoc />

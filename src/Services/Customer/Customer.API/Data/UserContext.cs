@@ -11,5 +11,10 @@ namespace Customer.API.Data
         {
         }
         public DbSet<User> Users { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<User>()
+                .HasKey(user => new { user.Id });
+        }
     }
 }

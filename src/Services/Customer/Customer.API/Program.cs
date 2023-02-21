@@ -1,4 +1,5 @@
 using Customer.API.Data;
+using Customer.API.Extensions;
 using Customer.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,5 +26,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+//app.MigrateDatabase<UserContext>();
 
 app.Run();

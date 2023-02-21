@@ -3,8 +3,15 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using MongoTest.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 Console.WriteLine("Hello, World!");
+
+
+var regions = CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(x => new RegionInfo(x.LCID).EnglishName).Distinct().ToList();
+
+
 var dbClient = new MongoClient("mongodb://127.0.0.1:27017");
 var dbList = dbClient.ListDatabases().ToList();
 IMongoDatabase db = dbClient.GetDatabase("CatalogDb");

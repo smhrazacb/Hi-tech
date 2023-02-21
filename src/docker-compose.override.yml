@@ -1,10 +1,27 @@
 version: '3.4'
 
 services:
-  Catalogdb:
-    container_name: Catalogdb
+  catalogdb:
+    container_name: catalogdb
     restart: always
     ports:
         - "27017:27017"
     volumes:
         - mongo_data:/data/db
+
+  catalog.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+    ports:
+      - "8000:80"
+
+  userdb:
+    container_name: userdb
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=userDb
+    ports:
+      - "5432:5432"

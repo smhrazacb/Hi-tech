@@ -1,10 +1,19 @@
 version: '3.4'
 
 services:
-  Catalogdb:
+  catalogdb:
     image: mongo
 
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+
+  userdb:
+    image: postgres
 
 volumes:
   mongo_data:
+  postgres_data:
   

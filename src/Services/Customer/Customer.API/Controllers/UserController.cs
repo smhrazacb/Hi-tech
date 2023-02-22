@@ -23,5 +23,27 @@ namespace Customer.API.Controllers
             var result = await repository.GetUsers();
             return Ok(result);
         }
+
+        [HttpGet("{id}", Name = "User")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<User>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<User>>> User(Guid guid)
+        {
+            var products = await repository.GetUser(guid);
+            if (products == null)
+            {
+                return NotFound();
+            }
+            return Ok(products);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<User>> User([FromBody] User user)
+        {
+            await repository.CreateUser(user);
+
+            return CreatedAtRoute("User", new { id = user.Id }, user);
+        }
     }
 }

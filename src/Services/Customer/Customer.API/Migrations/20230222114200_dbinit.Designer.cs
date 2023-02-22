@@ -3,6 +3,7 @@ using System;
 using Customer.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Customer.API.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20230222114200_dbinit")]
+    partial class dbinit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace Customer.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("GeoDataId")
+                    b.Property<int>("GeoDataId")
                         .HasColumnType("integer");
 
                     b.Property<string>("HouseShopPlotNo")
@@ -111,7 +114,7 @@ namespace Customer.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GeoDatas");
+                    b.ToTable("GeoData");
                 });
 
             modelBuilder.Entity("Customer.API.Entities.User", b =>
@@ -165,7 +168,9 @@ namespace Customer.API.Migrations
 
                     b.HasOne("Customer.API.Entities.GeoData", "GeoData")
                         .WithOne("Address")
-                        .HasForeignKey("Customer.API.Entities.Address", "GeoDataId");
+                        .HasForeignKey("Customer.API.Entities.Address", "GeoDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Contact");
 

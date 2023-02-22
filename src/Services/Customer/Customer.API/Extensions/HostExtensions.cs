@@ -1,23 +1,24 @@
-﻿using Npgsql;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Polly;
 
 namespace Customer.API.Extensions
-{
-    public static class HostExtensions
+{ public static class HostExtensions
     {
-        public static IHost MigrateDatabase<TContext>(this IHost host)
+        public static IHost MigrateDatabase<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder) where TContext : DbContext
         {
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var configuration = services.GetRequiredService<IConfiguration>();
                 var logger = services.GetRequiredService<ILogger<TContext>>();
+                var context = services.GetService<TContext>();
 
                 try
                 {
-                    logger.LogInformation("Migrating postresql database.");
+                    logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
 
-                    var retry = Policy.Handle<NpgsqlException>()
+                    var retry = Policy.Handle<SqlException>()
                             .WaitAndRetry(
                                 retryCount: 5,
                                 sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // 2,4,8,16,32 sc
@@ -26,31 +27,26 @@ namespace Customer.API.Extensions
                                     logger.LogError($"Retry {retryCount} of {context.PolicyKey} at {context.OperationKey}, due to: {exception}.");
                                 });
 
-                    //if the postgresql server container is not created on run docker compose this
-                    //migration can't fail for network related exception. The retry options for database operations
+                    //if the sql server container is not created on run docker compose this
+                    //migration can't fail for network related exception. The retry options for DbContext only 
                     //apply to transient exceptions                    
-                    retry.Execute(() => ExecuteMigrations(configuration));
+                    retry.Execute(() => InvokeSeeder(seeder, context, services));                    
 
-                    logger.LogInformation("Migrated postresql database.");
+                    logger.LogInformation("Migrated database associated with context {DbContextName}", typeof(TContext).Name);
                 }
-                catch (NpgsqlException ex)
+                catch (SqlException ex)
                 {
-                    logger.LogError(ex, "An error occurred while migrating the postresql database");
+                    logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);                   
                 }
             }
-
             return host;
-        }
+        }       
 
-        private static void ExecuteMigrations(IConfiguration configuration)
+        private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context, IServiceProvider services)
+            where TContext : DbContext
         {
-            using var connection = new NpgsqlConnection(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
-            connection.Open();
-
-            using var command = new NpgsqlCommand
-            {
-                Connection = connection
-            };
+            context.Database.Migrate();
+            seeder(context, services);
         }
     }
 }

@@ -31,12 +31,12 @@ namespace Catalog.API.Repositories
                  })
                                  .ToListAsync();
         }
-        public async Task<IEnumerable<Category>> GetProductsById(string _id)
+        public async Task<Category> GetProductsById(string _id)
         {
             return await _context
                 .CategoryList
                 .Find(p => p.Id == _id)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<Category>> GetProductsByCategory(string _categoryName)
         {

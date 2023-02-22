@@ -1,31 +1,36 @@
-﻿using Customer.API.Entities;
+﻿using Customer.API.Data;
+using Customer.API.Data.Interfaces;
+using Customer.API.Entities;
 using Customer.API.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace Customer.API.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IConfiguration _configuration;
+        private readonly UserContext _context;
 
-        public UserRepository(IConfiguration configuration)
+        public UserRepository(UserContext context)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(_configuration));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<User> CreateUser(User user)
+        public async Task CreateUser(User user)
+        {
+            _context.Users.Add(user);
+        }
+
+        public Task<bool> DeleteUser(Guid guid)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteUser(int id)
+        public async Task<User> GetUser(Guid guid)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetUser(int id)
-        {
-            throw new NotImplementedException();
+            return await
+                 _context.Users.Where(user => user.Id == guid)
+                 .FirstAsync();
         }
 
         public Task<User> GetUser(string email)
@@ -33,9 +38,19 @@ namespace Customer.API.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            throw new NotImplementedException();
+            var users = await _context.Users.ToListAsync();
+            for (int i = 0; i < users.Count; i++)
+            {
+                users[i].Address = await _context.Addresses.Where(a => a.Id == users[i].AddressId).FirstOrDefaultAsync();
+                users[i].Address.Contact = await _context.Contacts.Where(a => a.Id == users[i].Address.ContactId).FirstOrDefaultAsync();
+                if (users[i].Address.GeoDataId != null)
+                {
+                    users[i].Address.GeoData = await _context.GeoDatas.Where(a => a.Id == users[i].Address.GeoDataId).FirstOrDefaultAsync();
+                }
+            }
+            return users;
         }
 
         public Task<User> UpdateUser(User user)

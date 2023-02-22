@@ -6,9 +6,9 @@ namespace Customer.API.Repositories.Interfaces
     {
         public Task<IEnumerable<User>> GetUsers();
         public Task<User> UpdateUser(User user);
-        public Task<User> CreateUser(User user);
-        public Task<bool> DeleteUser(int id);
-        public Task<User> GetUser(int id);
+        public Task CreateUser(User user);
+        public Task<bool> DeleteUser(Guid guid);
+        public Task<User> GetUser(Guid guid);
         public Task<User> GetUser(string email);
     }
 }

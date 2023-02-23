@@ -8,11 +8,10 @@ namespace Customer.API.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string CountryCode { get; set; }
         public string MobileNumber { get; set; }
         public string? LandlineNumber { get; set; }
-        public virtual Address Address { get; set; }
 
     }
 }

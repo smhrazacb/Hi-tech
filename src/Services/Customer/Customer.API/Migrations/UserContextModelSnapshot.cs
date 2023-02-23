@@ -62,11 +62,9 @@ namespace Customer.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactId")
-                        .IsUnique();
+                    b.HasIndex("ContactId");
 
-                    b.HasIndex("GeoDataId")
-                        .IsUnique();
+                    b.HasIndex("GeoDataId");
 
                     b.ToTable("Addresses");
                 });
@@ -149,8 +147,7 @@ namespace Customer.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Users");
                 });
@@ -158,14 +155,14 @@ namespace Customer.API.Migrations
             modelBuilder.Entity("Customer.API.Entities.Address", b =>
                 {
                     b.HasOne("Customer.API.Entities.Contact", "Contact")
-                        .WithOne("Address")
-                        .HasForeignKey("Customer.API.Entities.Address", "ContactId")
+                        .WithMany()
+                        .HasForeignKey("ContactId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Customer.API.Entities.GeoData", "GeoData")
-                        .WithOne("Address")
-                        .HasForeignKey("Customer.API.Entities.Address", "GeoDataId");
+                        .WithMany()
+                        .HasForeignKey("GeoDataId");
 
                     b.Navigation("Contact");
 
@@ -175,30 +172,12 @@ namespace Customer.API.Migrations
             modelBuilder.Entity("Customer.API.Entities.User", b =>
                 {
                     b.HasOne("Customer.API.Entities.Address", "Address")
-                        .WithOne("User")
-                        .HasForeignKey("Customer.API.Entities.User", "AddressId")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Customer.API.Entities.Address", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Customer.API.Entities.Contact", b =>
-                {
-                    b.Navigation("Address")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Customer.API.Entities.GeoData", b =>
-                {
-                    b.Navigation("Address")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

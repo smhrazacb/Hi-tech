@@ -28,7 +28,7 @@ namespace Customer.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GeoData",
+                name: "GeoDatas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -38,7 +38,7 @@ namespace Customer.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeoData", x => x.Id);
+                    table.PrimaryKey("PK_GeoDatas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +53,7 @@ namespace Customer.API.Migrations
                     NearByArea = table.Column<string>(type: "text", nullable: false),
                     HouseShopPlotNo = table.Column<string>(type: "text", nullable: false),
                     Addressline1 = table.Column<string>(type: "text", nullable: false),
-                    GeoDataId = table.Column<int>(type: "integer", nullable: false),
+                    GeoDataId = table.Column<int>(type: "integer", nullable: true),
                     ContactId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -66,11 +66,10 @@ namespace Customer.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Addresses_GeoData_GeoDataId",
+                        name: "FK_Addresses_GeoDatas_GeoDataId",
                         column: x => x.GeoDataId,
-                        principalTable: "GeoData",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "GeoDatas",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -101,20 +100,17 @@ namespace Customer.API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_ContactId",
                 table: "Addresses",
-                column: "ContactId",
-                unique: true);
+                column: "ContactId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_GeoDataId",
                 table: "Addresses",
-                column: "GeoDataId",
-                unique: true);
+                column: "GeoDataId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_AddressId",
                 table: "Users",
-                column: "AddressId",
-                unique: true);
+                column: "AddressId");
         }
 
         /// <inheritdoc />
@@ -130,7 +126,7 @@ namespace Customer.API.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
-                name: "GeoData");
+                name: "GeoDatas");
         }
     }
 }

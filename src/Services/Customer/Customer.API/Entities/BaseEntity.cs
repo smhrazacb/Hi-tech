@@ -7,8 +7,8 @@ namespace Customer.API.Entities
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime AddedDate { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedDate { get; set; }
+        public DateTime AddedDate { get; set; }
 
     }
 }

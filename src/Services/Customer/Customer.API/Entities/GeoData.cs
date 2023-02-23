@@ -7,10 +7,8 @@ namespace Customer.API.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get;  set; }
         public double Latitude { get; set; }
         public double longitude { get; set; }
-        public virtual Address Address { get; set; }
-
     }
 }

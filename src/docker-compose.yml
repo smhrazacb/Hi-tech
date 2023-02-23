@@ -13,7 +13,14 @@ services:
   userdb:
     image: postgres
 
+  customer.api:
+    image: ${DOCKER_REGISTRY-}customerapi
+    build:
+      context: .
+      dockerfile: Services/Customer/Customer.API/Dockerfile
+
 volumes:
   mongo_data:
   postgres_data:
   
+

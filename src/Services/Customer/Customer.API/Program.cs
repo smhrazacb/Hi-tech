@@ -12,6 +12,7 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<UserContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Newtonsoftjson added due to "a cycle or if the object depth is larger than the maximum allowed depth of 32"
 builder.Services.AddControllers().AddNewtonsoftJson(options =>

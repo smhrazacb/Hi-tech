@@ -9,7 +9,7 @@ namespace Customer.API.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string Country { get; set; }
         public string State { get; set; }
         public string City { get; set; }
@@ -22,6 +22,5 @@ namespace Customer.API.Entities
         public int ContactId { get; set; }
         [ForeignKey("ContactId")]
         public virtual Contact Contact { get; set; }
-        public virtual User User { get; set; }
     }
 }

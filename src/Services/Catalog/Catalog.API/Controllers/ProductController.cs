@@ -2,6 +2,7 @@
 using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
 using System.Net;
+using AutoMapper;
 
 namespace Catalog.API.Controllers
 {
@@ -10,10 +11,12 @@ namespace Catalog.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository repository;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IProductRepository repository)
+        public ProductsController(IProductRepository repository, IMapper mapper)
         {
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
@@ -80,9 +83,11 @@ namespace Catalog.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Category>> Product([FromBody] Category product)
+        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.Created)]
+        public async Task<ActionResult<Category>> Product([FromBody] CategoryDto productdto)
         {
+            var product = _mapper.Map<Category>(productdto);
+
             await repository.CreateProduct(product);
 
             return CreatedAtRoute("Product", new { id = product.Id }, product);

@@ -33,3 +33,12 @@ services:
     ports:
       - "8001:80"
 
+  ocelotapigw:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+        - catalog.api
+        - customer.api
+    ports:
+      - "8010:80"

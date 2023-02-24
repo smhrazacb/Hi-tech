@@ -76,7 +76,7 @@ namespace Catalog.API.Repositories
         {
             return await _context
                          .CategoryList
-                         .Find(p => p.SubCategory.Product.Name.ToLower().Contains(_name))
+                         .Find(p => p.SubCategory.Product.Name.ToLower().Contains(_name.ToLower()))
                          .ToListAsync();
         }
     }

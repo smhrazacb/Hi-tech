@@ -16,7 +16,7 @@ namespace Catalog.API.Entities
         public string Name { get; set; }
         public string Packaging { get; set; }
         public UInt32 Stock { get; set; }
-        public UInt32 Price { get; set; }
+        public decimal Price { get; set; }
         public Dictionary<string, string>? AdditionalFields { get; set; }
         public string? DataSheetUrl { get; set; }
         public string? Image { get; set; }

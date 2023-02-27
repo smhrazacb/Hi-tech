@@ -13,6 +13,20 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 
+
+//builder.Services.AddMassTransit(x =>
+//{
+//    x.UsingRabbitMq();
+//});
+//// MassTransit-RabbitMQ Configuration
+//builder.Services.AddMassTransit(config => {
+//    config.UsingRabbitMq((ctx, cfg) => {
+//        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+//        cfg.UseHealthCheck(ctx);
+//    });
+//});
+//builder.Services.AddMassTransitHostedService();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

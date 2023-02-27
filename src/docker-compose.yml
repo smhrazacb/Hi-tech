@@ -19,6 +19,9 @@ services:
       context: .
       dockerfile: Services/Customer/Customer.API/Dockerfile
 
+  basketdb:
+    image: redis:alpine
+
   ocelotapigw:
     image: ${DOCKER_REGISTRY-}ocelotapigw
     build:

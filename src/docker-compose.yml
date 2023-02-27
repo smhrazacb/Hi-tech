@@ -24,6 +24,9 @@ services:
     build:
       context: .
       dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
 
 volumes:
   mongo_data:

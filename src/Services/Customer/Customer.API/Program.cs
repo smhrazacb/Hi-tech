@@ -4,12 +4,13 @@ using Customer.API.Extensions;
 using Customer.API.Repositories;
 using Customer.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddEntityFrameworkNpgsql().AddDbContext<UserContext>(opt =>
-        opt.UseNpgsql(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
+builder.Services.AddDbContext<UserContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

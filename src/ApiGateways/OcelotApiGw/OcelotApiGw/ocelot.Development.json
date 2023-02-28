@@ -105,6 +105,46 @@
       "UpstreamPathTemplate": "/User/Email",
       "UpstreamHttpMethod": [ "GET" ],
       "SwaggerKey": "Users"
+    },
+    // Basket.API
+    {
+      "DownstreamPathTemplate": "/api/v1/Basket",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Basket",
+      "UpstreamHttpMethod": [ "POST", "PUT" ],
+      "SwaggerKey": "Basket"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Basket/{guid}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Basket/{guid}",
+      "UpstreamHttpMethod": [ "GET","DELETE" ],
+      "SwaggerKey": "Basket"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Basket/Checkout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Basket/Checkout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "Basket"
     }
   ],
   "SwaggerEndPoints": [
@@ -125,6 +165,16 @@
           "Name": "Users API",
           "Version": "v1",
           "Url": "http://customer.api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Basket",
+      "Config": [
+        {
+          "Name": "Basket API",
+          "Version": "v1",
+          "Url": "http://basket.api/swagger/v1/swagger.json"
         }
       ]
     }

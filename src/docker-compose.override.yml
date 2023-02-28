@@ -39,6 +39,15 @@ services:
     ports:
         - "6379:6379"
 
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=basketdb:6379"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+
+    ports:
+      - "8002:80"
+
   ocelotapigw:
     container_name: ocelotapigw
     environment:
@@ -55,3 +64,5 @@ services:
     ports:
         - "5672:5672"
         - "15672:15672"
+
+

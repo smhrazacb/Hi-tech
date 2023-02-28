@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
+using EventBus.Messages.Events;
 
 namespace Customer.API.Mapping
 {
@@ -12,6 +13,10 @@ namespace Customer.API.Mapping
                 .ReverseMap();
             CreateMap<ShoppingItem, ShoppintItemDto>()
                 .ReverseMap();
+            CreateMap<BasketCheckoutEvent, ShoppingCart>()
+                .ReverseMap();
+            CreateMap<ShoppingItem, ProductEvent>()
+             .ReverseMap();
         }
     }
 }

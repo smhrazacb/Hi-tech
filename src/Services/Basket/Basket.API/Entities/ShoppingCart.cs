@@ -5,12 +5,7 @@ namespace Basket.API.Entities
 {
     public class ShoppingCart
     {
-        public string Id { get; private set; }
-
-        public IEnumerable<ShoppingItem> ShoppingItems { get; set; }
-        public ShoppingCart()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
+        public Guid ShoppingCartId { get;  set; }
+        public IEnumerable<ShoppingItem>? ShoppingItems { get; set; }
     }
 }

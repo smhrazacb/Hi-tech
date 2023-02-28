@@ -22,6 +22,12 @@ services:
   basketdb:
     image: redis:alpine
 
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
+
   ocelotapigw:
     image: ${DOCKER_REGISTRY-}ocelotapigw
     build:
@@ -35,5 +41,6 @@ volumes:
   mongo_data:
   postgres_data:
   
+
 
 

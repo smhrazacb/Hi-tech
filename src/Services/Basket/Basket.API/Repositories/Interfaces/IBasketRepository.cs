@@ -1,11 +1,12 @@
 ﻿using Basket.API.Entities;
+using System;
 
 namespace Basket.API.Repositories.Interfaces
 {
     public interface IBasketRepository
     {
-        Task<ShoppingCart> GetBasket(string id);
+        Task<ShoppingCart> GetBasket(Guid guid);
         Task<ShoppingCart> UpdateBasket(ShoppingCart basket);
-        Task DeleteBasket(string id);
+        Task DeleteBasket(Guid guid);
     }
 }

@@ -18,7 +18,10 @@ namespace Catalog.API.Controllers
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-
+        /// <summary>
+        /// Returns All Category, Subcategory and SucCategory Counts
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CategoryWithCount>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<CategoryWithCount>>> Products()
@@ -26,7 +29,11 @@ namespace Catalog.API.Controllers
             var products = await repository.GetProducts();
             return Ok(products);
         }
-
+        /// <summary>
+        /// Return a Product if Id matched
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:length(24)}", Name= "Product")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
@@ -39,7 +46,11 @@ namespace Catalog.API.Controllers
             }
             return Ok(products);
         }
-
+        /// <summary>
+        /// Returns list of Product detail if Category matched
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -53,7 +64,11 @@ namespace Catalog.API.Controllers
             }
             return Ok(products);
         }
-
+        /// <summary>
+        /// Returns list of Product detail if SubCategory matched
+        /// </summary>
+        /// <param name="subCategory"></param>
+        /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -67,7 +82,11 @@ namespace Catalog.API.Controllers
             }
             return Ok(products);
         }
-
+        /// <summary>
+        /// Returns list of Product detail if Name matched
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -81,7 +100,11 @@ namespace Catalog.API.Controllers
             }
             return Ok(products);
         }
-
+        /// <summary>
+        /// Register a new Product 
+        /// </summary>
+        /// <param name="productdto"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Category), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<Category>> Product([FromBody] CategoryDto productdto)
@@ -92,14 +115,22 @@ namespace Catalog.API.Controllers
 
             return CreatedAtRoute("Product", new { id = product.Id }, product);
         }
-
+        /// <summary>
+        /// Update a Product
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(Category), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateProduct([FromBody] Category product)
         {
             return Ok(await repository.UpdateProduct(product));
         }
-
+        /// <summary>
+        /// Delete a Product if Id matched
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteProductById(string id)

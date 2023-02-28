@@ -19,7 +19,10 @@ namespace Customer.API.Controllers
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-
+        /// <summary>
+        /// Returns All User
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<User>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<User>>> Users()
@@ -27,7 +30,11 @@ namespace Customer.API.Controllers
             var result = await repository.GetUsers();
             return Ok(result);
         }
-
+        /// <summary>
+        /// Returns a User if Id Matched
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         [HttpGet("{guid}", Name = "User")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<User>), (int)HttpStatusCode.OK)]
@@ -40,7 +47,11 @@ namespace Customer.API.Controllers
             }
             return Ok(products);
         }
-
+        /// <summary>
+        /// Returns a User if email Matched
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -54,7 +65,11 @@ namespace Customer.API.Controllers
             }
             return Ok(users);
         }
-
+        /// <summary>
+        /// Create a User
+        /// </summary>
+        /// <param name="userdto"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.Created)]
         public async Task<ActionResult<User>> User([FromBody] UserDto userdto)
@@ -63,12 +78,17 @@ namespace Customer.API.Controllers
             await repository.CreateUser(user);
             return CreatedAtRoute("User", new { guid = user.Id }, user);
         }
-
+        /// <summary>
+        /// Update a User
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="userdto"></param>
+        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> UpdateProduct(Guid guid, [FromBody] UserDto userdto)
+        public async Task<IActionResult> UpdateUser(Guid guid, [FromBody] UserDto userdto)
         {
             if (userdto == null)
                 return BadRequest();
@@ -85,7 +105,11 @@ namespace Customer.API.Controllers
 
             return Ok(await repository.UpdateUser(userupdated));
         }
-
+        /// <summary>
+        /// Delete a User
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         [HttpDelete("{guid}", Name = "DeleteUser")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]

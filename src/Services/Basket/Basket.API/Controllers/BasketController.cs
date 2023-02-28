@@ -57,7 +57,7 @@ namespace Basket.API.Controllers
         /// <summary>
         /// <para>Update Basket if Id existed</para>
         /// </summary>
-        /// <param name="shoppingCartDto"></param>
+        /// <param name="shoppingCart"></param>
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
@@ -72,9 +72,9 @@ namespace Basket.API.Controllers
         /// <summary>
         /// <para>Delete a Basket if existed</para> 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="guid"></param>
         /// <returns></returns>
-        [HttpDelete("{id}", Name = "DeleteBasket")]
+        [HttpDelete("{guid}", Name = "DeleteBasket")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteBasket(Guid guid)
         {

@@ -13,8 +13,6 @@ builder.Services.AddScoped<IProductContext, ProductContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
-
-
 //builder.Services.AddMassTransit(x =>
 //{
 //    x.UsingRabbitMq();

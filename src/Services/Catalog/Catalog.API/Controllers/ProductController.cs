@@ -3,6 +3,7 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Catalog.API.Controllers
 {

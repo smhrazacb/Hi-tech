@@ -328,4 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+<<<<<<< HEAD
 *.csv#
+=======
+>>>>>>> feature/4-initialize-web-store-master-layout

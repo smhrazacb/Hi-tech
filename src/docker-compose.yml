@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  catalogdb:
+    image: mongo
+
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+
+  userdb:
+    image: postgres
+
+  customer.api:
+    image: ${DOCKER_REGISTRY-}customerapi
+    build:
+      context: .
+      dockerfile: Services/Customer/Customer.API/Dockerfile
+
+  basketdb:
+    image: redis:alpine
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
+
+  ocelotapigw:
+    image: ${DOCKER_REGISTRY-}ocelotapigw
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+volumes:
+  mongo_data:
+  postgres_data:
+  
+
+
+

@@ -1,5 +1,4 @@
 using Customer.API.Data;
-using Customer.API.Data.Interfaces;
 using Customer.API.Extensions;
 using Customer.API.Repositories;
 using Customer.API.Repositories.Interfaces;
@@ -13,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<UserContext>(options =>
             options.UseNpgsql(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
-builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddDbContext<UserContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication("Bearer")
@@ -37,7 +36,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "Basket API",
+        Title = "User's API",
         Description = "To add items into shopping carts",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact

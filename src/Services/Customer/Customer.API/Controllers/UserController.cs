@@ -10,7 +10,7 @@ namespace Customer.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository repository;
@@ -35,14 +35,14 @@ namespace Customer.API.Controllers
         /// <summary>
         /// Returns a User if Id Matched
         /// </summary>
-        /// <param name="guid"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{guid}", Name = "User")]
+        [HttpGet("{id}", Name = "User")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<User>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<User>>> User(Guid guid)
+        public async Task<ActionResult<IEnumerable<User>>> User(string id)
         {
-            var products = await repository.GetUser(guid);
+            var products = await repository.GetUserById(id);
             if (products == null)
             {
                 return NotFound();
@@ -60,7 +60,7 @@ namespace Customer.API.Controllers
         [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<User>> Email(string email)
         {
-            var users = await repository.GetUser(email);
+            var users = await repository.GetUserByEmail(email);
             if (users == null)
             {
                 return NotFound();
@@ -78,46 +78,51 @@ namespace Customer.API.Controllers
         {
             var user = _mapper.Map<User>(userdto);
             await repository.CreateUser(user);
-            return CreatedAtRoute("User", new { guid = user.Id }, user);
+            return CreatedAtRoute("User", new { id = user.Id }, user);
         }
         /// <summary>
         /// Update a User
         /// </summary>
-        /// <param name="guid"></param>
+        /// <param name="id"></param>
         /// <param name="userdto"></param>
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> UpdateUser(Guid guid, [FromBody] UserDto userdto)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UserDto userdto)
         {
             if (userdto == null)
                 return BadRequest();
-            var userkey = await repository.GetUserKeys(guid);
+            var userkey = await repository.GetUserById(id);
             if (userkey == null)
                 return NotFound();
 
             var userupdated = _mapper.Map<User>(userdto);
             userupdated.Id = userkey.Id;
             userupdated.AddressId = userkey.AddressId;
-            userupdated.Address.ContactId = userkey.ContactId;
-            userupdated.Address.GeoDataId = userkey.GeoDataId;
             userupdated.AddedDate = userkey.AddedDate;
 
-            return Ok(await repository.UpdateUser(userupdated));
+            userkey.Address = userupdated.Address;
+            userkey.Email = userupdated.Email;
+            userkey.PasswordHash = userupdated.PasswordHash;
+            userkey.UserStatus = userupdated.UserStatus;
+            userkey.UserName = userupdated.UserName;
+            userkey.OrderType = userupdated.OrderType;
+
+            return Ok(await repository.UpdateUser(userkey));
         }
         /// <summary>
         /// Delete a User
         /// </summary>
-        /// <param name="guid"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{guid}", Name = "DeleteUser")]
+        [HttpDelete("{id}", Name = "DeleteUser")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteUser(Guid guid)
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            var result = await repository.DeleteUser(guid);
+            var result = await repository.DeleteUser(id);
             if (result > 0)
                 return NoContent();
             else

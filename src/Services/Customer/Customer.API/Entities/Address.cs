@@ -19,8 +19,5 @@ namespace Customer.API.Entities
         public int? GeoDataId { get; set; }
         [ForeignKey("GeoDataId")]
         public virtual GeoData? GeoData { get; set; }
-        public int ContactId { get; set; }
-        [ForeignKey("ContactId")]
-        public virtual Contact Contact { get; set; }
     }
 }

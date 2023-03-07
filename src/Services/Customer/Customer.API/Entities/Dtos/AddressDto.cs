@@ -13,6 +13,5 @@ namespace Customer.API.Entities.Dtos
         public string HouseShopPlotNo { get; set; }
         public string Addressline1 { get; set; }
         public virtual GeoDataDto? GeoData { get; set; }
-        public virtual ContactDto Contact { get; set; }
     }
 }

@@ -22,11 +22,12 @@ namespace Customer.API.Data
                 {
                     userlist.Add(new User()
                     {
-                        EmailAddress = Faker.Internet.Email(),
-                        Password = Faker.Identification.UsPassportNumber(),
-                        UserFullName = Faker.Name.FullName(Faker.NameFormats.WithPrefix),
+                        Email = Faker.Internet.Email(),
+                        PasswordHash = Faker.Identification.UsPassportNumber(),
+                        UserName = Faker.Name.FullName(Faker.NameFormats.WithPrefix),
                         OrderType = (EOrderType)Faker.RandomNumber.Next(0,1),
                         UserStatus = (EUserStatus)Faker.RandomNumber.Next(0, 2),
+                        PhoneNumber = Faker.Phone.Number(),
                         Address = new Address()
                         {
                             Country = Faker.Address.Country(),
@@ -35,12 +36,6 @@ namespace Customer.API.Data
                             NearByArea = Faker.Address.StreetName(),
                             HouseShopPlotNo = Faker.Address.SecondaryAddress(),
                             Addressline1 = Faker.Address.StreetAddress(),
-                            Contact = new Contact() 
-                            {
-                                CountryCode =  Faker.Country.TwoLetterCode(), 
-                                MobileNumber = Faker.Phone.Number(),
-                                LandlineNumber = Faker.Phone.Number(),
-                            },
                             GeoData = new GeoData() 
                             {
                                 Latitude = Faker.RandomNumber.Next(-89,89), 

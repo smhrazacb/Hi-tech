@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Customer.API.Entities;
 using Customer.API.Entities.Dtos;
+using Microsoft.AspNetCore.Identity;
 
 namespace Customer.API.Mapping
 {
@@ -14,10 +15,10 @@ namespace Customer.API.Mapping
             CreateMap<Address, AddressDto>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ReverseMap();
-            CreateMap<Contact, ContactDto>()
+            CreateMap<GeoData, GeoDataDto>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ReverseMap();
-            CreateMap<GeoData, GeoDataDto>()
+            CreateMap<UserDto, IdentityUser>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ReverseMap();
         }

@@ -8,22 +8,24 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace AuthorizationServer.Controllers
 {
-    public class AccountController : Controller
+    [Route("[controller]")]
+    public class AccountController : ControllerBase
     {
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            //ViewData["ReturnUrl"] = returnUrl;
+            //return View();
+            return Ok();
         }
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([FromBody]  LoginViewModel model)
         {
-            ViewData["ReturnUrl"] = model.ReturnUrl;
+            //ViewData["ReturnUrl"] = model.ReturnUrl;
 
             if (ModelState.IsValid)
             {
@@ -43,8 +45,9 @@ namespace AuthorizationServer.Controllers
 
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
+            return Ok();
 
-            return View(model);
+            //return View(model);
         }
         public async Task<IActionResult> Logout()
         {

@@ -7,10 +7,10 @@ namespace Customer.API.Entities.Dtos
     public class UserDto
     {
         [EmailAddress(ErrorMessage = "Invalid email address.")]
-        public string EmailAddress { get; set; }
-        public string Password { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
         public EUserStatus UserStatus { get; set; }
-        public string UserFullName { get; set; }
+        public string UserName { get; set; }
         public EOrderType OrderType { get; set; }
         public virtual AddressDto Address { get; set; }
     }

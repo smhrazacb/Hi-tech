@@ -1,11 +1,11 @@
 ﻿using Customer.API.Data;
-using Customer.API.Data.Interfaces;
 using Customer.API.Entities;
 using Customer.API.Entities.Dtos;
 using Customer.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Customer.API.Repositories
 {
@@ -20,94 +20,60 @@ namespace Customer.API.Repositories
 
         public async Task CreateUser(User user)
         {
-            try
-            {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex) { }
-
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
         }
-        public async Task<int> DeleteUser(Guid guid)
+        public async Task<int> DeleteUser(string id)
         {
-            try
-            {
-                return await _context.Users
-                     .Where(t => t.Id == guid)
-                     .ExecuteDeleteAsync();
-            }
-            catch (Exception ex) { return -1; }
+            return await _context.Users
+                 .Where(t => t.Id == id)
+                 .ExecuteDeleteAsync();
         }
-        public async Task<User> GetUser(Guid guid)
+        public async Task<User> GetUserById(string id)
         {
-            try
-            {
-                return await
-                _context.Users.Where(user => user.Id == guid)
-                .Include(ur => ur.Address)
-                .Include(user => user.Address.Contact)
-                .Include(user => user.Address.GeoData)
-                .FirstAsync();
-            }
-            catch (Exception ex) { return null; }
+            return await
+            _context.Users.Where(user => user.Id == id)
+            .Include(ur => ur.Address)
+            .Include(user => user.Address.GeoData)
+            .FirstAsync();
         }
 
-        public async Task<User> GetUser(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            try
-            {
-                return await
-                _context.Users.Where(user => user.EmailAddress == email)
-                .Include(ur => ur.Address)
-                .Include(user => user.Address.Contact)
-                .Include(user => user.Address.GeoData)
-                .FirstAsync();
-            }
-            catch (Exception ex) { return null; }
+            return await
+            _context.Users.Where(user => user.Email == email)
+            .Include(ur => ur.Address)
+            .Include(user => user.Address.GeoData)
+            .FirstAsync();
         }
 
-        public async Task<UserKey> GetUserKeys(Guid guid)
+        public async Task<UserKey> GetUserKeys(string id)
         {
-            try
-            {
-                return await
-                 _context.Users.Where(user => user.Id == guid)
-                 .Include(ur => ur.Address)
-                 .Include(user => user.Address.Contact)
-                 .Include(user => user.Address.GeoData)
-                 .Select(user => new UserKey
-                 {
-                     Id = user.Id,
-                     AddressId = user.AddressId,
-                     ContactId = user.Address.ContactId,
-                     GeoDataId = user.Address.GeoDataId,
-                     AddedDate = user.AddedDate
-                 })
-                 .FirstAsync();
-            }
-            catch (Exception ex) { return null; }
+            return await
+             _context.Users.Where(user => user.Id == id)
+             .Include(ur => ur.Address)
+             .Include(user => user.Address.GeoData)
+             .Select(user => new UserKey
+             {
+                 Id = user.Id,
+                 AddressId = user.AddressId,
+                 GeoDataId = user.Address.GeoDataId,
+                 AddedDate = user.AddedDate
+             })
+             .FirstAsync();
         }
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            try
-            {
-                return await _context.Users
-             .Include(user => user.Address)
-             .Include(user => user.Address.Contact)
-             .Include(user => user.Address.GeoData)
-             .ToListAsync();
-            }
-            catch (Exception ex) { return null; }
+            return await _context.Users
+         .Include(user => user.Address)
+         .Include(user => user.Address.GeoData)
+         .ToListAsync();
         }
         public async Task<int> UpdateUser(User user)
         {
-            try
-            {
-                _context.Entry(user).State = EntityState.Modified;
-                return await _context.SaveChangesAsync();
-            }
-            catch (Exception ex) { return -1; }
+            _context.Entry(user).State = EntityState.Modified;
+            return await _context.SaveChangesAsync();
         }
     }
 }

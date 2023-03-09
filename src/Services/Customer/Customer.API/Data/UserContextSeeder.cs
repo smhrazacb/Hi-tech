@@ -1,51 +1,76 @@
 ﻿using Customer.API.Entities;
 using Customer.API.Entities.Enums;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Customer.API.Data
 {
     public class UserContextSeed
     {
-        public static async Task SeedAsync(UserContext usercontext, ILogger<UserContextSeed> logger)
+        public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger<UserContextSeed> logger)
         {
-            if (!usercontext.Users.Any())
-            {
-                usercontext.Users.AddRange(GetPreconfiguredUser());
-                await usercontext.SaveChangesAsync();
-                logger.LogInformation("Seed database associated with context {DbContextName}", typeof(UserContext).Name);
+            var context = serviceProvider.GetService<ApplicationDbContext>();
+
+            if (!context.Users.Any())
+            {        string[] roles = new string[] { "Owner", "Administrator", "Manager", "Editor", "Buyer", "Business", "Seller", "Subscriber" };
+
+                foreach (var user in PreconfiguredUser)
+                {
+                    var userStore = new UserStore<ApplicationUser>(context);
+                    var result = userStore.CreateAsync(user);
+                    AssignRoles(serviceProvider, user.Email, roles);
+                }
+                await context.SaveChangesAsync();
+                logger.LogInformation("Seed database associated with context {DbContextName}", typeof(ApplicationDbContext).Name);
             }
         }
-        public static IEnumerable<User> GetPreconfiguredUser()
+        public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string[] roles)
         {
-            var userlist = new List<User>();
+            UserManager<ApplicationUser> _userManager = services.GetService<UserManager<ApplicationUser>>();
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+            var result = await _userManager.AddToRolesAsync(user, roles);
+
+            return result;
+        }
+        public static IEnumerable<ApplicationUser> PreconfiguredUser
+        {
+            get
             {
-                for (int i = 0; i < 10; i++)
+                var userlist = new List<ApplicationUser>();
                 {
-                    userlist.Add(new User()
+                    for (int i = 0; i < 5; i++)
                     {
-                        Email = Faker.Internet.Email(),
-                        PasswordHash = Faker.Identification.UsPassportNumber(),
-                        UserName = Faker.Name.FullName(Faker.NameFormats.WithPrefix),
-                        OrderType = (EOrderType)Faker.RandomNumber.Next(0,1),
-                        UserStatus = (EUserStatus)Faker.RandomNumber.Next(0, 2),
-                        PhoneNumber = Faker.Phone.Number(),
-                        Address = new Address()
+                        var user = new ApplicationUser()
                         {
-                            Country = Faker.Address.Country(),
-                            State = Faker.Address.UsState(),
-                            City = Faker.Address.City(),
-                            NearByArea = Faker.Address.StreetName(),
-                            HouseShopPlotNo = Faker.Address.SecondaryAddress(),
-                            Addressline1 = Faker.Address.StreetAddress(),
-                            GeoData = new GeoData() 
+                            Email = Faker.Internet.Email(),
+                            NormalizedUserName = Faker.Name.FullName(Faker.NameFormats.WithPrefix),
+                            UserName = Faker.Internet.Email(),
+                            OrderType = (EOrderType)Faker.RandomNumber.Next(0, 1),
+                            UserStatus = (EUserStatus)Faker.RandomNumber.Next(0, 2),
+                            PhoneNumber = Faker.Phone.Number(),
+                            Address = new Address()
                             {
-                                Latitude = Faker.RandomNumber.Next(-89,89), 
-                                longitude = Faker.RandomNumber.Next(-180,180), 
+                                Country = Faker.Address.Country(),
+                                State = Faker.Address.UsState(),
+                                City = Faker.Address.City(),
+                                NearByArea = Faker.Address.StreetName(),
+                                HouseShopPlotNo = Faker.Address.SecondaryAddress(),
+                                Addressline1 = Faker.Address.StreetAddress(),
+                                GeoData = new GeoData()
+                                {
+                                    Latitude = Faker.RandomNumber.Next(-89, 89),
+                                    longitude = Faker.RandomNumber.Next(-180, 180),
+                                }
                             }
-                            
-                        }
-                    });
+                        };
+                        user.PasswordHash = new PasswordHasher<ApplicationUser>()
+                            .HashPassword(user, "admin");
+                        userlist.Add(user);
+                    }
+                    return userlist;
                 }
-                return userlist;
             }
         }
     }

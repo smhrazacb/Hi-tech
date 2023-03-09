@@ -2,6 +2,7 @@
 using Customer.API.Entities;
 using Customer.API.Entities.Dtos;
 using Customer.API.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
@@ -11,17 +12,20 @@ namespace Customer.API.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UserContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserRepository(UserContext context)
+        public UserRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
+            _userManager = userManager;
         }
 
-        public async Task CreateUser(User user)
+        public async Task CreateUser(ApplicationUser user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _userManager.CreateAsync(user);
+            //_context.Users.Add(user);
+            //await _context.SaveChangesAsync();
         }
         public async Task<int> DeleteUser(string id)
         {
@@ -29,7 +33,7 @@ namespace Customer.API.Repositories
                  .Where(t => t.Id == id)
                  .ExecuteDeleteAsync();
         }
-        public async Task<User> GetUserById(string id)
+        public async Task<ApplicationUser> GetUserById(string id)
         {
             return await
             _context.Users.Where(user => user.Id == id)
@@ -38,7 +42,7 @@ namespace Customer.API.Repositories
             .FirstAsync();
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<ApplicationUser> GetUserByEmail(string email)
         {
             return await
             _context.Users.Where(user => user.Email == email)
@@ -63,14 +67,14 @@ namespace Customer.API.Repositories
              .FirstAsync();
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<ApplicationUser>> GetUsers()
         {
             return await _context.Users
          .Include(user => user.Address)
          .Include(user => user.Address.GeoData)
          .ToListAsync();
         }
-        public async Task<int> UpdateUser(User user)
+        public async Task<int> UpdateUser(ApplicationUser user)
         {
             _context.Entry(user).State = EntityState.Modified;
             return await _context.SaveChangesAsync();

@@ -4,7 +4,7 @@ using Customer.API.Entities.Enums;
 
 namespace Customer.API.Entities
 {
-    public class User : BaseEntity
+    public class ApplicationUser : BaseEntity
     {
         public EUserStatus UserStatus { get; set; }
         public EOrderType OrderType { get; set; }

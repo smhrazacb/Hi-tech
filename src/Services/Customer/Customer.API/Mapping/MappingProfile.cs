@@ -9,7 +9,7 @@ namespace Customer.API.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDto>()
+            CreateMap<ApplicationUser, UserDto>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ReverseMap();
             CreateMap<Address, AddressDto>()

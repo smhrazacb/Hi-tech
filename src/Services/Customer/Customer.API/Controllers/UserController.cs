@@ -2,9 +2,13 @@
 using Customer.API.Entities;
 using Customer.API.Entities.Dtos;
 using Customer.API.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Customer.API.Controllers
 {
@@ -15,19 +19,19 @@ namespace Customer.API.Controllers
     {
         private readonly IUserRepository repository;
         private readonly IMapper _mapper;
-
         public UserController(IUserRepository repository, IMapper mapper)
         {
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
+
         /// <summary>
         /// Returns All User
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<User>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<User>>> Users()
+        [ProducesResponseType(typeof(IEnumerable<ApplicationUser>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<ApplicationUser>>> Users()
         {
             var result = await repository.GetUsers();
             return Ok(result);
@@ -39,8 +43,8 @@ namespace Customer.API.Controllers
         /// <returns></returns>
         [HttpGet("{id}", Name = "User")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IEnumerable<User>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<User>>> User(string id)
+        [ProducesResponseType(typeof(IEnumerable<ApplicationUser>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<ApplicationUser>>> User(string id)
         {
             var products = await repository.GetUserById(id);
             if (products == null)
@@ -58,7 +62,7 @@ namespace Customer.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<User>> Email(string email)
+        public async Task<ActionResult<ApplicationUser>> Email(string email)
         {
             var users = await repository.GetUserByEmail(email);
             if (users == null)
@@ -73,10 +77,13 @@ namespace Customer.API.Controllers
         /// <param name="userdto"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(User), (int)HttpStatusCode.Created)]
-        public async Task<ActionResult<User>> User([FromBody] UserDto userdto)
+        [ProducesResponseType(typeof(ApplicationUser), (int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<ApplicationUser>> User([FromBody] UserDto userdto)
         {
-            var user = _mapper.Map<User>(userdto);
+            var user = _mapper.Map<ApplicationUser>(userdto);
+            user.PasswordHash = new PasswordHasher<ApplicationUser>()
+                            .HashPassword(user, userdto.Password);
             await repository.CreateUser(user);
             return CreatedAtRoute("User", new { id = user.Id }, user);
         }
@@ -98,7 +105,7 @@ namespace Customer.API.Controllers
             if (userkey == null)
                 return NotFound();
 
-            var userupdated = _mapper.Map<User>(userdto);
+            var userupdated = _mapper.Map<ApplicationUser>(userdto);
             userupdated.Id = userkey.Id;
             userupdated.AddressId = userkey.AddressId;
             userupdated.AddedDate = userkey.AddedDate;

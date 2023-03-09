@@ -6,9 +6,9 @@ using System.Reflection.Emit;
 
 namespace Customer.API.Data
 {
-    public class UserContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public UserContext(DbContextOptions<UserContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             //ChangeTracker.LazyLoadingEnabled = false;
         }

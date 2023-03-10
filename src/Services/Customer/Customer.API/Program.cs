@@ -23,7 +23,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Register the Identity services.
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+})
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -71,11 +74,12 @@ builder.Services.AddOpenIddict()
                 options.AddDevelopmentEncryptionCertificate()
                        .AddDevelopmentSigningCertificate();
 
+
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableTokenEndpointPassthrough();
 
-            })
+            })   
 
             // Register the OpenIddict validation components.
             .AddValidation(options =>
@@ -150,7 +154,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Register the worker responsible for seeding the database.
 // Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
+//builder.Services.AddHostedService<Worker>();
 
 var app = builder.Build();
 
@@ -170,12 +174,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 // seed preConfigured data if db = null 
-//app.MigrateDatabase<ApplicationDbContext>((context, services) =>
-//{
-//    var logger = services.GetService<ILogger<UserContextSeed>>();
-//    UserContextSeed
-//        .SeedAsync(services, logger)
-//        .Wait();
-//});
+app.MigrateDatabase<ApplicationDbContext>((context, services) =>
+{
+    var logger = services.GetService<ILogger<UserContextSeed>>();
+    UserContextSeed
+        .SeedAsync(services, logger)
+        .Wait();
+});
 
 app.Run();

@@ -21,9 +21,9 @@ namespace Customer.API.Repositories
             _userManager = userManager;
         }
 
-        public async Task CreateUser(ApplicationUser user)
+        public async Task<IdentityResult> CreateUser(ApplicationUser user)
         {
-            await _userManager.CreateAsync(user);
+            return await _userManager.CreateAsync(user);
             //_context.Users.Add(user);
             //await _context.SaveChangesAsync();
         }

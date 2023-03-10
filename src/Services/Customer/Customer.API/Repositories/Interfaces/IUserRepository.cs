@@ -1,5 +1,6 @@
 ﻿using Customer.API.Entities;
 using Customer.API.Entities.Dtos;
+using Microsoft.AspNetCore.Identity;
 
 namespace Customer.API.Repositories.Interfaces
 {
@@ -7,7 +8,7 @@ namespace Customer.API.Repositories.Interfaces
     {
         public Task<IEnumerable<ApplicationUser>> GetUsers();
         public Task<int> UpdateUser(ApplicationUser user);
-        public Task CreateUser(ApplicationUser user);
+        public Task<IdentityResult> CreateUser(ApplicationUser user);
         public Task<int> DeleteUser(string id);
         public Task<ApplicationUser> GetUserById(string id);
         public Task<UserKey> GetUserKeys(string id);

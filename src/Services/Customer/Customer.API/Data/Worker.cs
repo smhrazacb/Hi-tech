@@ -22,8 +22,8 @@ namespace Customer.API.Data
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await context.Database.EnsureCreatedAsync();
 
-            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
             await Initialize(_serviceProvider, scope);
+            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
             if (await manager.FindByClientIdAsync("OrderAPI") == null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor

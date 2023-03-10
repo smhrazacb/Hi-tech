@@ -78,13 +78,18 @@ namespace Customer.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(ApplicationUser), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(IdentityResult), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<ApplicationUser>> User([FromBody] UserDto userdto)
         {
             var user = _mapper.Map<ApplicationUser>(userdto);
             user.PasswordHash = new PasswordHasher<ApplicationUser>()
                             .HashPassword(user, userdto.Password);
-            await repository.CreateUser(user);
+            var result = await repository.CreateUser(user);
+            if (!result.Succeeded)
+            {
+                return Conflict(result);
+            }
             return CreatedAtRoute("User", new { id = user.Id }, user);
         }
         /// <summary>

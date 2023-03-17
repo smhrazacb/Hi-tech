@@ -4,11 +4,13 @@ using Catalog.API.Repositories.Interfaces;
 using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using OpenIddict.Validation.AspNetCore;
 
 namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository repository;

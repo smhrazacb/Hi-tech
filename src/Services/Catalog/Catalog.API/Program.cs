@@ -4,6 +4,7 @@ using Catalog.API.Repositories.Interfaces;
 using Microsoft.OpenApi.Models;
 using Catalog.API.Repositories;
 using System.Reflection;
+using OpenIddict.Validation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,19 +14,30 @@ builder.Services.AddScoped<IProductContext, ProductContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
-//builder.Services.AddMassTransit(x =>
-//{
-//    x.UsingRabbitMq();
-//});
-//// MassTransit-RabbitMQ Configuration
-//builder.Services.AddMassTransit(config => {
-//    config.UsingRabbitMq((ctx, cfg) => {
-//        cfg.Host(Configuration["EventBusSettings:HostAddress"]);
-//        cfg.UseHealthCheck(ctx);
-//    });
-//});
-//builder.Services.AddMassTransitHostedService();
 
+// Register the OpenIddict validation components.
+builder.Services.AddOpenIddict()
+    .AddValidation(options =>
+    {
+        // Note: the validation handler uses OpenID Connect discovery
+        // to retrieve the address of the introspection endpoint.
+        options.SetIssuer("https://localhost:5999/");
+        options.AddAudiences("catalog_server");
+
+        // Configure the validation handler to use introspection and register the client
+        // credentials used when communicating with the remote introspection endpoint.
+        options.UseIntrospection()
+        .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD2")
+               .SetClientId("catalog_server");
+
+        // Register the System.Net.Http integration.
+        options.UseSystemNetHttp();
+
+        // Register the ASP.NET Core host.
+        options.UseAspNetCore();
+    });
+builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -34,7 +46,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v1",
         Title = "Catalog API",
-        Description = "To add items into shopping carts",
+        Description = "To browse update edit delete products",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {
@@ -50,6 +62,34 @@ builder.Services.AddSwaggerGen(options =>
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+      {
+        {
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
+
+            },
+            new List<string>()
+          }
+        });
 });
 
 var app = builder.Build();
@@ -61,7 +101,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product.API v1"));
 }
+app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

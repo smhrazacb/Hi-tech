@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Catalog.API.Repositories;
 using System.Reflection;
 using OpenIddict.Validation.AspNetCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.Services.AddOpenIddict()
     {
         // Note: the validation handler uses OpenID Connect discovery
         // to retrieve the address of the introspection endpoint.
-        options.SetIssuer("https://localhost:5999/");
+        options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
         options.AddAudiences("catalog_server");
 
         // Configure the validation handler to use introspection and register the client
@@ -70,6 +71,7 @@ builder.Services.AddSwaggerGen(options =>
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
+        
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement()

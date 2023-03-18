@@ -1,35 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
+using System;
 using System.Globalization;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using OpenIddict.Abstractions;
-using EsparkIndent.Server.Models;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace EsparkIndent.Server;
-
-public class Worker : IHostedService
+namespace EsparkIndent.Server.Entities
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public Worker(IServiceProvider serviceProvider)
-        => _serviceProvider = serviceProvider;
-
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public class AppicationContextSeed
     {
-        await using var scope = _serviceProvider.CreateAsyncScope();
+        public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger<AppicationContextSeed> logger)
+        {
+            await using var scope = serviceProvider.CreateAsyncScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await context.Database.EnsureCreatedAsync(cancellationToken);
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await context.Database.EnsureCreatedAsync(CancellationToken.None);
 
-        await RegisterApplicationsAsync(scope.ServiceProvider);
-        await RegisterScopesAsync(scope.ServiceProvider);
-
+            await RegisterApplicationsAsync(scope.ServiceProvider);
+            await RegisterScopesAsync(scope.ServiceProvider);
+        }
+        public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string[] roles)
+        {
+            UserManager<ApplicationUser> _userManager = services.GetService<UserManager<ApplicationUser>>();
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+            var result = await _userManager.AddToRolesAsync(user, roles);
+            return result;
+        }
         static async Task RegisterApplicationsAsync(IServiceProvider provider)
         {
             var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
@@ -101,12 +100,38 @@ public class Worker : IHostedService
                     }
                 });
             }
-
+            if (await manager.FindByClientIdAsync("swagger_client") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "swagger_client",
+                    ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
+                    ConsentType = ConsentTypes.Explicit,
+                    DisplayName = "Swagger test client application",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.ResponseTypes.Code,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + "catalog_api"
+                    },
+                    Requirements =
+                    {
+                        Requirements.Features.ProofKeyForCodeExchange
+                    }
+                });
+            }
             // Note: when using introspection instead of local token validation,
             // an application entry MUST be created to allow the resource server
             // to communicate with OpenIddict's introspection endpoint.
             if (await manager.FindByClientIdAsync("catalog_server") is null)
-            {   
+            {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
                     ClientId = "catalog_server",
@@ -136,9 +161,6 @@ public class Worker : IHostedService
             }
         }
 
-
     }
-   
-    
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
 }

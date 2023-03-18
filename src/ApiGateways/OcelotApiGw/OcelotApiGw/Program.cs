@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Values;
 
 var builder = WebApplication.CreateBuilder(args);
 // Config Enviroment 
@@ -15,6 +18,7 @@ builder.Logging.AddDebug();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
+
 builder.Services.AddOcelot();
 var app = builder.Build();
 
@@ -22,6 +26,7 @@ app.UseSwaggerForOcelotUI(options =>
 {
     options.PathToSwaggerGenerator = "/swagger/docs";
 });
+app.UseAuthentication();
 app.UseOcelot().Wait();
 
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
-using EsparkIndent.Server.Models;
+using EsparkIndent.Server.Entities;
 using OpenIddict.Validation.AspNetCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;

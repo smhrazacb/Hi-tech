@@ -21,7 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Client.AspNetCore;
 using EsparkIndent.Server.Helpers;
-using EsparkIndent.Server.Models;
+using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.ViewModels.Authorization;
 using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;

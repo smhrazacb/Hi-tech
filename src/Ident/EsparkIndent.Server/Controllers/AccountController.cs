@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using EsparkIndent.Server.Models;
+using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.Services;
 using EsparkIndent.Server.ViewModels.Account;
 

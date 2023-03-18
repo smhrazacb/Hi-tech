@@ -1,25 +1,30 @@
-using Microsoft.AspNetCore.Builder;
+using EsparkIndent.Server.Entities;
+using EsparkIndent.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using EsparkIndent.Server.Models;
-using EsparkIndent.Server.Services;
 using Quartz;
-using System.IO;
+using System.Reflection;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace EsparkIndent.Server;
 
 public class Startup
 {
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+    public IConfiguration Configuration { get; }
+
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllersWithViews();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             // Configure the context to use Microsoft SQL Server.
-            options.UseSqlite($"Filename={Path.Combine("dbEsparkIndent-Server.sqlite3")}");
+            options.UseNpgsql(Configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
 
             // Register the entity sets needed by OpenIddict.
             // Note: use the generic overload if you need
@@ -200,9 +205,6 @@ public class Startup
         services.AddTransient<IEmailSender, AuthMessageSender>();
         services.AddTransient<ISmsSender, AuthMessageSender>();
 
-        // Register the worker responsible for seeding the database with the sample clients.
-        // Note: in a real world application, this step should be part of a setup script.
-        services.AddHostedService<Worker>();
     }
 
     public void Configure(IApplicationBuilder app)

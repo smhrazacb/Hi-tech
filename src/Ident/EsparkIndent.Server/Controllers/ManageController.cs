@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using EsparkIndent.Server.Models;
+using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.Services;
 using EsparkIndent.Server.ViewModels.Manage;
 using System.Linq;

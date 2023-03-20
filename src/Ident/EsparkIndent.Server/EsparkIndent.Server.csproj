@@ -4,6 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>230bddc7-ae8e-4c5e-9a83-dabd79d93d9b</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <IsServiceFabricServiceProject>True</IsServiceFabricServiceProject>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -15,6 +19,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 		<PackageReference Include="OpenIddict.AspNetCore" Version="4.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
 		<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.1.0" />

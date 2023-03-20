@@ -11,7 +11,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Products",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "UpstreamhttpMethod": [ "GET", "POST", "PUT" ],
       "SwaggerKey": "Products"
     },
     {
@@ -24,7 +24,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Products/{id}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamhttpMethod": [ "GET", "DELETE" ],
       "SwaggerKey": "Products"
     },
     {
@@ -37,7 +37,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Products/Category",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamhttpMethod": [ "GET" ],
       "SwaggerKey": "Products"
     },
     {
@@ -50,7 +50,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Products/SubCategory",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamhttpMethod": [ "GET" ],
       "SwaggerKey": "Products"
     },
     {
@@ -63,48 +63,8 @@
         }
       ],
       "UpstreamPathTemplate": "/Products/Name",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamhttpMethod": [ "GET" ],
       "SwaggerKey": "Products"
-    },
-    // Customer API
-    {
-      "DownstreamPathTemplate": "/api/v1/User",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customer.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/User",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
-      "SwaggerKey": "Users"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/User/{guid}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customer.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/User/{guid}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
-      "SwaggerKey": "Users"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/User/Email",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customer.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/User/Email",
-      "UpstreamHttpMethod": [ "GET" ],
-      "SwaggerKey": "Users"
     },
     // Basket.API
     {
@@ -117,7 +77,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Basket",
-      "UpstreamHttpMethod": [ "POST", "PUT" ],
+      "UpstreamhttpMethod": [ "POST", "PUT" ],
       "SwaggerKey": "Basket"
     },
     {
@@ -130,7 +90,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Basket/{guid}",
-      "UpstreamHttpMethod": [ "GET","DELETE" ],
+      "UpstreamhttpMethod": [ "GET","DELETE" ],
       "SwaggerKey": "Basket"
     },
     {
@@ -143,7 +103,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Basket/Checkout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamhttpMethod": [ "POST" ],
       "SwaggerKey": "Basket"
     }
   ],
@@ -155,16 +115,6 @@
           "Name": "Products API",
           "Version": "v1",
           "Url": "http://catalog.api/swagger/v1/swagger.json"
-        }
-      ]
-    },
-    {
-      "Key": "Users",
-      "Config": [
-        {
-          "Name": "Users API",
-          "Version": "v1",
-          "Url": "http://customer.api/swagger/v1/swagger.json"
         }
       ]
     },

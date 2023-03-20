@@ -125,6 +125,9 @@ builder.Services.AddOpenIddict()
         // Force client applications to use Proof Key for Code Exchange (PKCE).
         options.RequireProofKeyForCodeExchange();
 
+        // Disable ssl https for development 
+        options.UseAspNetCore().DisableTransportSecurityRequirement();
+
         // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
         options.UseAspNetCore()
                .EnableStatusCodePagesIntegration()

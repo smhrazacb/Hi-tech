@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EsparkIndent.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230318062853_init")]
-    partial class init
+    [Migration("20230320052832_initdb")]
+    partial class initdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

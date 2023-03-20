@@ -43,11 +43,11 @@ namespace EsparkIndent.Server.Entities
                     DisplayName = "SPA client application",
                     RedirectUris =
                     {
-                        new Uri("https://localhost:5000/callback/login/local")
+                        new Uri("http://localhost:8000/callback/login/local")
                     },
                     PostLogoutRedirectUris =
                     {
-                        new Uri("https://localhost:5000/callback/logout/local")
+                        new Uri("http://localhost:8000/callback/logout/local")
                     },
                     Permissions =
                     {
@@ -138,7 +138,7 @@ namespace EsparkIndent.Server.Entities
                     ClientSecret = "80B552BB-4CD8-48DA-946E-0815E0147DD2",
                     Permissions =
                     {
-                        Permissions.Endpoints.Introspection
+                        Permissions.Endpoints.Introspection,
                     }
                 });
             }

@@ -126,7 +126,7 @@ builder.Services.AddOpenIddict()
         options.RequireProofKeyForCodeExchange();
 
         // Disable ssl https for development 
-        options.UseAspNetCore().DisableTransportSecurityRequirement();
+        //options.UseAspNetCore().DisableTransportSecurityRequirement();
 
         // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
         options.UseAspNetCore()

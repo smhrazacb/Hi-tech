@@ -3,7 +3,7 @@
     //Catalog API
     {
       "DownstreamPathTemplate": "/api/v1/Products",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -16,7 +16,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -29,7 +29,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/Category",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -42,7 +42,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/SubCategory",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -55,7 +55,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/Name",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -75,12 +75,12 @@
         {
           "Name": "Products API",
           "Version": "v1",
-          "Url": "https://localhost:5000/swagger/v1/swagger.json"
+          "Url": "http://localhost:5000/swagger/v1/swagger.json"
         }
       ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5010"
+    "BaseUrl": "http://localhost:5010"
   }
 }

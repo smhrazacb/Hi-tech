@@ -121,10 +121,10 @@ namespace EsparkIndent.Server.Entities
                         Permissions.Scopes.Roles,
                         Permissions.Prefixes.Scope + "catalog_api"
                     },
-                    Requirements =
-                    {
-                        Requirements.Features.ProofKeyForCodeExchange
-                    }
+                    //Requirements =
+                    //{
+                    //    Requirements.Features.ProofKeyForCodeExchange
+                    //}
                 });
             }
             // Note: when using introspection instead of local token validation,

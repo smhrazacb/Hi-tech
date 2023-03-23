@@ -1,8 +1,12 @@
 using EsparkIndent.Server;
 using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Server.AspNetCore;
 using Quartz;
 using System.Configuration;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -11,7 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add builder.Services to the container.
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -126,7 +129,7 @@ builder.Services.AddOpenIddict()
         options.RequireProofKeyForCodeExchange();
 
         // Disable ssl https for development 
-        //options.UseAspNetCore().DisableTransportSecurityRequirement();
+        options.UseAspNetCore().DisableTransportSecurityRequirement();
 
         // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
         options.UseAspNetCore()
@@ -158,7 +161,7 @@ builder.Services.AddOpenIddict()
         // Note: when issuing access tokens used by third-party APIs
         // you don't own, you can disable access token encryption:
         //
-        // options.DisableAccessTokenEncryption();
+        options.DisableAccessTokenEncryption();
     })
 
     // Register the OpenIddict validation components.
@@ -167,23 +170,23 @@ builder.Services.AddOpenIddict()
         // Configure the audience accepted by this resource server.
         // The value MUST match the audience associated with the
         // "demo_api" scope, which is used by ResourceController.
-        options.AddAudiences("resource_server");
+        //options.AddAudiences("resource_server");
 
         // Import the configuration from the local OpenIddict server instance.
-        options.UseLocalServer();
+        //options.UseLocalServer();
 
         // Instead of validating the token locally by reading it directly,
         // introspection can be used to ask a remote authorization server
         // to validate the token (and its attached database entry).
         //
-        // options.UseIntrospection()
-        //        .SetIssuer("https://localhost:44395/")
-        //        .SetClientId("resource_server")
-        //        .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD2");
+        options.UseIntrospection()
+               .SetIssuer("http://lcoalhost:5999")
+               .SetClientId("catalog_server")
+               .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD2");
         //
         // When introspection is used, System.Net.Http integration must be enabled.
         //
-        // options.UseSystemNetHttp();
+        options.UseSystemNetHttp();
 
         // Register the ASP.NET Core host.
         options.UseAspNetCore();
@@ -210,6 +213,8 @@ builder.Services.AddTransient<ISmsSender, AuthMessageSender>();
 
 
 var app = builder.Build();
+// for https disabling
+app.UseForwardedHeaders();
 //app.UseDeveloperExceptionPage();
 //app.UseStatusCodePagesWithReExecute("/error");
 // Added due to 

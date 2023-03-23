@@ -23,7 +23,7 @@ builder.Services.AddOpenIddict()
         // Note: the validation handler uses OpenID Connect discovery
         // to retrieve the address of the introspection endpoint.
         options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
-        options.AddAudiences("catalog_server");
+        //options.AddAudiences("catalog_server");
 
         // Configure the validation handler to use introspection and register the client
         // credentials used when communicating with the remote introspection endpoint.
@@ -37,7 +37,11 @@ builder.Services.AddOpenIddict()
         // Register the ASP.NET Core host.
         options.UseAspNetCore();
     });
-builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+});
 builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

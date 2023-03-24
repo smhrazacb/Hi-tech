@@ -12,11 +12,11 @@ services:
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:6999
+      - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
-      - "IdentityUrl=http://identserver:5999"
+      - "IdentityUrl=http://host.docker.internal:5999"
     ports:
-      - "8000:6999"
+      - "8000:80"
 
   ident.server:
     container_name: identserver
@@ -37,20 +37,20 @@ services:
     ports:
       - "5432:5432"
 
-  #basketdb:
-  #  container_name: basketdb
-  #  restart: always    
-  #  ports:
-  #      - "6379:6379"
+  basketdb:
+    container_name: basketdb
+    restart: always    
+    ports:
+        - "6379:6379"
 
-  #basket.api:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - "CacheSettings:ConnectionString=basketdb:6379"
-  #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=basketdb:6379"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
 
-  #  ports:
-  #    - "8002:80"
+    ports:
+      - "8002:80"
 
   ocelotapigw:
     container_name: ocelotapigw
@@ -58,15 +58,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
         - catalog.api
-        #- basket.api
+        - basket.api
     ports:
       - "8010:80"
 
-  #rabbitmq:
-  #  container_name: rabbitmq
-  #  restart: always
-  #  ports:
-  #      - "5672:5672"
-  #      - "15672:15672"
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
 
 

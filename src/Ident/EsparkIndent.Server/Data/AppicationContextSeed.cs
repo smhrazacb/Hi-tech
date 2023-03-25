@@ -100,6 +100,37 @@ namespace EsparkIndent.Server.Entities
                     }
                 });
             }
+            if (await manager.FindByClientIdAsync("catalogswagger") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "catalogswagger",
+                    ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
+                    ConsentType = ConsentTypes.Explicit,
+                    DisplayName = "Swagger client application",
+                    RedirectUris =
+                    {
+                        new Uri("http://host.docker.internal:8000/swagger/oauth2-redirect.html")
+                    },
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.ResponseTypes.Code,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + "catalog_api"
+                    },
+                    Requirements =
+                    {
+                        Requirements.Features.ProofKeyForCodeExchange
+                    }
+                });
+            }
             
             // Note: when using introspection instead of local token validation,
             // an application entry MUST be created to allow the resource server

@@ -11,6 +11,7 @@ using Quartz;
 using System.Configuration;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add builder.Services to the container.
@@ -200,6 +201,7 @@ builder.Services.AddOpenIddict()
         // options.EnableTokenEntryValidation();
     });
 
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Newtonsoftjson added due to "a cycle or if the object depth is larger than the maximum allowed depth of 32"
@@ -233,6 +235,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

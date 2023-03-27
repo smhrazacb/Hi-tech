@@ -1,5 +1,3 @@
-using Microsoft.OpenApi.Models;
-using MMLib.SwaggerForOcelot.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -15,6 +13,7 @@ builder.Logging.AddDebug();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
+
 builder.Services.AddOcelot();
 var app = builder.Build();
 

@@ -19,7 +19,8 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
 5. You can launch microservices with swagger as below urls:
 * **API Gateway -> http://localhost:8010/swagger/index.html**
 # Result 
-![](./img/HowTo1.png)
+- Issue 8
+![](./img/8.gif)
 6. If you want to udapte microservices application you will need to shutdown all docker containers first
 ```
 docker-compose -f docker-compose.yml -f docker-compose.override.yml down

@@ -3,109 +3,70 @@
     //Catalog API
     {
       "DownstreamPathTemplate": "/api/v1/Products",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8000"
+          "Port": "5000"
         }
       ],
       "UpstreamPathTemplate": "/Products",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "UpstreamhttpsMethod": [ "GET", "POST", "PUT" ],
       "SwaggerKey": "Products"
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8000"
+          "Port": "5000"
         }
       ],
       "UpstreamPathTemplate": "/Products/{id}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamhttpsMethod": [ "GET", "DELETE" ],
       "SwaggerKey": "Products"
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/Category",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8000"
+          "Port": "5000"
         }
       ],
       "UpstreamPathTemplate": "/Products/Category",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamhttpsMethod": [ "GET" ],
       "SwaggerKey": "Products"
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/SubCategory",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8000"
+          "Port": "5000"
         }
       ],
       "UpstreamPathTemplate": "/Products/SubCategory",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamhttpsMethod": [ "GET" ],
       "SwaggerKey": "Products"
     },
     {
       "DownstreamPathTemplate": "/api/v1/Products/Name",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8000"
+          "Port": "5000"
         }
       ],
       "UpstreamPathTemplate": "/Products/Name",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamhttpsMethod": [ "GET" ],
       "SwaggerKey": "Products"
-    },
-    // Customer API
-    {
-      "DownstreamPathTemplate": "/api/v1/User",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "8001"
-        }
-      ],
-      "UpstreamPathTemplate": "/User",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
-      "SwaggerKey": "Users"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/User/{guid}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "8001"
-        }
-      ],
-      "UpstreamPathTemplate": "/User/{guid}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
-      "SwaggerKey": "Users"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/User/Email",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "8001"
-        }
-      ],
-      "UpstreamPathTemplate": "/User/Email",
-      "UpstreamHttpMethod": [ "GET" ],
-      "SwaggerKey": "Users"
     }
+
   ],
   "SwaggerEndPoints": [
     {
@@ -114,22 +75,12 @@
         {
           "Name": "Products API",
           "Version": "v1",
-          "Url": "http://localhost:8000/swagger/v1/swagger.json"
-        }
-      ]
-    },
-    {
-      "Key": "Users",
-      "Config": [
-        {
-          "Name": "Users API",
-          "Version": "v1",
-          "Url": "http://localhost:8001/swagger/v1/swagger.json"
+          "Url": "https://localhost:5000/swagger/v1/swagger.json"
         }
       ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:8010"
+    "BaseUrl": "https://localhost:5010"
   }
 }

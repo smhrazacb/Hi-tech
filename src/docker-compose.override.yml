@@ -12,26 +12,30 @@ services:
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=mongodb://catalogdb:27017"
+      - "IdentityUrl=http://host.docker.internal:5999"
     ports:
       - "8000:80"
 
-  userdb:
-    container_name: userdb
+  ident.server:
+    container_name: identserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5999
+      - "DatabaseSettings:ConnectionString=Server=identdb;Port=5432;Database=userDb;User Id=admin;Password=admin1234;"
+    ports:
+      - "5999:5999"
+
+  identdb:
+    container_name: identdb
     restart: always
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=userDb
+      - POSTGRES_DB=identdb
     ports:
       - "5432:5432"
-
-  customer.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=userdb;Port=5432;Database=userDb;User Id=admin;Password=admin1234;"
-    ports:
-      - "8001:80"
 
   basketdb:
     container_name: basketdb
@@ -54,7 +58,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
         - catalog.api
-        - customer.api
+        - basket.api
     ports:
       - "8010:80"
 

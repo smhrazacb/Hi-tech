@@ -10,14 +10,8 @@ services:
       context: .
       dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
-  userdb:
+  identdb:
     image: postgres
-
-  customer.api:
-    image: ${DOCKER_REGISTRY-}customerapi
-    build:
-      context: .
-      dockerfile: Services/Customer/Customer.API/Dockerfile
 
   basketdb:
     image: redis:alpine
@@ -28,6 +22,12 @@ services:
       context: .
       dockerfile: Services/Basket/Basket.API/Dockerfile
 
+  ident.server:
+    image: ${DOCKER_REGISTRY-}identserver
+    build:
+      context: .
+      dockerfile: Ident/EsparkIndent.Server/Dockerfile
+
   ocelotapigw:
     image: ${DOCKER_REGISTRY-}ocelotapigw
     build:
@@ -36,6 +36,8 @@ services:
   
   rabbitmq:
     image: rabbitmq:3-management-alpine
+
+
 
 volumes:
   mongo_data:

@@ -110,7 +110,7 @@ namespace EsparkIndent.Server.Entities
                     DisplayName = "Swagger client application",
                     RedirectUris =
                     {
-                        new Uri("https://localhost:8000/swagger/oauth2-redirect.html")
+                        new Uri("http://host.docker.internal:8000/swagger/oauth2-redirect.html")
                     },
                     Permissions =
                     {
@@ -128,7 +128,7 @@ namespace EsparkIndent.Server.Entities
                     Requirements =
                     {
                         Requirements.Features.ProofKeyForCodeExchange
-                    },
+                    }
                 });
             }
             

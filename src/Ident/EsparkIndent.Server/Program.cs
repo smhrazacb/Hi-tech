@@ -11,7 +11,6 @@ using Quartz;
 using System.Configuration;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add builder.Services to the container.
@@ -41,7 +40,11 @@ builder.Services.AddQuartz(options =>
     options.UseSimpleTypeLoader();
     options.UseInMemoryStore();
 });
-
+//services cors
+//builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+//{
+//    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+//}));
 // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
 builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
@@ -230,7 +233,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+//app cors
+//app.UseCors("corsapp");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

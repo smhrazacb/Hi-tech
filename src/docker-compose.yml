@@ -13,14 +13,14 @@ services:
   identdb:
     image: postgres
 
-  basketdb:
-    image: redis:alpine
+  #basketdb:
+  #  image: redis:alpine
 
-  basket.api:
-    image: ${DOCKER_REGISTRY-}basketapi
-    build:
-      context: .
-      dockerfile: Services/Basket/Basket.API/Dockerfile
+  #basket.api:
+  #  image: ${DOCKER_REGISTRY-}basketapi
+  #  build:
+  #    context: .
+  #    dockerfile: Services/Basket/Basket.API/Dockerfile
 
   ident.server:
     image: ${DOCKER_REGISTRY-}identserver
@@ -28,14 +28,14 @@ services:
       context: .
       dockerfile: Ident/EsparkIndent.Server/Dockerfile
 
-  ocelotapigw:
-    image: ${DOCKER_REGISTRY-}ocelotapigw
-    build:
-      context: .
-      dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
+  #ocelotapigw:
+  #  image: ${DOCKER_REGISTRY-}ocelotapigw
+  #  build:
+  #    context: .
+  #    dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
   
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
+  #rabbitmq:
+  #  image: rabbitmq:3-management-alpine
 
 
 

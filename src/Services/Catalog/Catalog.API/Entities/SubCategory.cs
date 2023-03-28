@@ -7,6 +7,5 @@ namespace Catalog.API.Entities
     {
         public string SubCategoryName { get; set; }
         public Product Product { get; set; }
-
     }
 }

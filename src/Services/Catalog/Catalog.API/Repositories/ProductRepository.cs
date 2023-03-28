@@ -4,6 +4,7 @@ using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
 using System.Xml.Linq;
+using DnsClient.Protocol;
 
 namespace Catalog.API.Repositories
 {
@@ -31,7 +32,7 @@ namespace Catalog.API.Repositories
                  })
                                  .ToListAsync();
         }
-        public async Task<Category> GetProductsById(string _id)
+        public async Task<Category> GetProductById(string _id)
         {
             return await _context
                 .CategoryList
@@ -56,6 +57,10 @@ namespace Catalog.API.Repositories
         {
             await _context.CategoryList.InsertOneAsync(_product);
         }
+        public async Task UploadProducts(IEnumerable<Category> _products)
+        {
+            await _context.CategoryList.InsertManyAsync(_products);
+        }
         public async Task<bool> DeleteProduct(string _id)
         {
             var filter = Builders<Category>.Filter.Eq(p => p.Id, _id);
@@ -78,6 +83,30 @@ namespace Catalog.API.Repositories
                          .CategoryList
                          .Find(p => p.SubCategory.Product.Name.ToLower().Contains(_name.ToLower()))
                          .ToListAsync();
+        }
+        public async Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf)
+        {
+            return
+                await _context.CategoryList
+                .Find(p =>
+                p.SubCategory.Product.ManufacturerPartNo.ToLower().Contains(mfp.ToLower())
+                &
+                p.SubCategory.Product.Manufacturer.ToLower().Contains(mf.ToLower())
+                ).ToListAsync();
+        }
+
+        public async Task UpdateProducts(IEnumerable<Category> products)
+        {
+            var bulkOps = new List<WriteModel<Category>>();
+            foreach (var record in products)
+            {
+                var upsertOne = new ReplaceOneModel<Category>(
+                    Builders<Category>.Filter.Where(x => x.Id == record.Id),
+                    record)
+                { IsUpsert = true };
+                bulkOps.Add(upsertOne);
+            }
+            await _context.CategoryList.BulkWriteAsync(bulkOps);
         }
     }
 }

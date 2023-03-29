@@ -5,6 +5,8 @@ using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Cryptography;
+using System.Security.Policy;
 
 namespace Catalog.API.Controllers
 {
@@ -26,11 +28,24 @@ namespace Catalog.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(CSVDto), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CSVDto>> UplaodUpdateProducts([FromBody] string csvfilepath)
+        public async Task<ActionResult<CSVDto>> UplaodUpdateProducts(IFormFile file)
         {
-            var Fname = @"C:\Users\SmhrazaEspark\Downloads\StockData Edited.csv";
+            if (file == null || file.Length == 0)
+                return BadRequest("File is not selected or empty");
+
+            // Save the file to disk
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads",
+                Path.GetFileNameWithoutExtension(file.FileName)
+                  + "_"
+                  + DateTime.Now.ToString("yyyyddMMHHmmss")
+                  + Path.GetExtension(file.FileName));
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            //var Fname = @"C:\Users\SmhrazaEspark\Downloads\StockData Edited.csv";
             var cr = new CSV2Category();
-            var result = cr.Read(Fname);
+            var result = CSV2Category.Read(filePath);
             // Check already existed products 
             foreach (var item in result.NewCategories)
             {

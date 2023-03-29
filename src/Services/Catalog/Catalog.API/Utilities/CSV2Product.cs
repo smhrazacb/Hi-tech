@@ -1,19 +1,16 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
-using Catalog.API.Validations;
-using LumenWorks.Framework.IO.Csv;
+using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic.FileIO;
+using Sylvan.Data;
 using Sylvan.Data.Csv;
-using System.ComponentModel;
+using System;
 using System.Data;
-using System.Data.OleDb;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Formats.Asn1;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Catalog.API.Utilities
 {
@@ -21,23 +18,24 @@ namespace Catalog.API.Utilities
 
     public class CSV2Category
     {
-        public CSVDto Read(string path)
+        public static CSVDto Read(string path)
         {
             CSVDto cSVDto = new CSVDto();
-            cSVDto.NewCategories = new List<Category>();
-            cSVDto.InvalidEntries = new List<string>();
-            cSVDto.DuplicatePartNumbers = new List<string>();
-            cSVDto.UpdateCategories = new List<Category>();
+            var NewCategories = new List<Category>();
+            var InvalidEntries = new List<string>();
+            var DuplicatePartNumbers = new List<string>();
+            var UpdateCategories = new List<Category>();
             var stopWatch = Stopwatch.StartNew();
             int count = 0;
             using (var reader = CsvDataReader.Create(path))
             {
+
                 // Loop through each row in the CSV file
                 while (reader.Read())
                 {
                     try
                     {
-                        if (cSVDto.NewCategories.Count == 28)
+                        if (NewCategories.Count == 28)
                         {
                             Console.WriteLine();
                         }
@@ -86,24 +84,31 @@ namespace Catalog.API.Utilities
                                     .Add(pairs[i], pairs[++i]);
                             }
                         }
-                        if (cSVDto.NewCategories
+                        if (NewCategories
                             .Where(a => a.SubCategory.Product.ManufacturerPartNo ==
                                 obj.SubCategory.Product.ManufacturerPartNo &&
                                 a.SubCategory.Product.Manufacturer ==
                                 obj.SubCategory.Product.Manufacturer).Count() > 0)
-                            cSVDto.DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
+                        {
+                            Debug.WriteLine("Duplicate Entry : "+ (reader.RowNumber+1).ToString());
+                            DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
+                        }
                         else
-                            cSVDto.NewCategories.Add(obj);
+                            NewCategories.Add(obj);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
-                        cSVDto.InvalidEntries.Add(reader.GetRawRecordSpan().ToString());
+                        Debug.WriteLine((reader.RowNumber+1).ToString() + " : " + ex.Message);
+                        InvalidEntries.Add(reader.GetRawRecordSpan().ToString());
                     }
                 }
                 //Console.WriteLine(count);
                 Console.WriteLine($"seconds : {stopWatch.Elapsed.TotalSeconds}");
-                Console.WriteLine($"Total Products added : {cSVDto.NewCategories.Count}");
+                Console.WriteLine($"Total Products added : {NewCategories.Count}");
+                cSVDto.DuplicatePartNumbers = DuplicatePartNumbers;
+                cSVDto.InvalidEntries = InvalidEntries;
+                cSVDto.UpdateCategories = UpdateCategories;
+                cSVDto.NewCategories =  NewCategories;
                 return cSVDto;
             }
         }

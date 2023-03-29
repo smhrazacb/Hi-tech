@@ -86,13 +86,12 @@ namespace Catalog.API.Repositories
         }
         public async Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf)
         {
+            var filter1 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.ManufacturerPartNo, mfp);
+            var filter2 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.Manufacturer, mf);
+
             return
                 await _context.CategoryList
-                .Find(p =>
-                p.SubCategory.Product.ManufacturerPartNo.ToLower().Contains(mfp.ToLower())
-                &
-                p.SubCategory.Product.Manufacturer.ToLower().Contains(mf.ToLower())
-                ).ToListAsync();
+                .Find(filter1 & filter2).ToListAsync();
         }
 
         public async Task UpdateProducts(IEnumerable<Category> products)

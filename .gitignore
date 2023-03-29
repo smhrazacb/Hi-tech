@@ -336,3 +336,4 @@ ASALocalRun/
 *.sqlite3-shm
 *.sqlite3-wal
 src/Services/Catalog/Catalog.API/uploads/
+src/Services/Catalog/Catalog.API/upload/

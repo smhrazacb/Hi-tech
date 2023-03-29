@@ -32,9 +32,12 @@ namespace Catalog.API.Controllers
         {
             if (file == null || file.Length == 0)
                 return BadRequest("File is not selected or empty");
-
             // Save the file to disk
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads",
+            var destPath = Path.Combine(Environment.SpecialFolder.CommonApplicationData+ "/upload");
+            if (!Directory.Exists(destPath))
+                Directory.CreateDirectory(destPath);
+
+            var filePath = Path.Combine(destPath,
                 Path.GetFileNameWithoutExtension(file.FileName)
                   + "_"
                   + DateTime.Now.ToString("yyyyddMMHHmmss")
@@ -69,6 +72,12 @@ namespace Catalog.API.Controllers
             // Upload New Products
             if (result.NewCategories.Count() != 0)
                 await repository.UploadProducts(result.NewCategories);
+
+            // Populate Summary 
+            result.DuplicatePartNumbersCount = result.DuplicatePartNumbers.Count();
+            result.InvalidEntriesCount = result.InvalidEntries.Count();
+            result.NewCategoriesCount = result.NewCategories.Count();
+            result.UpdateCategoriesCount = result.UpdateCategories.Count();
 
             return Ok(result);
         }

@@ -21,10 +21,10 @@ namespace Catalog.API.Utilities
         public static CSVDto Read(string path)
         {
             CSVDto cSVDto = new CSVDto();
-            var NewCategories = new List<Category>();
-            var InvalidEntries = new List<string>();
-            var DuplicatePartNumbers = new List<string>();
-            var UpdateCategories = new List<Category>();
+            cSVDto.NewCategories = new List<Category>();
+            cSVDto.InvalidEntries = new List<string>();
+            cSVDto.DuplicatePartNumbers = new List<string>();
+            cSVDto.UpdateCategories = new List<Category>();
             var stopWatch = Stopwatch.StartNew();
             int count = 0;
             using (var reader = CsvDataReader.Create(path))
@@ -35,7 +35,7 @@ namespace Catalog.API.Utilities
                 {
                     try
                     {
-                        if (NewCategories.Count == 28)
+                        if (cSVDto.NewCategories.Count == 28)
                         {
                             Console.WriteLine();
                         }
@@ -84,31 +84,27 @@ namespace Catalog.API.Utilities
                                     .Add(pairs[i], pairs[++i]);
                             }
                         }
-                        if (NewCategories
+                        if (cSVDto.NewCategories
                             .Where(a => a.SubCategory.Product.ManufacturerPartNo ==
                                 obj.SubCategory.Product.ManufacturerPartNo &&
                                 a.SubCategory.Product.Manufacturer ==
                                 obj.SubCategory.Product.Manufacturer).Count() > 0)
                         {
                             Debug.WriteLine("Duplicate Entry : "+ (reader.RowNumber+1).ToString());
-                            DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
+                            cSVDto.DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
                         }
                         else
-                            NewCategories.Add(obj);
+                            cSVDto.NewCategories.Add(obj);
                     }
                     catch (Exception ex)
                     {
                         Debug.WriteLine((reader.RowNumber+1).ToString() + " : " + ex.Message);
-                        InvalidEntries.Add(reader.GetRawRecordSpan().ToString());
+                        cSVDto.InvalidEntries.Add(reader.GetRawRecordSpan().ToString());
                     }
                 }
                 //Console.WriteLine(count);
                 Console.WriteLine($"seconds : {stopWatch.Elapsed.TotalSeconds}");
-                Console.WriteLine($"Total Products added : {NewCategories.Count}");
-                cSVDto.DuplicatePartNumbers = DuplicatePartNumbers;
-                cSVDto.InvalidEntries = InvalidEntries;
-                cSVDto.UpdateCategories = UpdateCategories;
-                cSVDto.NewCategories =  NewCategories;
+                Console.WriteLine($"Total Products added : {cSVDto.NewCategories.Count}");
                 return cSVDto;
             }
         }

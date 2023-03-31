@@ -1,19 +1,16 @@
 ﻿using Catalog.API.Entities;
+using Catalog.API.Filter;
+using MongoDB.Driver;
 
 namespace Catalog.API.Repositories.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductRepositoryR
     {
         Task<IEnumerable<CategoryWithCount>> GetProducts();
         Task<Category> GetProductById(string id);
-        Task<IEnumerable<Category>> GetProductsByCategory(string category);
+        Task<(int totalpages, IEnumerable<Category>)> GetProductsByCategory(PaginationFilter pagefilter, string category);
         Task<IEnumerable<Category>> GetProductsBySubCategory(string subCategory);
         Task<IEnumerable<Category>> GetProductsByName(string name);
         Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf);
-        Task CreateProduct(Category product);
-        Task UploadProducts(IEnumerable<Category> products);
-        Task<bool> UpdateProduct(Category product);
-        Task UpdateProducts(IEnumerable<Category> products);
-        Task<bool> DeleteProduct(string id);
     }
 }

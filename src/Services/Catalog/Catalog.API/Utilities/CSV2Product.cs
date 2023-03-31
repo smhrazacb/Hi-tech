@@ -15,16 +15,19 @@ using System.Xml.Linq;
 namespace Catalog.API.Utilities
 {
 
-
-    public class CSV2Category
+    public interface ICSV2Category 
     {
-        public static CSVDto Read(string path)
+        public CSVDto Read(string path);
+    }
+    public class CSV2Category : ICSV2Category
+    {
+        public CSVDto Read(string path)
         {
             CSVDto cSVDto = new CSVDto();
-            cSVDto.NewCategories = new List<Category>();
+            cSVDto.NewProducts = new List<Category>();
             cSVDto.InvalidEntries = new List<string>();
             cSVDto.DuplicatePartNumbers = new List<string>();
-            cSVDto.UpdateCategories = new List<Category>();
+            cSVDto.UpdateProducts = new List<Category>();
             var stopWatch = Stopwatch.StartNew();
             int count = 0;
             using (var reader = CsvDataReader.Create(path))
@@ -35,7 +38,7 @@ namespace Catalog.API.Utilities
                 {
                     try
                     {
-                        if (cSVDto.NewCategories.Count == 28)
+                        if (cSVDto.NewProducts.Count == 28)
                         {
                             Console.WriteLine();
                         }
@@ -63,7 +66,7 @@ namespace Catalog.API.Utilities
                         obj.SubCategory.Product.Packaging = reader.GetString(8);
                         obj.SubCategory.Product.Series = reader.GetString(9);
                         obj.SubCategory.Product.DataSheetUrl = reader.GetString(10);
-                        obj.SubCategory.Product.Image = reader.GetString(11);
+                        obj.SubCategory.Product.ImageUrl = reader.GetString(11);
 
                         string input = reader.GetString(12);
                         if (!input.IsNullOrEmpty())
@@ -84,7 +87,7 @@ namespace Catalog.API.Utilities
                                     .Add(pairs[i], pairs[++i]);
                             }
                         }
-                        if (cSVDto.NewCategories
+                        if (cSVDto.NewProducts
                             .Where(a => a.SubCategory.Product.ManufacturerPartNo ==
                                 obj.SubCategory.Product.ManufacturerPartNo &&
                                 a.SubCategory.Product.Manufacturer ==
@@ -94,7 +97,7 @@ namespace Catalog.API.Utilities
                             cSVDto.DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
                         }
                         else
-                            cSVDto.NewCategories.Add(obj);
+                            cSVDto.NewProducts.Add(obj);
                     }
                     catch (Exception ex)
                     {
@@ -104,7 +107,7 @@ namespace Catalog.API.Utilities
                 }
                 //Console.WriteLine(count);
                 Console.WriteLine($"seconds : {stopWatch.Elapsed.TotalSeconds}");
-                Console.WriteLine($"Total Products added : {cSVDto.NewCategories.Count}");
+                Console.WriteLine($"Total Products added : {cSVDto.NewProducts.Count}");
                 return cSVDto;
             }
         }

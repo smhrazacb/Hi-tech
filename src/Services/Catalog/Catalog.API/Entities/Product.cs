@@ -21,6 +21,6 @@ namespace Catalog.API.Entities
         public decimal Price { get; set; }
         public Dictionary<string, string> AdditionalFields { get; set; }
         public string? DataSheetUrl { get; set; }
-        public string? Image { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

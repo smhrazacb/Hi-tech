@@ -5,14 +5,17 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
 using System.Xml.Linq;
 using DnsClient.Protocol;
+using System;
+using Catalog.API.Filter;
+using System.Drawing.Printing;
 
 namespace Catalog.API.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepositoryR : IProductRepositoryR
     {
         private readonly IProductContext _context;
 
-        public ProductRepository(IProductContext context)
+        public ProductRepositoryR(IProductContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
@@ -39,12 +42,45 @@ namespace Catalog.API.Repositories
                 .Find(p => p.Id == _id)
                 .FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<Category>> GetProductsByCategory(string _categoryName)
+        public async Task<(int totalpages, IEnumerable<Category>)> GetProductsByCategory(PaginationFilter pagefilter, string _categoryName)
         {
-            return await _context
-                .CategoryList
-                .Find(p => p.CategoryName == _categoryName)
+            var countFacet = AggregateFacet.Create("count",
+           PipelineDefinition<Category, AggregateCountResult>.Create(new[]
+           {
+                PipelineStageDefinitionBuilder.Count<Category>()
+           }));
+
+            var dataFacet = AggregateFacet.Create("data",
+                PipelineDefinition<Category, Category>.Create(new[]
+                {
+                PipelineStageDefinitionBuilder.Sort(Builders<Category>.Sort.Ascending(x => x.CategoryName)),
+                PipelineStageDefinitionBuilder.Skip<Category>((pagefilter.PageNumber- 1) * pagefilter.PageSize),
+                PipelineStageDefinitionBuilder.Limit<Category>(pagefilter.PageSize),
+                }));
+
+            var filter = Builders<Category>.Filter.Empty;
+            var aggregation = await _context.CategoryList.Aggregate()
+                .Match(filter)
+                .Facet(countFacet, dataFacet)
                 .ToListAsync();
+
+            var count = aggregation.First()
+                .Facets.First(x => x.Name == "count")
+                .Output<AggregateCountResult>()
+                ?.FirstOrDefault()
+            ?.Count ?? 0;
+
+            var totalPages = (int)count / pagefilter.PageSize;
+
+            var data = aggregation.First()
+                .Facets.First(x => x.Name == "data")
+                .Output<Category>();
+
+            return (totalPages, data);
+            //return await _context
+            //    .CategoryList
+            //    .Find(p => p.CategoryName == _categoryName)
+            //    .ToListAsync();
         }
         public async Task<IEnumerable<Category>> GetProductsBySubCategory(string _subCategoryName)
         {
@@ -53,30 +89,6 @@ namespace Catalog.API.Repositories
                 .Find(a => a.SubCategory.SubCategoryName == _subCategoryName)
                 .ToListAsync();
         }
-        public async Task CreateProduct(Category _product)
-        {
-            await _context.CategoryList.InsertOneAsync(_product);
-        }
-        public async Task UploadProducts(IEnumerable<Category> _products)
-        {
-            await _context.CategoryList.InsertManyAsync(_products);
-        }
-        public async Task<bool> DeleteProduct(string _id)
-        {
-            var filter = Builders<Category>.Filter.Eq(p => p.Id, _id);
-            DeleteResult deleteResult = await _context.CategoryList.DeleteOneAsync(filter);
-            return deleteResult.IsAcknowledged
-                && deleteResult.DeletedCount > 0;
-        }
-        public async Task<bool> UpdateProduct(Category _product)
-        {
-            var updateResult = await _context
-                                        .CategoryList
-                                        .ReplaceOneAsync(filter: g => g.Id == _product.Id, replacement: _product);
-            return updateResult.IsAcknowledged
-                               && updateResult.ModifiedCount > 0;
-        }
-
         public async Task<IEnumerable<Category>> GetProductsByName(string _name)
         {
             return await _context
@@ -88,24 +100,12 @@ namespace Catalog.API.Repositories
         {
             var filter1 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.ManufacturerPartNo, mfp);
             var filter2 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.Manufacturer, mf);
-
-            return
-                await _context.CategoryList
-                .Find(filter1 & filter2).ToListAsync();
-        }
-
-        public async Task UpdateProducts(IEnumerable<Category> products)
-        {
-            var bulkOps = new List<WriteModel<Category>>();
-            foreach (var record in products)
+            var res = await _context.CategoryList.Find(filter1 & filter2).ToListAsync();
+            if (res == null)
             {
-                var upsertOne = new ReplaceOneModel<Category>(
-                    Builders<Category>.Filter.Where(x => x.Id == record.Id),
-                    record)
-                { IsUpsert = true };
-                bulkOps.Add(upsertOne);
+                Console.WriteLine();
             }
-            await _context.CategoryList.BulkWriteAsync(bulkOps);
+            return res;
         }
     }
 }

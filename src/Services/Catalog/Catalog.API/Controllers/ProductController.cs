@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using OpenIddict.Validation.AspNetCore;
 using System;
 using Catalog.API.Utilities;
+using Catalog.API.Services;
+using Catalog.API.Filter;
 
 namespace Catalog.API.Controllers
 {
@@ -15,14 +17,15 @@ namespace Catalog.API.Controllers
     //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository repository;
+        private readonly IProductRepositoryR repository;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductRepository repository, IMapper mapper)
+        public ProductsController(IProductRepositoryR repository, IMapper mapper)
         {
-            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.repository = repository;
+            _mapper = mapper;
         }
+
         /// <summary>
         /// Returns All Category, Subcategory and SucCategory Counts
         /// </summary>
@@ -61,9 +64,10 @@ namespace Catalog.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Category>>> Category(string category)
+        public async Task<ActionResult<IEnumerable<Category>>> Category([FromQuery] PaginationFilter filter, string category)
         {
-            var products = await repository.GetProductsByCategory(category);
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var (totalPages, products)= await repository.GetProductsByCategory(validFilter, category);
             if (products == null)
             {
                 return NotFound();

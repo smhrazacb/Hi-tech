@@ -3,9 +3,11 @@ using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
+using Catalog.API.Services;
 using Catalog.API.Utilities;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
+using Sylvan.Data;
 using System;
 using System.Data;
 using System.Diagnostics;
@@ -16,7 +18,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IProductContext, ProductContext>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductRepositoryR, ProductRepositoryR>();
+builder.Services.AddScoped<IProductRepositoryW, ProductRepositoryW>();
+builder.Services.AddScoped<ICSV2Category, CSV2Category>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 
@@ -48,6 +52,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
 });
 builder.Services.AddAuthorization();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

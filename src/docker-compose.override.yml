@@ -18,7 +18,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./Services/Catalog/Catalog.API:/root
+      - ./Services/Catalog/Catalog.API/dockerEnv/:/root
   #ident.server:
   #  container_name: identserver
   #  environment:

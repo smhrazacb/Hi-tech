@@ -337,3 +337,4 @@ ASALocalRun/
 *.sqlite3-wal
 src/Services/Catalog/Catalog.API/uploads/
 src/Services/Catalog/Catalog.API/upload/
+src/Services/Catalog/Catalog.API/dockerEnv/

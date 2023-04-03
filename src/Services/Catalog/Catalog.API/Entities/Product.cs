@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Catalog.API.Entities
 {
@@ -14,11 +15,12 @@ namespace Catalog.API.Entities
 
         [BsonElement("Name")]
         public string Name { get; set; }
+        public string Description { get; set; }
         public string Packaging { get; set; }
         public UInt32 Stock { get; set; }
         public decimal Price { get; set; }
-        public Dictionary<string, string>? AdditionalFields { get; set; }
+        public Dictionary<string, string> AdditionalFields { get; set; }
         public string? DataSheetUrl { get; set; }
-        public string? Image { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

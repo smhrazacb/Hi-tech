@@ -1,27 +1,39 @@
 using Catalog.API.Data;
 using Catalog.API.Data.Interfaces;
-using Catalog.API.Repositories.Interfaces;
-using Microsoft.OpenApi.Models;
+using Catalog.API.Entities;
 using Catalog.API.Repositories;
-using System.Reflection;
+using Catalog.API.Repositories.Interfaces;
+using Catalog.API.Services;
+using Catalog.API.Utilities;
+using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
-using Microsoft.Extensions.Configuration;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using Microsoft.AspNetCore.Cors;
+using Sylvan.Data;
+using System;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing.Imaging;
+using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-
 builder.Services.AddScoped<IProductContext, ProductContext>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductRepositoryR, ProductRepositoryR>();
+builder.Services.AddScoped<IProductRepositoryW, ProductRepositoryW>();
+builder.Services.AddScoped<ICSV2Category, CSV2Category>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IUriService>(o =>
+{
+    var accessor = o.GetRequiredService<IHttpContextAccessor>();
+    var request = accessor.HttpContext.Request;
+    var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+    return new UriService(uri);
+});
 builder.Services.AddControllers();
-// Register the OpenIddict validation components.
+
+
+//Register the OpenIddict validation components.
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
     {
@@ -48,13 +60,9 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
 });
 builder.Services.AddAuthorization();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//services cors
-builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
-{
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -77,29 +85,9 @@ builder.Services.AddSwaggerGen(options =>
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            AuthorizationCode = new OpenApiOAuthFlow
-            {
-                AuthorizationUrl = new Uri($"{builder.Configuration.GetValue<string>("IdentityUrl")}/connect/authorize"),
-                TokenUrl = new Uri($"{builder.Configuration.GetValue<string>("IdentityUrl")}/connect/token"),
-                Scopes = new Dictionary<string, string>()
-                {
-                    { "openid", "openid" } ,{"email", "email" } ,{"profile", "profile" }
-                    ,{"offline_access" , "offline_access"}, {"catalog_api" , "catalog_api"}
-                }, 
-                // Set PKCE parameters
-            }
-        }
-    });
 });
 
 var app = builder.Build();
-app.UseCors("corsapp");
 app.UseHttpsRedirection();
 
 // Configure the HTTP request pipeline.

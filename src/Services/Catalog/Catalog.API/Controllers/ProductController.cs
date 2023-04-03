@@ -5,22 +5,33 @@ using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using OpenIddict.Validation.AspNetCore;
+using System;
+using Catalog.API.Utilities;
+using Catalog.API.Services;
+using Catalog.API.Filter;
+using Catalog.API.Helpers;
+using Microsoft.AspNetCore.Routing;
+using Catalog.API.Responses;
+using System.Threading.Tasks;
 
 namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository repository;
+        private readonly IProductRepositoryR repository;
         private readonly IMapper _mapper;
+        private readonly IUriService uriService;
 
-        public ProductsController(IProductRepository repository, IMapper mapper)
+        public ProductsController(IProductRepositoryR repository, IMapper mapper, IUriService uriService)
         {
-            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.repository = repository;
+            _mapper = mapper;
+            this.uriService = uriService;
         }
+
         /// <summary>
         /// Returns All Category, Subcategory and SucCategory Counts
         /// </summary>
@@ -30,6 +41,7 @@ namespace Catalog.API.Controllers
         public async Task<ActionResult<IEnumerable<CategoryWithCount>>> Products()
         {
             var products = await repository.GetProducts();
+          
             return Ok(products);
         }
         /// <summary>
@@ -42,7 +54,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Category>>> Product(string id)
         {
-            var products = await repository.GetProductsById(id);
+            var products = await repository.GetProductById(id);
             if (products == null)
             {
                 return NotFound();
@@ -50,95 +62,72 @@ namespace Catalog.API.Controllers
             return Ok(products);
         }
         /// <summary>
-        /// Returns list of Product detail if Category matched
+        /// Returns list of Product detail if Category matched Maxpage size is 50
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Category>>> Category(string category)
+        [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> Category([FromQuery] PaginationFilter filter, string category)
         {
-            var products = await repository.GetProductsByCategory(category);
+            var route = Request.Path.Value;
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var (totalRecords, products)= await repository.GetProductsByCategory(validFilter, category);
             if (products == null)
             {
                 return NotFound();
             }
-            return Ok(products);
+            var pagedReponse = PaginationHelper.CreatePagedReponse(products, validFilter, totalRecords, uriService, route);
+
+            return Ok(pagedReponse);
         }
         /// <summary>
-        /// Returns list of Product detail if SubCategory matched
+        /// Returns list of Product detail if SubCategory matched Maxpage size is 50
         /// </summary>
         /// <param name="subCategory"></param>
         /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Category>>> SubCategory(string subCategory)
+        [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> SubCategory([FromQuery] PaginationFilter filter, string subCategory)
         {
-            var products = await repository.GetProductsBySubCategory(subCategory);
+            var route = Request.Path.Value;
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var (totalRecords, products) = await repository.GetProductsBySubCategory(validFilter, subCategory);
             if (products == null)
             {
                 return NotFound();
             }
-            return Ok(products);
+            var pagedReponse = PaginationHelper.CreatePagedReponse(products, validFilter, totalRecords, uriService, route);
+
+            return Ok(pagedReponse);
         }
         /// <summary>
-        /// Returns list of Product detail if Name matched
+        /// Returns list of Product detail if Name matched Maxpage size is 50
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         [Route("[action]/")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Category>>> Name(string name)
+        [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> Name([FromQuery] PaginationFilter filter, string name)
         {
-            var products = await repository.GetProductsByName(name);
+            var route = Request.Path.Value;
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var (totalRecords, products) = await repository.GetProductsByName(validFilter, name);
             if (products == null)
             {
                 return NotFound();
             }
-            return Ok(products);
-        }
-        /// <summary>
-        /// Register a new Product 
-        /// </summary>
-        /// <param name="productdto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.Created)]
-        public async Task<ActionResult<Category>> Product([FromBody] CategoryDto productdto)
-        {
-            var product = _mapper.Map<Category>(productdto);
+            var pagedReponse = PaginationHelper.CreatePagedReponse(products, validFilter, totalRecords, uriService, route);
 
-            await repository.CreateProduct(product);
+            return Ok(pagedReponse);
+        }
 
-            return CreatedAtRoute("Product", new { id = product.Id }, product);
-        }
-        /// <summary>
-        /// Update a Product
-        /// </summary>
-        /// <param name="product"></param>
-        /// <returns></returns>
-        [HttpPut]
-        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateProduct([FromBody] Category product)
-        {
-            return Ok(await repository.UpdateProduct(product));
-        }
-        /// <summary>
-        /// Delete a Product if Id matched
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
-        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteProductById(string id)
-        {
-            return Ok(await repository.DeleteProduct(id));
-        }
+       
     }
 }

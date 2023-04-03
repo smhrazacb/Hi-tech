@@ -12,18 +12,16 @@ namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class AdminController : ControllerBase
+    public class AdminProductController : ControllerBase
     {
         private readonly IProductRepositoryR repositoryR;
         private readonly IProductRepositoryW repositoryW;
-        private readonly IMapper _mapper;
         private readonly ICSV2Category _csv2category;
 
-        public AdminController(IProductRepositoryR repositoryR, IProductRepositoryW repositoryW, IMapper mapper, ICSV2Category csv2category)
+        public AdminProductController(IProductRepositoryR repositoryR, IProductRepositoryW repositoryW, ICSV2Category csv2category)
         {
             this.repositoryR = repositoryR;
             this.repositoryW = repositoryW;
-            _mapper = mapper;
             _csv2category = csv2category;
         }
 
@@ -33,7 +31,6 @@ namespace Catalog.API.Controllers
         /// <param name="csvfilepath"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("[action]")]
         [ProducesResponseType(typeof(CSVDto), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<CSVDto>> UplaodCSVProducts(IFormFile file)
         {
@@ -56,19 +53,6 @@ namespace Catalog.API.Controllers
             }
             var result = _csv2category.Read(filePath);
 
-            // Picture downloading and processing 
-            //var destPathi = Path.Combine(Path.GetDirectoryName(filePath),
-            //    Path.GetFileNameWithoutExtension(filePath));
-            //if (!Directory.Exists(destPathi))
-            //    Directory.CreateDirectory(destPathi);
-            //foreach (var item in result.NewCategories)
-            //{
-            //    var destPathic = destPathi + @"\" + item.SubCategory.Product.Manufacturer + "_" +
-            //         item.SubCategory.Product.ManufacturerPartNo + ".png";
-            //    var pp = PictureUtil.DownloadImageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/DAN-13-Danzig-100_Mark_%281922%29.jpg/800px-DAN-13-Danzig-100_Mark_%281922%29.jpg");
-            //    Console.WriteLine();
-            //}
-            // Check already existed products 
             foreach (var item in result.NewProducts)
             {
                 var res = repositoryR

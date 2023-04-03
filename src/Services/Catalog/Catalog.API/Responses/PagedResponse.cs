@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Catalog.API.Wrappers
+namespace Catalog.API.Responses
+
 {
     public class PagedResponse<T> : Response<T>
     {
@@ -13,7 +14,7 @@ namespace Catalog.API.Wrappers
         public Uri LastPage { get; set; }
 
         public int TotalPages { get; set; }
-        public int TotalRecords { get; set; }
+        public long TotalRecords { get; set; }
         public Uri NextPage { get; set; }
         public Uri PreviousPage { get; set; }
         

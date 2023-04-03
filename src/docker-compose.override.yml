@@ -19,55 +19,55 @@ services:
       - "8000:80"
     volumes:
       - ./Services/Catalog/Catalog.API/dockerEnv/:/root
-  #ident.server:
-  #  container_name: identserver
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - ASPNETCORE_URLS=http://+:5999
-  #    - "DatabaseSettings:ConnectionString=Server=identdb;Port=5432;Database=userDb;User Id=admin;Password=admin1234;"
-  #  ports:
-  #    - "5999:5999"
+  ident.server:
+    container_name: identserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5999
+      - "DatabaseSettings:ConnectionString=Server=identdb;Port=5432;Database=userDb;User Id=admin;Password=admin1234;"
+    ports:
+      - "5999:5999"
 
-  #identdb:
-  #  container_name: identdb
-  #  restart: always
-  #  environment:
-  #    - POSTGRES_USER=admin
-  #    - POSTGRES_PASSWORD=admin1234
-  #    - POSTGRES_DB=identdb
-  #  ports:
-  #    - "5432:5432"
+  identdb:
+    container_name: identdb
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=identdb
+    ports:
+      - "5432:5432"
 
-  #basketdb:
-  #  container_name: basketdb
-  #  restart: always    
-  #  ports:
-  #      - "6379:6379"
+  basketdb:
+    container_name: basketdb
+    restart: always    
+    ports:
+        - "6379:6379"
 
-  #basket.api:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - "CacheSettings:ConnectionString=basketdb:6379"
-  #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=basketdb:6379"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
 
-  #  ports:
-  #    - "8002:80"
+    ports:
+      - "8002:80"
 
-  #ocelotapigw:
-  #  container_name: ocelotapigw
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #  depends_on:
-  #      - catalog.api
-  #      - basket.api
-  #  ports:
-  #    - "8010:80"
+  ocelotapigw:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+        - catalog.api
+        - basket.api
+    ports:
+      - "8010:80"
 
-  #rabbitmq:
-  #  container_name: rabbitmq
-  #  restart: always
-  #  ports:
-  #      - "5672:5672"
-  #      - "15672:15672"
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
 
 

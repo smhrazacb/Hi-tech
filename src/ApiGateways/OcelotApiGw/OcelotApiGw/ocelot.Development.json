@@ -1,6 +1,46 @@
 {
   "Routes": [
     //Catalog API
+
+    {
+      "DownstreamPathTemplate": "/api/v1/AdminProduct/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "catalog.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/AdminProduct/",
+      "UpstreamhttpMethod": [ "POST" ],
+      "SwaggerKey": "Products"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/AdminProduct/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "catalog.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/AdminProduct/{id}",
+      "UpstreamhttpMethod": [ "DELETE" ],
+      "SwaggerKey": "Products"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/AdminProduct/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "catalog.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/AdminProduct/",
+      "UpstreamhttpMethod": [ "PUT" ],
+      "SwaggerKey": "Products"
+    },
     {
       "DownstreamPathTemplate": "/api/v1/Products",
       "DownstreamScheme": "http",
@@ -11,7 +51,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Products",
-      "UpstreamhttpMethod": [ "GET", "POST", "PUT" ],
+      "UpstreamhttpMethod": [ "GET" ],
       "SwaggerKey": "Products"
     },
     {
@@ -90,7 +130,7 @@
         }
       ],
       "UpstreamPathTemplate": "/Basket/{guid}",
-      "UpstreamhttpMethod": [ "GET","DELETE" ],
+      "UpstreamhttpMethod": [ "GET", "DELETE" ],
       "SwaggerKey": "Basket"
     },
     {

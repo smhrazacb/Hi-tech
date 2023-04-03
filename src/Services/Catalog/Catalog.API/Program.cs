@@ -22,30 +22,38 @@ builder.Services.AddScoped<IProductRepositoryR, ProductRepositoryR>();
 builder.Services.AddScoped<IProductRepositoryW, ProductRepositoryW>();
 builder.Services.AddScoped<ICSV2Category, CSV2Category>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IUriService>(o =>
+{
+    var accessor = o.GetRequiredService<IHttpContextAccessor>();
+    var request = accessor.HttpContext.Request;
+    var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+    return new UriService(uri);
+});
 builder.Services.AddControllers();
 
 
-// Register the OpenIddict validation components.
-//builder.Services.AddOpenIddict()
-//    .AddValidation(options =>
-//    {
-//        // Note: the validation handler uses OpenID Connect discovery
-//        // to retrieve the address of the introspection endpoint.
-//        options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
-//        //options.AddAudiences("catalog_server");
+//Register the OpenIddict validation components.
+builder.Services.AddOpenIddict()
+    .AddValidation(options =>
+    {
+        // Note: the validation handler uses OpenID Connect discovery
+        // to retrieve the address of the introspection endpoint.
+        options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
+        //options.AddAudiences("catalog_server");
 
-//        // Configure the validation handler to use introspection and register the client
-//        // credentials used when communicating with the remote introspection endpoint.
-//        options.UseIntrospection()
-//        .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD2")
-//               .SetClientId("catalog_server");
+        // Configure the validation handler to use introspection and register the client
+        // credentials used when communicating with the remote introspection endpoint.
+        options.UseIntrospection()
+        .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD2")
+               .SetClientId("catalog_server");
 
-//        // Register the System.Net.Http integration.
-//        options.UseSystemNetHttp();
+        // Register the System.Net.Http integration.
+        options.UseSystemNetHttp();
 
-//        // Register the ASP.NET Core host.
-//        options.UseAspNetCore();
-//    });
+        // Register the ASP.NET Core host.
+        options.UseAspNetCore();
+    });
 
 builder.Services.AddAuthentication(options =>
 {
@@ -99,8 +107,8 @@ if (app.Environment.IsDevelopment())
         ;
     });
 }
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

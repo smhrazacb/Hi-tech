@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Catalog.API.Wrappers
+namespace Catalog.API.Responses
 {
     public class Response<T>
     {

@@ -3,7 +3,7 @@ using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using EventBus.Messages.Events;
 
-namespace Customer.API.Mapping
+namespace Basket.API.Mapping
 {
     public class MappingProfile : Profile
     {

@@ -1,15 +1,8 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
-using System.Xml.Linq;
-using DnsClient.Protocol;
-using System;
 using Catalog.API.Filter;
-using System.Drawing.Printing;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Catalog.API.Extensions;
 
 namespace Catalog.API.Repositories

@@ -4,12 +4,8 @@ using Basket.API.Entities.Dtos;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.Events;
 using MassTransit;
-using MassTransit.Transports;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Diagnostics;
 using System.Net;
-using static StackExchange.Redis.Role;
 
 namespace Basket.API.Controllers
 {

@@ -1,13 +1,39 @@
 version: '3.4'
 
 services:
-  #catalogdb:
-  #  container_name: catalogdb
-  #  restart: always
-  #  ports:
-  #      - "27017:27017"
-  #  volumes:
-  #      - mongo_data:/data/db
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    ports:
+        - "27017:27017"
+    volumes:
+        - mongo_data:/data/db
+
+  identdb:
+    container_name: identdb
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=identdb
+    ports:
+      - "5432:5432"
+
+  orderdb:
+    container_name: orderdb
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=identdb
+    ports:
+      - "5433:5432"
+
+  basketdb:
+    container_name: basketdb
+    restart: always    
+    ports:
+        - "6379:6379"
 
   #catalog.api:
   #  environment:
@@ -28,32 +54,6 @@ services:
   #  ports:
   #    - "5999:5999"
 
-  #identdb:
-  #  container_name: identdb
-  #  restart: always
-  #  environment:
-  #    - POSTGRES_USER=admin
-  #    - POSTGRES_PASSWORD=admin1234
-  #    - POSTGRES_DB=identdb
-  #  ports:
-  #    - "5432:5432"
-
-  orderdb:
-    container_name: orderdb
-    restart: always
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=identdb
-    ports:
-      - "5433:5432"
-
-  #basketdb:
-  #  container_name: basketdb
-  #  restart: always    
-  #  ports:
-  #      - "6379:6379"
-
   #basket.api:
   #  environment:
   #    - ASPNETCORE_ENVIRONMENT=Development
@@ -62,6 +62,7 @@ services:
 
   #  ports:
   #    - "8002:80"
+
 
   #ocelotapigw:
   #  container_name: ocelotapigw
@@ -73,11 +74,11 @@ services:
   #  ports:
   #    - "8010:80"
 
-  #rabbitmq:
-  #  container_name: rabbitmq
-  #  restart: always
-  #  ports:
-  #      - "5672:5672"
-  #      - "15672:15672"
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
 
 

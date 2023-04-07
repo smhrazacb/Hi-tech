@@ -1,10 +1,7 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
-using System.Xml.Linq;
-using DnsClient.Protocol;
 
 namespace Catalog.API.Repositories
 {

@@ -1,16 +1,10 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
-using Microsoft.AspNetCore.Components.RenderTree;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Sylvan.Data;
 using Sylvan.Data.Csv;
-using System;
 using System.Data;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Catalog.API.Utilities
 {

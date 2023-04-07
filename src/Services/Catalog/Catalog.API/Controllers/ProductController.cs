@@ -3,16 +3,10 @@ using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
 using System.Net;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using OpenIddict.Validation.AspNetCore;
-using System;
-using Catalog.API.Utilities;
 using Catalog.API.Services;
 using Catalog.API.Filter;
 using Catalog.API.Helpers;
-using Microsoft.AspNetCore.Routing;
 using Catalog.API.Responses;
-using System.Threading.Tasks;
 
 namespace Catalog.API.Controllers
 {

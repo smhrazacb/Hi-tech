@@ -1,19 +1,12 @@
 using Catalog.API.Data;
 using Catalog.API.Data.Interfaces;
-using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
 using Catalog.API.Utilities;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
-using Sylvan.Data;
-using System;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Reflection;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

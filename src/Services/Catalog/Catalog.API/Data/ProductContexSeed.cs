@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using Catalog.API.Entities;
-using System.Security.Cryptography.Xml;
 
 namespace Catalog.API.Data
 {

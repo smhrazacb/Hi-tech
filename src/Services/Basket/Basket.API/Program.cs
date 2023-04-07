@@ -1,8 +1,6 @@
+using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using MassTransit;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -26,7 +24,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "Consumer API",
+        Title = "Basket API",
         Description = "To add items into shopping carts",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact

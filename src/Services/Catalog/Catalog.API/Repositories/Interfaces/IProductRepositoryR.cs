@@ -1,6 +1,5 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Filter;
-using MongoDB.Driver;
 
 namespace Catalog.API.Repositories.Interfaces
 {

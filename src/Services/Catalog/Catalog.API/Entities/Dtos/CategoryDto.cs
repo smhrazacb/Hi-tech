@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-
-namespace Catalog.API.Entities
+﻿namespace Catalog.API.Entities
 {
     public class CategoryDto
     {

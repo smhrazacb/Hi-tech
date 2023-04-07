@@ -1,5 +1,4 @@
 ﻿using Basket.API.Entities;
-using System;
 
 namespace Basket.API.Repositories.Interfaces
 {

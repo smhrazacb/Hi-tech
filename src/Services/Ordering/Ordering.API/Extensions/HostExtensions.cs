@@ -1,13 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Polly;
-using System;
 
-namespace EsparkIndent.Server.Entities
+namespace Ordering.API.Extensions
 {
     public static class HostExtensions
     {
@@ -35,17 +30,18 @@ namespace EsparkIndent.Server.Entities
                     //if the sql server container is not created on run docker compose this
                     //migration can't fail for network related exception. The retry options for DbContext only 
                     //apply to transient exceptions                    
-                    retry.Execute(() => InvokeSeeder(seeder, context, services));
+                    retry.Execute(() => InvokeSeeder(seeder, context, services));                    
 
                     logger.LogInformation("Migrated database associated with context {DbContextName}", typeof(TContext).Name);
                 }
                 catch (NpgsqlException ex)
                 {
-                    logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);
+                    logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);                   
                 }
             }
+
             return host;
-        }
+        }       
 
         private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context, IServiceProvider services)
             where TContext : DbContext

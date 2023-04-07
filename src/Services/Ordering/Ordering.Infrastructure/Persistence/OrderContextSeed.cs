@@ -1,15 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Ordering.Domain.Entities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Ordering.Infrastructure.Persistence
 {
     public class OrderContextSeed
     {
         public static async Task SeedAsync(OrderContext orderContext, ILogger<OrderContextSeed> logger)
-        {            
+        {
             if (!orderContext.Orders.Any())
             {
                 orderContext.Orders.AddRange(GetPreconfiguredOrders());
@@ -22,7 +19,11 @@ namespace Ordering.Infrastructure.Persistence
         {
             return new List<Order>
             {
-                new Order() {UserName = "swn", FirstName = "Mehmet", LastName = "Ozkaya", EmailAddress = "ezozkme@gmail.com", AddressLine = "Bahcelievler", Country = "Turkey", TotalPrice = 350 }
+                new Order() {UserName = "swn", FirstName = "Mehmet", 
+                    LastName = "Ozkaya", EmailAddress = "ezozkme@gmail.com",
+                    State= "Sind",ZipCode="54565", AddressLine = "Bahcelievler",
+                    Country = "Turkey", TotalPrice = 350, 
+                    CardName= "ABCCard Name", CardNumber= "545648-65546-45", CVV="555", Expiration="9-9-23", PaymentMethod= 1}
             };
         }
     }

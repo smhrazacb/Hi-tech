@@ -2,7 +2,7 @@
 {
     public class ShoppingCart
     {
-        public Guid ShoppingCartId { get;  set; }
+        public Guid ShoppingCartId { get; set; }
         public IEnumerable<ShoppingItem>? ShoppingItems { get; set; }
     }
 }

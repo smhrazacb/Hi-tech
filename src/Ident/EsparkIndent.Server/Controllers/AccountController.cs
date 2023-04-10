@@ -1,13 +1,11 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using EsparkIndent.Server.Entities;
+using EsparkIndent.Server.Services;
+using EsparkIndent.Server.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using EsparkIndent.Server.Entities;
-using EsparkIndent.Server.Services;
-using EsparkIndent.Server.ViewModels.Account;
+using System.Security.Claims;
 
 namespace EsparkIndent.Server.Controllers;
 

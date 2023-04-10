@@ -17,7 +17,9 @@ namespace Ordering.Domain.Entities
         public string ZipCode { get; set; }
 
         // Payment
-        public string CardName { get;
+        public string CardName
+        {
+            get;
             set;
         }
         public string CardNumber { get; set; }

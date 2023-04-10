@@ -19,10 +19,10 @@ namespace Ordering.Infrastructure.Persistence
         {
             return new List<Order>
             {
-                new Order() {UserName = "swn", FirstName = "Mehmet", 
+                new Order() {UserName = "swn", FirstName = "Mehmet",
                     LastName = "Ozkaya", EmailAddress = "ezozkme@gmail.com",
                     State= "Sind",ZipCode="54565", AddressLine = "Bahcelievler",
-                    Country = "Turkey", TotalPrice = 350, 
+                    Country = "Turkey", TotalPrice = 350,
                     CardName= "ABCCard Name", CardNumber= "545648-65546-45", CVV="555", Expiration="9-9-23", PaymentMethod= 1}
             };
         }

@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace Catalog.API.Utilities
 {
 
-    public interface ICSV2Category 
+    public interface ICSV2Category
     {
         public CSVDto Read(string path);
     }
@@ -87,7 +87,7 @@ namespace Catalog.API.Utilities
                                 a.SubCategory.Product.Manufacturer ==
                                 obj.SubCategory.Product.Manufacturer).Count() > 0)
                         {
-                            Debug.WriteLine("Duplicate Entry : "+ (reader.RowNumber+1).ToString());
+                            Debug.WriteLine("Duplicate Entry : " + (reader.RowNumber + 1).ToString());
                             cSVDto.DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
                         }
                         else
@@ -95,7 +95,7 @@ namespace Catalog.API.Utilities
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine((reader.RowNumber+1).ToString() + " : " + ex.Message);
+                        Debug.WriteLine((reader.RowNumber + 1).ToString() + " : " + ex.Message);
                         cSVDto.InvalidEntries.Add(reader.GetRawRecordSpan().ToString());
                     }
                 }

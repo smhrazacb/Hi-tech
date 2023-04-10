@@ -29,7 +29,7 @@ namespace Catalog.API.Utilities
 
             return image;
         }
-        public static void RemoveMeta(string imagePath, string destPath) 
+        public static void RemoveMeta(string imagePath, string destPath)
         {
             try
             {

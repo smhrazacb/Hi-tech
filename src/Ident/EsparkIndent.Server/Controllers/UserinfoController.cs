@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using EsparkIndent.Server.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using EsparkIndent.Server.Entities;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
 
 namespace EsparkIndent.Server.Controllers;
 

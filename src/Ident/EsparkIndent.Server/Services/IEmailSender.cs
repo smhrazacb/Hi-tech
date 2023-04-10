@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace EsparkIndent.Server.Services;
+﻿namespace EsparkIndent.Server.Services;
 
 public interface IEmailSender
 {

@@ -6,6 +6,8 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Ident/EsparkIndent.Server/EsparkIndent.Server.csproj", "Ident/EsparkIndent.Server/"]
+COPY ["Ident/EsparkIndent.Server/signing-certificate.pfx", "Ident/EsparkIndent.Server/"]
+COPY ["Ident/EsparkIndent.Server/encryption-certificate.pfx", "Ident/EsparkIndent.Server/"]
 RUN dotnet restore "Ident/EsparkIndent.Server/EsparkIndent.Server.csproj"
 COPY . .
 WORKDIR "/src/Ident/EsparkIndent.Server"

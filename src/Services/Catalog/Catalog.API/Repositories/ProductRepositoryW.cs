@@ -1,7 +1,7 @@
-﻿using MongoDB.Driver;
-using Catalog.API.Data.Interfaces;
+﻿using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
 using Catalog.API.Repositories.Interfaces;
+using MongoDB.Driver;
 
 namespace Catalog.API.Repositories
 {

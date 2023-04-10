@@ -7,6 +7,7 @@ using Catalog.API.Utilities;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -34,7 +35,6 @@ builder.Services.AddOpenIddict()
         // to retrieve the address of the introspection endpoint.
         options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
         //options.AddAudiences("catalog_server");
-
         // Configure the validation handler to use introspection and register the client
         // credentials used when communicating with the remote introspection endpoint.
         options.UseIntrospection()
@@ -102,6 +102,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 

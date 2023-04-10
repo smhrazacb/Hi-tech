@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace EsparkIndent.Server.Helpers;
+﻿namespace EsparkIndent.Server.Helpers;
 
 public static class AsyncEnumerableExtensions
 {

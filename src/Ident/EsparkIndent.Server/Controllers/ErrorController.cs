@@ -4,9 +4,9 @@
  * the license and the contributors participating to this project.
  */
 
+using EsparkIndent.Server.ViewModels.Shared;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using EsparkIndent.Server.ViewModels.Shared;
 
 namespace EsparkIndent.Server;
 

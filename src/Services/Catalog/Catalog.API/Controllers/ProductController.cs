@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
 using Catalog.API.Entities;
-using Catalog.API.Repositories.Interfaces;
-using System.Net;
-using AutoMapper;
-using Catalog.API.Services;
 using Catalog.API.Filter;
 using Catalog.API.Helpers;
+using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Responses;
+using Catalog.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
+using System.Net;
 
 namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepositoryR repository;
@@ -35,7 +37,7 @@ namespace Catalog.API.Controllers
         public async Task<ActionResult<IEnumerable<CategoryWithCount>>> Products()
         {
             var products = await repository.GetProducts();
-          
+
             return Ok(products);
         }
         /// <summary>
@@ -43,7 +45,7 @@ namespace Catalog.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id:length(24)}", Name= "Product")]
+        [HttpGet("{id:length(24)}", Name = "Product")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Category>>> Product(string id)
@@ -68,7 +70,7 @@ namespace Catalog.API.Controllers
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var (totalRecords, products)= await repository.GetProductsByCategory(validFilter, category);
+            var (totalRecords, products) = await repository.GetProductsByCategory(validFilter, category);
             if (products == null)
             {
                 return NotFound();
@@ -122,6 +124,6 @@ namespace Catalog.API.Controllers
             return Ok(pagedReponse);
         }
 
-       
+
     }
 }

@@ -7,7 +7,6 @@ using Catalog.API.Utilities;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -102,8 +101,6 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseAuthorization();
-
-
 
 app.MapControllers();
 

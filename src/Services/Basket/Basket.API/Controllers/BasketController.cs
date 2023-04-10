@@ -90,14 +90,14 @@ namespace Basket.API.Controllers
         public async Task<ActionResult<BasketCheckoutEvent>> Checkout([FromBody] BasketCheckoutIdsDto basketCheckoutIdsDto)
         {
             // Get Basket
-            var basket = await _repository.GetBasket(basketCheckoutIdsDto.BasketId);
+            var basket = await _repository.GetBasket(basketCheckoutIdsDto.ShoppingCartId);
             if (basket == null)
                 return NotFound();
             // Validate basket price with current product price
             // send checkout event to rabbitmq
-            var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basket);
-            basketCheckoutEvent.TotalPrice = basketCheckoutIdsDto.TotalPrice;
-            basketCheckoutEvent.UserId = basketCheckoutIdsDto.UserId;
+            var shoppingItems = _mapper.Map<IEnumerable<ProductEvent>>(basket.ShoppingItems);
+            var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
+            basketCheckoutEvent.ShoppingItems = shoppingItems;
             await _publishEndpoint.Publish<BasketCheckoutEvent>(basketCheckoutEvent);
 
             // remove the basket

@@ -5,16 +5,13 @@ using Catalog.API.Helpers;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Responses;
 using Catalog.API.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Validation.AspNetCore;
 using System.Net;
 
 namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepositoryR repository;

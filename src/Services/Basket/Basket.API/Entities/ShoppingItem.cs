@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Basket.API.Entities
+﻿namespace Basket.API.Entities
 {
     public class ShoppingItem
     {

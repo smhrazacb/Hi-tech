@@ -94,38 +94,6 @@ namespace EsparkIndent.Server.Entities
                     }
                 });
             }
-            if (await manager.FindByClientIdAsync("catalogswagger") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor
-                {
-                    ClientId = "catalogswagger",
-                    ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
-                    ConsentType = ConsentTypes.Explicit,
-                    DisplayName = "Swagger client application",
-                    RedirectUris =
-                    {
-                        new Uri("https://localhost:8000/swagger/oauth2-redirect.html")
-                    },
-                    Permissions =
-                    {
-                        Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Logout,
-                        Permissions.Endpoints.Token,
-                        Permissions.GrantTypes.AuthorizationCode,
-                        Permissions.GrantTypes.RefreshToken,
-                        Permissions.ResponseTypes.Code,
-                        Permissions.Scopes.Email,
-                        Permissions.Scopes.Profile,
-                        Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "catalog_api"
-                    },
-                    Requirements =
-                    {
-                        Requirements.Features.ProofKeyForCodeExchange
-                    },
-                });
-            }
-
             // Note: when using introspection instead of local token validation,
             // an application entry MUST be created to allow the resource server
             // to communicate with OpenIddict's introspection endpoint.
@@ -135,6 +103,30 @@ namespace EsparkIndent.Server.Entities
                 {
                     ClientId = "catalog_server",
                     ClientSecret = "80B552BB-4CD8-48DA-946E-0815E0147DD2",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Introspection,
+                    }
+                });
+            }
+            if (await manager.FindByClientIdAsync("basket_server") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "basket_server",
+                    ClientSecret = "80B552BB-4CD8-48DA-946E-0815E0147DD3",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Introspection,
+                    }
+                });
+            }
+            if (await manager.FindByClientIdAsync("order_server") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "order_server",
+                    ClientSecret = "80B552BB-4CD8-48DA-946E-0815E0147DD4",
                     Permissions =
                     {
                         Permissions.Endpoints.Introspection,
@@ -155,6 +147,30 @@ namespace EsparkIndent.Server.Entities
                     Resources =
                     {
                         "catalog_server"
+                    }
+                });
+            }
+            if (await manager.FindByNameAsync("basket_api") is null)
+            {
+                await manager.CreateAsync(new OpenIddictScopeDescriptor
+                {
+                    DisplayName = "Baket API access",
+                    Name = "basket_api",
+                    Resources =
+                    {
+                        "basket_server"
+                    }
+                });
+            }
+            if (await manager.FindByNameAsync("order_api") is null)
+            {
+                await manager.CreateAsync(new OpenIddictScopeDescriptor
+                {
+                    DisplayName = "Order API access",
+                    Name = "Order_api",
+                    Resources =
+                    {
+                        "order_server"
                     }
                 });
             }

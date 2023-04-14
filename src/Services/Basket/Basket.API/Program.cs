@@ -2,6 +2,7 @@ using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using MassTransit;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Validation.AspNetCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,32 @@ builder.Services.AddMassTransit(config =>
         cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
     });
 });
+//Register the OpenIddict validation components.
+builder.Services.AddOpenIddict()
+    .AddValidation(options =>
+    {
+        // Note: the validation handler uses OpenID Connect discovery
+        // to retrieve the address of the introspection endpoint.
+        options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
+        //options.AddAudiences("catalog_server");
+        // Configure the validation handler to use introspection and register the client
+        // credentials used when communicating with the remote introspection endpoint.
+        options.UseIntrospection()
+        .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD3")
+               .SetClientId("basket_server");
+
+        // Register the System.Net.Http integration.
+        options.UseSystemNetHttp();
+
+        // Register the ASP.NET Core host.
+        options.UseAspNetCore();
+    });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+});
+builder.Services.AddAuthorization();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -62,7 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -9,6 +9,7 @@ namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class AdminProductController : ControllerBase
     {
         private readonly IProductRepositoryR repositoryR;

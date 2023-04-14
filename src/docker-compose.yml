@@ -4,8 +4,8 @@ services:
   #catalogdb:
   #  image: mongo
 
-  #identdb:
-  #  image: postgres
+  identdb:
+    image: postgres
    
   orderdb:
     image: postgres

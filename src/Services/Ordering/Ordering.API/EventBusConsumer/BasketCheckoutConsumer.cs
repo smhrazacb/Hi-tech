@@ -3,6 +3,7 @@ using EventBus.Messages.Events;
 using MassTransit;
 using MediatR;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
+using Ordering.Infrastructure.Repositories.Services;
 
 namespace Ordering.API.EventBusConsumer
 {
@@ -10,6 +11,7 @@ namespace Ordering.API.EventBusConsumer
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IIdentityService _identityService;
         private readonly ILogger<BasketCheckoutConsumer> _logger;
 
         public BasketCheckoutConsumer(IMediator mediator, IMapper mapper, ILogger<BasketCheckoutConsumer> logger)

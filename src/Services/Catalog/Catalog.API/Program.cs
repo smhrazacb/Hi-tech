@@ -90,13 +90,6 @@ if (app.Environment.IsDevelopment())
     .UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product.API v1");
-        c.OAuthClientId("catalogswagger");
-        c.OAuthAppName("Ordering Swagger UI");
-        c.OAuth2RedirectUrl("https://localhost:8000/swagger/oauth2-redirect.html");
-        c.OAuthClientSecret("901564A5-E7FE-42CB-B10D-61EF6A8F365");
-        //c.SupportedSubmitMethods(SubmitMethod.Post);
-        c.OAuthUsePkce();
-        ;
     });
 }
 app.UseAuthentication();

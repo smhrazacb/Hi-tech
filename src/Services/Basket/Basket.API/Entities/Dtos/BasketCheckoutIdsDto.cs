@@ -1,6 +1,4 @@
-﻿using EventBus.Messages.Events;
-
-namespace Basket.API.Entities.Dtos
+﻿namespace Basket.API.Entities.Dtos
 {
     public class BasketCheckoutIdsDto
     {

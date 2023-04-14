@@ -4,16 +4,16 @@ using Basket.API.Entities.Dtos;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.Events;
 using MassTransit;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+using OpenIddict.Validation.AspNetCore;
 using System.Net;
-using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 
 namespace Basket.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class BasketController : ControllerBase
     {
         private readonly IBasketRepository _repository;
@@ -33,6 +33,7 @@ namespace Basket.API.Controllers
         [HttpGet("{guid}", Name = "GetBasket")]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult<ShoppingCart>> GetBasket(Guid guid)
         {
             var basket = await _repository.GetBasket(guid);
@@ -46,6 +47,7 @@ namespace Basket.API.Controllers
         /// <param name="shoppingCartDto"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
         {
@@ -59,6 +61,7 @@ namespace Basket.API.Controllers
         /// <param name="shoppingCart"></param>
         /// <returns></returns>
         [HttpPut]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
@@ -74,6 +77,7 @@ namespace Basket.API.Controllers
         /// <param name="guid"></param>
         /// <returns></returns>
         [HttpDelete("{guid}", Name = "DeleteBasket")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteBasket(Guid guid)
         {
@@ -101,7 +105,7 @@ namespace Basket.API.Controllers
             var shoppingItems = _mapper.Map<IEnumerable<ProductEvent>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
             basketCheckoutEvent.ShoppingItems = shoppingItems;
-            await _publishEndpoint.Publish<BasketCheckoutEvent>(basketCheckoutEvent);
+            await _publishEndpoint.Publish(basketCheckoutEvent);
 
             // remove the basket
             await _repository.DeleteBasket(basket.ShoppingCartId);

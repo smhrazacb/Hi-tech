@@ -1,12 +1,10 @@
 using EventBus.Messages.Common;
 using MassTransit;
-using Microsoft.AspNetCore.Hosting;
 using Ordering.API.EventBusConsumer;
 using Ordering.API.Extensions;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +31,28 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<BasketCheckoutConsumer>();
 builder.Services.AddAutoMapper(typeof(Program));
 
+//Register the OpenIddict validation components.
+builder.Services.AddOpenIddict()
+    .AddValidation(options =>
+    {
+        // Note: the validation handler uses OpenID Connect discovery
+        // to retrieve the address of the introspection endpoint.
+        options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
+        //options.AddAudiences("catalog_server");
+        // Configure the validation handler to use introspection and register the client
+        // credentials used when communicating with the remote introspection endpoint.
+        options.UseIntrospection()
+        .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD4")
+               .SetClientId("order_server");
+
+        // Register the System.Net.Http integration.
+        options.UseSystemNetHttp();
+
+        // Register the ASP.NET Core host.
+        options.UseAspNetCore();
+    });
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -46,7 +66,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

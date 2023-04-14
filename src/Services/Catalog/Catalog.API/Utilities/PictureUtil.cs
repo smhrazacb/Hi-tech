@@ -16,7 +16,7 @@ namespace Catalog.API.Utilities
 
                 System.Net.WebResponse webResponse = webRequest.GetResponse();
 
-                System.IO.Stream stream = webResponse.GetResponseStream();
+                Stream stream = webResponse.GetResponseStream();
 
                 image = System.Drawing.Image.FromStream(stream);
 
@@ -41,7 +41,7 @@ namespace Catalog.API.Utilities
 
                 //Getting all files from Destination Folder.
                 var files = Directory.EnumerateFiles(imagePath);
-                Console.WriteLine("Files: {0}", files.Count<string>().ToString());
+                Console.WriteLine("Files: {0}", files.Count().ToString());
                 Console.WriteLine("Processing...");
                 var stopWatch = Stopwatch.StartNew();
 

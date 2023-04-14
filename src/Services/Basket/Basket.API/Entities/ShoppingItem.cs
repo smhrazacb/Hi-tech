@@ -1,10 +1,14 @@
-﻿namespace Basket.API.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Basket.API.Entities
 {
     public class ShoppingItem
     {
-        public string Id { get; set; }
-        public string NameWithShortDesc { get; set; }
-        public uint Qty { get; set; }
-        public decimal Price { get; set; }
+        public string ProductId { get; set; }
+        public string ProductNameShortdesc { get; set; }
+        public decimal UnitPrice { get; set; }
+        public decimal OldUnitPrice { get; set; }
+        public int Quantity { get; set; }
+        public string PictureUrl { get; set; }
     }
 }

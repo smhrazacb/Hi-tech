@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-			  <PackageReference Include="MassTransit" Version="8.0.14" />
+		<PackageReference Include="MassTransit" Version="8.0.14" />
 		<PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
@@ -16,13 +16,13 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Polly" Version="7.2.3" />
-		    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj" />
-    <ProjectReference Include="..\Ordering.Application\Ordering.Application.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj" />
+		<ProjectReference Include="..\Ordering.Application\Ordering.Application.csproj" />
 		<ProjectReference Include="..\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
-	  </ItemGroup>
+	</ItemGroup>
 
 </Project>

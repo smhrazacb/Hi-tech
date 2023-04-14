@@ -4,8 +4,11 @@ using Basket.API.Entities.Dtos;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.Events;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 
 namespace Basket.API.Controllers
 {
@@ -38,7 +41,7 @@ namespace Basket.API.Controllers
             return Ok(basket);
         }
         /// <summary>
-        /// <para>Create a new empty Basket</para>
+        /// <para>Create a new Basket with product</para>
         /// </summary>
         /// <param name="shoppingCartDto"></param>
         /// <returns></returns>
@@ -47,7 +50,7 @@ namespace Basket.API.Controllers
         public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
         {
             var shoppingCart = _mapper.Map<ShoppingCart>(shoppingCartDto);
-            shoppingCart.ShoppingCartId = Guid.NewGuid();
+           
             return Ok(await _repository.UpdateBasket(shoppingCart));
         }
         /// <summary>

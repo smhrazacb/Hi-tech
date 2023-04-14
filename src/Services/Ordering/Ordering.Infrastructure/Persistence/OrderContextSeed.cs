@@ -19,7 +19,7 @@ namespace Ordering.Infrastructure.Persistence
         {
             return new List<Order>
             {
-                new Order() {UserName = "swn", FirstName = "Mehmet",
+                new Order() {UserId =Guid.Parse("6832abf5-38e1-41d0-bab2-4f7aa13864a6"), FirstName = "Mehmet",
                     LastName = "Ozkaya", EmailAddress = "ezozkme@gmail.com",
                     State= "Sind",ZipCode="54565", AddressLine = "Bahcelievler",
                     Country = "Turkey", TotalPrice = 350,

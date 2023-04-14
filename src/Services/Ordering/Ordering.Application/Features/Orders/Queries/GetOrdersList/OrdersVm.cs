@@ -3,7 +3,7 @@
     public class OrdersVm
     {
         public int Id { get; set; }
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
         public decimal TotalPrice { get; set; }
 
         // BillingAddress

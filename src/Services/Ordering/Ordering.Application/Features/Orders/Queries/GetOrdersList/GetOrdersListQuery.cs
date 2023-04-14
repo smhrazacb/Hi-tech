@@ -4,11 +4,11 @@ namespace Ordering.Application.Features.Orders.Queries.GetOrdersList
 {
     public class GetOrdersListQuery : IRequest<List<OrdersVm>>
     {
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
-        public GetOrdersListQuery(string userName)
+        public GetOrdersListQuery(Guid userId)
         {
-            UserName = userName ?? throw new ArgumentNullException(nameof(userName));
+            UserId = userId;
         }
     }
 }

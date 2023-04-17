@@ -3,7 +3,7 @@
     public class BasketCheckoutEvent : IntegrationBaseEvent
     {
         public IEnumerable<ProductEvent> ShoppingItems { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
 
         // BillingAddress

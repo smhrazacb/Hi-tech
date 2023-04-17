@@ -1,15 +1,19 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Commands.DeleteOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
 using Ordering.Application.Features.Orders.Queries.GetOrdersList;
+using Ordering.Infrastructure.Repositories.Services;
 using System.Net;
 
 namespace Ordering.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,9 +23,9 @@ namespace Ordering.API.Controllers
         }
         [HttpGet("{userName}", Name = "GetOrder")]
         [ProducesResponseType(typeof(IEnumerable<OrdersVm>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrdersByUserId(Guid userId)
+        public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrder(string userName)
         {
-            var query = new GetOrdersListQuery(userId);
+            var query = new GetOrdersListQuery(userName);
             var orders = await _mediator.Send(query);
             return Ok(orders);
         }

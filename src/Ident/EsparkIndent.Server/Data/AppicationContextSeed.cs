@@ -27,42 +27,6 @@ namespace EsparkIndent.Server.Entities
         {
             var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            //if (await manager.FindByClientIdAsync("spa_client") is null)
-            //{
-            //    await manager.CreateAsync(new OpenIddictApplicationDescriptor
-            //    {
-            //        ClientId = "spa_client",
-            //        ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
-            //        ConsentType = ConsentTypes.Explicit,
-            //        DisplayName = "SPA client application",
-            //        RedirectUris =
-            //        {
-            //            new Uri("http://localhost:8000/callback/login/local")
-            //        },
-            //        PostLogoutRedirectUris =
-            //        {
-            //            new Uri("http://localhost:8000/callback/logout/local")
-            //        },
-            //        Permissions =
-            //        {
-            //            Permissions.Endpoints.Authorization,
-            //            Permissions.Endpoints.Logout,
-            //            Permissions.Endpoints.Token,
-            //            Permissions.GrantTypes.AuthorizationCode,
-            //            Permissions.GrantTypes.RefreshToken,
-            //            Permissions.ResponseTypes.Code,
-            //            Permissions.Scopes.Email,
-            //            Permissions.Scopes.Profile,
-            //            Permissions.Scopes.Roles,
-            //            Permissions.Prefixes.Scope + "catalog_api"
-            //        }
-            //        ,
-            //        Requirements =
-            //        {
-            //            Requirements.Features.ProofKeyForCodeExchange
-            //        }
-            //    });
-            //}
             if (await manager.FindByClientIdAsync("spa_clientp") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
@@ -86,7 +50,9 @@ namespace EsparkIndent.Server.Entities
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,
                         Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "catalog_api"
+                        Permissions.Prefixes.Scope + "order_api",
+                        Permissions.Prefixes.Scope + "catalog_api",
+                        Permissions.Prefixes.Scope + "basket_api",
                     },
                     Requirements =
                     {
@@ -167,7 +133,7 @@ namespace EsparkIndent.Server.Entities
                 await manager.CreateAsync(new OpenIddictScopeDescriptor
                 {
                     DisplayName = "Order API access",
-                    Name = "Order_api",
+                    Name = "order_api",
                     Resources =
                     {
                         "order_server"

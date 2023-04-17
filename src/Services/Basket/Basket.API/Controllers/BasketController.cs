@@ -1,13 +1,16 @@
-﻿using AutoMapper;
+﻿using AspNet.Security.OpenIdConnect.Primitives;
+using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using System.Net;
+using System.Security.Claims;
 
 namespace Basket.API.Controllers
 {
@@ -19,12 +22,17 @@ namespace Basket.API.Controllers
         private readonly IBasketRepository _repository;
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
-        public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
+            _repository = repository;
+            _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+
         /// <summary>
         /// <para>Returns a requested Basket if Id existed</para> 
         /// </summary>
@@ -47,12 +55,10 @@ namespace Basket.API.Controllers
         /// <param name="shoppingCartDto"></param>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
         {
             var shoppingCart = _mapper.Map<ShoppingCart>(shoppingCartDto);
-           
             return Ok(await _repository.UpdateBasket(shoppingCart));
         }
         /// <summary>
@@ -61,7 +67,6 @@ namespace Basket.API.Controllers
         /// <param name="shoppingCart"></param>
         /// <returns></returns>
         [HttpPut]
-        [AllowAnonymous]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
@@ -77,7 +82,6 @@ namespace Basket.API.Controllers
         /// <param name="guid"></param>
         /// <returns></returns>
         [HttpDelete("{guid}", Name = "DeleteBasket")]
-        [AllowAnonymous]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteBasket(Guid guid)
         {
@@ -101,9 +105,10 @@ namespace Basket.API.Controllers
             if (basket == null)
                 return NotFound();
             // Validate basket price with current product price
-            // send checkout event to rabbitmq
             var shoppingItems = _mapper.Map<IEnumerable<ProductEvent>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
+            basketCheckoutEvent.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
+            // send checkout event to rabbitmq
             basketCheckoutEvent.ShoppingItems = shoppingItems;
             await _publishEndpoint.Publish(basketCheckoutEvent);
 

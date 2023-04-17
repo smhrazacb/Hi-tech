@@ -1,16 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ordering.Domain.Common;
 using Ordering.Domain.Entities;
+using Ordering.Infrastructure.Repositories.Services;
 
 namespace Ordering.Infrastructure.Persistence
 {
     public class OrderContext : DbContext
     {
-        public OrderContext(DbContextOptions<OrderContext> options) : base(options)
+        private readonly IIdentityService _identityService;
+        public OrderContext(IIdentityService identityService, DbContextOptions<OrderContext> options) : base(options)
         {
+            _identityService = identityService;
         }
-
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -20,11 +23,9 @@ namespace Ordering.Infrastructure.Persistence
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedDate = DateTime.Now;
-                        entry.Entity.CreatedBy = "swn";
                         break;
                     case EntityState.Modified:
                         entry.Entity.LastModifiedDate = DateTime.Now;
-                        entry.Entity.LastModifiedBy = "swn";
                         break;
                 }
             }

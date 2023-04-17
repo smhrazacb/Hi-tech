@@ -1,26 +1,27 @@
 ﻿
 using Microsoft.AspNetCore.Http;
+using OpenIddict.Abstractions;
 
 namespace Ordering.Infrastructure.Repositories
 .Services
 {
     public class IdentityService : IIdentityService
     {
-        private IHttpContextAccessor _context;
+        private readonly IHttpContextAccessor _IHttpContextAccessor;
 
         public IdentityService(IHttpContextAccessor context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _IHttpContextAccessor = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public string GetUserIdentity()
         {
-            return _context.HttpContext.User.FindFirst("sub").Value;
+            return _IHttpContextAccessor.HttpContext.User.FindFirst(OpenIddictConstants.Claims.Subject).Value;
         }
 
         public string GetUserName()
         {
-            return _context.HttpContext.User.Identity.Name;
+            return _IHttpContextAccessor.HttpContext.User.Identity.Name;
         }
     }
 }

@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Ordering.Application\Ordering.Application.csproj" />
 	  <PackageReference Include="Npgsql" Version="7.0.2" />
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+	  <PackageReference Include="OpenIddict.Abstractions" Version="4.2.0" />
 	  <PackageReference Include="SendGrid" Version="9.28.1" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
 		  <PrivateAssets>all</PrivateAssets>

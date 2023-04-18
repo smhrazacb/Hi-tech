@@ -1,19 +1,12 @@
 using Catalog.API.Data;
 using Catalog.API.Data.Interfaces;
-using Catalog.API.Entities;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
 using Catalog.API.Utilities;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
-using Sylvan.Data;
-using System;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Reflection;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -41,7 +34,6 @@ builder.Services.AddOpenIddict()
         // to retrieve the address of the introspection endpoint.
         options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
         //options.AddAudiences("catalog_server");
-
         // Configure the validation handler to use introspection and register the client
         // credentials used when communicating with the remote introspection endpoint.
         options.UseIntrospection()
@@ -98,13 +90,6 @@ if (app.Environment.IsDevelopment())
     .UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product.API v1");
-        c.OAuthClientId("catalogswagger");
-        c.OAuthAppName("Ordering Swagger UI");
-        c.OAuth2RedirectUrl("https://localhost:8000/swagger/oauth2-redirect.html");
-        c.OAuthClientSecret("901564A5-E7FE-42CB-B10D-61EF6A8F365");
-        //c.SupportedSubmitMethods(SubmitMethod.Post);
-        c.OAuthUsePkce();
-        ;
     });
 }
 app.UseAuthentication();

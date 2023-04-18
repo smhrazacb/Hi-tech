@@ -4,26 +4,21 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using EsparkIndent.Server.Entities;
+using EsparkIndent.Server.Helpers;
+using EsparkIndent.Server.ViewModels.Authorization;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Client.AspNetCore;
-using EsparkIndent.Server.Helpers;
-using EsparkIndent.Server.Entities;
-using EsparkIndent.Server.ViewModels.Authorization;
 using OpenIddict.Server.AspNetCore;
+using System.Collections.Immutable;
+using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Client.WebIntegration.OpenIddictClientWebIntegrationConstants;
 

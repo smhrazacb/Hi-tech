@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace EsparkIndent.Server.Services;
+﻿namespace EsparkIndent.Server.Services;
 
 // This class is used by the application to send Email and SMS
 // when you turn on two-factor authentication in ASP.NET Identity.

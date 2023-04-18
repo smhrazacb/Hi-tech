@@ -1,21 +1,15 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
-using Microsoft.AspNetCore.Components.RenderTree;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Sylvan.Data;
 using Sylvan.Data.Csv;
-using System;
 using System.Data;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Catalog.API.Utilities
 {
 
-    public interface ICSV2Category 
+    public interface ICSV2Category
     {
         public CSVDto Read(string path);
     }
@@ -93,7 +87,7 @@ namespace Catalog.API.Utilities
                                 a.SubCategory.Product.Manufacturer ==
                                 obj.SubCategory.Product.Manufacturer).Count() > 0)
                         {
-                            Debug.WriteLine("Duplicate Entry : "+ (reader.RowNumber+1).ToString());
+                            Debug.WriteLine("Duplicate Entry : " + (reader.RowNumber + 1).ToString());
                             cSVDto.DuplicatePartNumbers.Add(reader.GetRawRecordSpan().ToString());
                         }
                         else
@@ -101,7 +95,7 @@ namespace Catalog.API.Utilities
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine((reader.RowNumber+1).ToString() + " : " + ex.Message);
+                        Debug.WriteLine((reader.RowNumber + 1).ToString() + " : " + ex.Message);
                         cSVDto.InvalidEntries.Add(reader.GetRawRecordSpan().ToString());
                     }
                 }

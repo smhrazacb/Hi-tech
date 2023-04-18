@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Catalog.API.Responses
+﻿namespace Catalog.API.Responses
 {
     public class Response<T>
     {

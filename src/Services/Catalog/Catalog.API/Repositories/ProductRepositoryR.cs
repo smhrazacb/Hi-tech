@@ -1,16 +1,9 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
-using Catalog.API.Data.Interfaces;
+﻿using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
-using Catalog.API.Repositories.Interfaces;
-using System.Xml.Linq;
-using DnsClient.Protocol;
-using System;
-using Catalog.API.Filter;
-using System.Drawing.Printing;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Catalog.API.Extensions;
+using Catalog.API.Filter;
+using Catalog.API.Repositories.Interfaces;
+using MongoDB.Driver;
 
 namespace Catalog.API.Repositories
 {
@@ -60,7 +53,7 @@ namespace Catalog.API.Repositories
                 Builders<Category>.Sort.Ascending(x => x.CategoryName),
                 page: pagefilter.PageNumber,
                 pageSize: pagefilter.PageSize);
-        }     
+        }
         public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByName(PaginationFilter pagefilter, string _name)
         {
             return await _context.CategoryList

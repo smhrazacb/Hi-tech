@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.AspNetCore.Routing;
-using System;
 
 namespace EsparkIndent.Server.Helpers;
 

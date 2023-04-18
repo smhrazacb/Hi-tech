@@ -1,12 +1,8 @@
 ﻿using Catalog.API.Filter;
 using Catalog.API.Responses;
 using Catalog.API.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Catalog.API.Helpers  
+namespace Catalog.API.Helpers
 {
     public static class PaginationHelper
     {

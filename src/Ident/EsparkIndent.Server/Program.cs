@@ -1,14 +1,9 @@
-using EsparkIndent.Server;
 using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using OpenIddict.Server.AspNetCore;
 using Quartz;
-using System.Configuration;
+using System.Reflection;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -124,7 +119,6 @@ builder.Services.AddOpenIddict()
 
         // Mark the "email", "profile", "roles" and "demo_api" scopes as supported scopes.
         options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles, "demo_api");
-
         // Register the signing and encryption credentials.
         options.AddDevelopmentEncryptionCertificate()
                .AddDevelopmentSigningCertificate();
@@ -257,3 +251,11 @@ app.MigrateDatabase<ApplicationDbContext>((context, services) =>
 });
 
 app.Run();
+
+string AssemblyDirectory()
+{
+    string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+    UriBuilder uri = new UriBuilder(codeBase);
+    string path = Uri.UnescapeDataString(uri.Path);
+    return Path.GetDirectoryName(path);
+}

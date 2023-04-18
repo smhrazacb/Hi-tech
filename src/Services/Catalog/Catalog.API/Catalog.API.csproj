@@ -32,4 +32,7 @@
 		<PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="4.1.0" />
 		<PackageReference Include="System.Data.OleDb" Version="7.0.0" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="dockerEnv\upload\" />
+	</ItemGroup>
 </Project>

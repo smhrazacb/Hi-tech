@@ -1,10 +1,10 @@
-﻿using MongoDB.Driver;
-using Catalog.API.Entities;
+﻿using Catalog.API.Entities;
+using MongoDB.Driver;
 
 namespace Catalog.API.Data.Interfaces
 {
     public interface IProductContext
     {
-       IMongoCollection<Category> CategoryList { get; }
+        IMongoCollection<Category> CategoryList { get; }
     }
 }

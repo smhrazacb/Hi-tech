@@ -1,17 +1,15 @@
-﻿using AutoMapper;
-using Catalog.API.Entities;
+﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
-using Catalog.API.Services;
 using Catalog.API.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Net;
 
 namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class AdminProductController : ControllerBase
     {
         private readonly IProductRepositoryR repositoryR;

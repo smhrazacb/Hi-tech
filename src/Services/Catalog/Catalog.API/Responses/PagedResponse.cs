@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Catalog.API.Responses
+﻿namespace Catalog.API.Responses
 
 {
     public class PagedResponse<T> : Response<T>
@@ -17,8 +12,8 @@ namespace Catalog.API.Responses
         public long TotalRecords { get; set; }
         public Uri NextPage { get; set; }
         public Uri PreviousPage { get; set; }
-        
-        public PagedResponse(T data, int pageNumber , int pageSize)
+
+        public PagedResponse(T data, int pageNumber, int pageSize)
         {
             this.PageNumber = pageNumber;
             this.PageSize = pageSize;

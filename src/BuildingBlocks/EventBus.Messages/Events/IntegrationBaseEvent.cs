@@ -1,20 +1,22 @@
-﻿namespace EventBus.Messages.Events
+﻿using System;
+
+namespace EventBus.Messages.Events
 {
     public class IntegrationBaseEvent
     {
         public IntegrationBaseEvent()
         {
-            OrderId = Guid.NewGuid();
+            Id = Guid.NewGuid();
             CreationDate = DateTime.UtcNow;
         }
 
         public IntegrationBaseEvent(Guid id, DateTime createDate)
         {
-            OrderId = id;
+            Id = id;
             CreationDate = createDate;
         }
 
-        public Guid OrderId { get; private set; }
+        public Guid Id { get; private set; }
 
         public DateTime CreationDate { get; private set; }
     }

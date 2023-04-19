@@ -4,10 +4,11 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {
     public class CheckoutOrderCommand : IRequest<int>
     {
-        public int Id { get; set; }
+        public Guid ShoppingCartId { get; set; }
+        public int OrderId { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
-        public IEnumerable<CheckoutOrderCommandItems> OrderItems { get; set; }
+        public IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -30,8 +31,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         public string ProductId { get; set; }
         public string ProductNameShortdesc { get; set; }
         public decimal UnitPrice { get; set; }
-        public decimal OldUnitPrice { get; set; }
         public int Quantity { get; set; }
-        public string PictureUrl { get; set; }
+        public string? PictureUrl { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Contracts.Persistence;
 using Ordering.Domain.Entities;
 using Ordering.Infrastructure.Persistence;
@@ -11,11 +12,22 @@ namespace Ordering.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByUserName(string createdBy)
+        public async Task<IEnumerable<Order>> GetOrdersByShoppingCart(Guid shoppingcartid)
         {
             var orderList = await _dbContext.Orders
-                                .Where(o => o.UserId == createdBy)
-                                .ToListAsync();
+                                 .Where(o => o.ShoppingCartId == shoppingcartid)
+                                 .ToListAsync();
+            return orderList;
+        }
+
+        public async Task<IEnumerable<Order>> GetOrdersByUserName(string createdBy)
+        {
+            var orderList =
+                await _dbContext
+                .Orders
+                .Include(orderList => orderList.ShoppingItems)
+                .Where(o => o.UserId == createdBy)
+                .ToListAsync();
             return orderList;
         }
     }

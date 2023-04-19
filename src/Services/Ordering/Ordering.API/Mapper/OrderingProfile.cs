@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventBus.Messages.Events;
+using EventBus.Messages.Models;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 
 namespace Ordering.API.Mapper
@@ -9,7 +10,8 @@ namespace Ordering.API.Mapper
 		public OrderingProfile()
 		{
 			CreateMap<CheckoutOrderCommand, BasketCheckoutEvent>().ReverseMap();
-			CreateMap<IEnumerable<CheckoutOrderCommandItems>, IEnumerable<ProductEvent>>().ReverseMap();
+			CreateMap<CheckoutOrderCommandItems, EventCartItem>().ReverseMap();
+			CreateMap<CheckoutOrderCommand, OrderCompleteEvent>().ReverseMap();
 		}
 	}
 }

@@ -1,8 +1,11 @@
-﻿namespace EventBus.Messages.Events
+﻿using EventBus.Messages.Models;
+
+namespace EventBus.Messages.Events
 {
     public class BasketCheckoutEvent : IntegrationBaseEvent
     {
-        public IEnumerable<ProductEvent> ShoppingItems { get; set; }
+        public IEnumerable<EventCartItem> ShoppingItems { get; set; }
+        public Guid ShoppingCartId { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
 

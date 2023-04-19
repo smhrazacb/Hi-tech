@@ -7,7 +7,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         public int Id { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
-        public IEnumerable<UpdateOrderCommandItems> OrderItems { get; set; }
+        public IEnumerable<UpdateOrderCommandItems> ShoppingItems { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -30,8 +30,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         public string ProductId { get; set; }
         public string ProductNameShortdesc { get; set; }
         public decimal UnitPrice { get; set; }
-        public decimal OldUnitPrice { get; set; }
         public int Quantity { get; set; }
-        public string PictureUrl { get; set; }
+        public string? PictureUrl { get; set; }
     }
 }

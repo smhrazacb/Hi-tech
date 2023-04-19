@@ -6,7 +6,6 @@ using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Commands.DeleteOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
 using Ordering.Application.Features.Orders.Queries.GetOrdersList;
-using Ordering.Infrastructure.Repositories.Services;
 using System.Net;
 
 namespace Ordering.API.Controllers

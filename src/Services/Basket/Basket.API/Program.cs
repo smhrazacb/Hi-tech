@@ -1,5 +1,7 @@
+using Basket.API.EventBusConsumer;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
+using EventBus.Messages.Common;
 using MassTransit;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
@@ -20,9 +22,15 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // MassTransit-RabbitMQ Configuration
 builder.Services.AddMassTransit(config =>
 {
+    config.AddConsumer<BasketDeleteConsumer>();
+
     config.UsingRabbitMq((ctx, cfg) =>
     {
         cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+        cfg.ReceiveEndpoint(EventBusConstants.OrderCompleteQueue, c =>
+        {
+            c.ConfigureConsumer<BasketDeleteConsumer>(ctx);
+        });
     });
 });
 //Register the OpenIddict validation components.

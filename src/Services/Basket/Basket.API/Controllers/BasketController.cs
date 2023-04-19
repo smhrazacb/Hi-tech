@@ -4,13 +4,12 @@ using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.Events;
+using EventBus.Messages.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using System.Net;
-using System.Security.Claims;
 
 namespace Basket.API.Controllers
 {
@@ -96,7 +95,7 @@ namespace Basket.API.Controllers
         [Route("[action]")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(BasketCheckoutEvent), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BasketCheckoutEvent), (int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<BasketCheckoutEvent>> Checkout([FromBody] BasketCheckoutIdsDto basketCheckoutIdsDto)
         {
@@ -105,17 +104,14 @@ namespace Basket.API.Controllers
             if (basket == null)
                 return NotFound();
             // Validate basket price with current product price
-            var shoppingItems = _mapper.Map<IEnumerable<ProductEvent>>(basket.ShoppingItems);
+            var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
             basketCheckoutEvent.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
             // send checkout event to rabbitmq
             basketCheckoutEvent.ShoppingItems = shoppingItems;
             await _publishEndpoint.Publish(basketCheckoutEvent);
 
-            // remove the basket
-            await _repository.DeleteBasket(basket.ShoppingCartId);
-
-            return Ok(basketCheckoutEvent);
+            return Accepted(basketCheckoutEvent);
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using Ordering.Domain.Common;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Net;
 
 namespace Ordering.Domain.Entities
 {
     public class Order : EntityBase
     {
         public decimal TotalPrice { get; set; }
-        public IEnumerable<OrderItem> OrderItems { get; set; }
+        public virtual IEnumerable<OrderItem> ShoppingItems { get; set; }
+        public Guid ShoppingCartId { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

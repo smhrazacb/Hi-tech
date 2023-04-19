@@ -25,14 +25,26 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 
         public async Task<int> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
         {
+            Order order;
             var orderEntity = _mapper.Map<Order>(request);
-            var newOrder = await _orderRepository.AddAsync(orderEntity);
+            //check duplicate 
+            var duplicateOrder = await _orderRepository.GetOrdersByShoppingCart(orderEntity.ShoppingCartId);
+            if (duplicateOrder.Count() != 0)
+            {
+                order = duplicateOrder.FirstOrDefault();
+                _logger.
+                    LogInformation($"Shopping Cart Id : {order.ShoppingCartId} " +
+                    $"is already assioted with Order Id .{order.OrderId}");
+            }
+            else
+            {
+                //create new order 
+                order = await _orderRepository.AddAsync(orderEntity);
+                _logger.LogInformation($"Order {order.OrderId} is successfully created.");
+                await SendMail(order);
+            }
 
-            _logger.LogInformation($"Order {newOrder.Id} is successfully created.");
-
-            await SendMail(newOrder);
-
-            return newOrder.Id;
+            return order.OrderId;
         }
 
         private async Task SendMail(Order order)
@@ -45,7 +57,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Order {order.Id} failed due to an error with the mail service: {ex.Message}");
+                _logger.LogError($"Order {order.OrderId} failed due to an error with the mail service: {ex.Message}");
             }
         }
     }

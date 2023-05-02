@@ -2,7 +2,9 @@
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
 using System.Net;
 
 namespace Catalog.API.Controllers

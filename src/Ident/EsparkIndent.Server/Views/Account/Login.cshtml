@@ -57,7 +57,7 @@
                                     </div>
                                 </div> <p>
                                     Not a member?
-                                    <a asp-controller="Account" asp-action="Register" class="theme-color">Sign up now</a>
+                                    <a asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="theme-color">Sign up now</a>
                                 </p>
                             </div>
                         </div>

@@ -1,17 +1,17 @@
 version: '3.4'
 
 services:
-  #catalogdb:
-  #  image: mongo
+  catalogdb:
+    image: mongo
 
   identdb:
     image: postgres
    
-  orderdb:
-    image: postgres
+  #orderdb:
+  #  image: postgres
 
-  basketdb:
-    image: redis:alpine
+  #basketdb:
+  #  image: redis:alpine
 
   #catalog.api:
   #  image: ${DOCKER_REGISTRY-}catalogapi
@@ -37,10 +37,8 @@ services:
   #    context: .
   #    dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
   
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-
-
+  #rabbitmq:
+  #  image: rabbitmq:3-management-alpine
 
 volumes:
   mongo_data:

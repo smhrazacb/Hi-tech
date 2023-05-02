@@ -2,8 +2,11 @@ using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Quartz;
+using System.Configuration;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,42 +64,6 @@ builder.Services.AddOpenIddict()
         // Enable Quartz.NET integration.
         options.UseQuartz();
     })
-
-    // Register the OpenIddict client components.
-    .AddClient(options =>
-    {
-        // Note: this sample uses the code flow, but you can enable the other flows if necessary.
-        options.AllowAuthorizationCodeFlow();
-
-        // Register the signing and encryption credentials used to protect
-        // sensitive data like the state tokens produced by OpenIddict.
-        options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
-
-        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
-        options.UseAspNetCore()
-               .EnableStatusCodePagesIntegration()
-               .EnableRedirectionEndpointPassthrough();
-
-        // Register the System.Net.Http integration and use the identity of the current
-        // assembly as a more specific user agent, which can be useful when dealing with
-        // providers that use the user agent as a way to throttle requests (e.g Reddit).
-        options.UseSystemNetHttp()
-               .SetProductInformation(typeof(Program).Assembly);
-
-        // Register the Web providers integrations.
-        //
-        // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
-        // URI per provider, unless all the registered providers support returning a special "iss"
-        // parameter containing their URL as part of authorization responses. For more information,
-        // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
-        options.UseWebProviders()
-               .UseGitHub()
-               .SetClientId("c4ade52327b01ddacff3")
-               .SetClientSecret("da6bed851b75e317bf6b2cb67013679d9467c122")
-               .SetRedirectUri("callback/login/github");
-    })
-
     // Register the OpenIddict server components.
     .AddServer(options =>
     {
@@ -119,10 +86,16 @@ builder.Services.AddOpenIddict()
 
         // Mark the "email", "profile", "roles" and "demo_api" scopes as supported scopes.
         options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles, "demo_api");
-        // Register the signing and encryption credentials.
-        options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
 
+        // Set the lifetime of your tokens
+        options.SetAccessTokenLifetime(TimeSpan.FromMinutes(5));
+        options.SetRefreshTokenLifetime(TimeSpan.FromDays(1));
+        // Register the signing and encryption credentials.
+        //options.AddDevelopmentEncryptionCertificate()
+        //       .AddDevelopmentSigningCertificate();
+        options.AddEncryptionCertificate(LoadCertificate(
+                "_encryption-certificate.pfx"));
+        options.AddSigningCertificate(LoadCertificate("_signing-certificate.pfx"));
         // Force client applications to use Proof Key for Code Exchange (PKCE).
         options.RequireProofKeyForCodeExchange();
 
@@ -159,43 +132,7 @@ builder.Services.AddOpenIddict()
         // Note: when issuing access tokens used by third-party APIs
         // you don't own, you can disable access token encryption:
         //
-        options.DisableAccessTokenEncryption();
-    })
-
-    // Register the OpenIddict validation components.
-    .AddValidation(options =>
-    {
-        // Configure the audience accepted by this resource server.
-        // The value MUST match the audience associated with the
-        // "demo_api" scope, which is used by ResourceController.
-        //options.AddAudiences("resource_server");
-
-        // Import the configuration from the local OpenIddict server instance.
-        //options.UseLocalServer();
-
-        // Instead of validating the token locally by reading it directly,
-        // introspection can be used to ask a remote authorization server
-        // to validate the token (and its attached database entry).
-        //
-        options.UseIntrospection()
-               .SetIssuer("http://lcoalhost:5999")
-               .SetClientId("catalog_server")
-               .SetClientSecret("80B552BB-4CD8-48DA-946E-0815E0147DD2");
-        //
-        // When introspection is used, System.Net.Http integration must be enabled.
-        //
-        options.UseSystemNetHttp();
-
-        // Register the ASP.NET Core host.
-        options.UseAspNetCore();
-
-        // For applications that need immediate access token or authorization
-        // revocation, the database entry of the received tokens and their
-        // associated authorizations can be validated for each API call.
-        // Enabling these options may have a negative impact on performance.
-        //
-        // options.EnableAuthorizationEntryValidation();
-        // options.EnableTokenEntryValidation();
+        //options.DisableAccessTokenEncryption();
     });
 
 
@@ -258,4 +195,9 @@ string AssemblyDirectory()
     UriBuilder uri = new UriBuilder(codeBase);
     string path = Uri.UnescapeDataString(uri.Path);
     return Path.GetDirectoryName(path);
+}
+X509Certificate2 LoadCertificate(string thumbprint)
+{
+    var bytes = File.ReadAllBytes(thumbprint);
+    return new X509Certificate2(bytes, "123456");
 }

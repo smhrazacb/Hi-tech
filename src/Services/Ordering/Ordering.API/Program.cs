@@ -8,6 +8,7 @@ using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 // For username 
@@ -38,6 +39,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
     {
+        options.AddEncryptionCertificate(LoadCertificate(
+                "_encryption-certificate.pfx"));
         // Note: the validation handler uses OpenID Connect discovery
         // to retrieve the address of the introspection endpoint.
         options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
@@ -140,3 +143,8 @@ app.MigrateDatabase<OrderContext>((context, services) =>
 });
 
 app.Run();
+X509Certificate2 LoadCertificate(string thumbprint)
+{
+    var bytes = File.ReadAllBytes(thumbprint);
+    return new X509Certificate2(bytes, "123456");
+}

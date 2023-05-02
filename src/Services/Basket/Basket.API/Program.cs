@@ -6,6 +6,7 @@ using MassTransit;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddMassTransit(config =>
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
     {
+        options.AddEncryptionCertificate(LoadCertificate(
+                "_encryption-certificate.pfx"));
         // Note: the validation handler uses OpenID Connect discovery
         // to retrieve the address of the introspection endpoint.
         options.SetIssuer(builder.Configuration.GetValue<string>("IdentityUrl"));
@@ -136,4 +139,8 @@ app.MapControllers();
 
 app.Run();
 
-
+X509Certificate2 LoadCertificate(string thumbprint)
+{
+    var bytes = File.ReadAllBytes(thumbprint);
+    return new X509Certificate2(bytes, "123456");
+}

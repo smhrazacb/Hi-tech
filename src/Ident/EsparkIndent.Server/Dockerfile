@@ -1,13 +1,12 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
+EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Ident/EsparkIndent.Server/EsparkIndent.Server.csproj", "Ident/EsparkIndent.Server/"]
-COPY ["Ident/EsparkIndent.Server/signing-certificate.pfx", "Ident/EsparkIndent.Server/"]
-COPY ["Ident/EsparkIndent.Server/encryption-certificate.pfx", "Ident/EsparkIndent.Server/"]
 RUN dotnet restore "Ident/EsparkIndent.Server/EsparkIndent.Server.csproj"
 COPY . .
 WORKDIR "/src/Ident/EsparkIndent.Server"

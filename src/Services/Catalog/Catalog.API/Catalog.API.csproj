@@ -35,4 +35,9 @@
 	<ItemGroup>
 	  <Folder Include="dockerEnv\upload\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="_encryption-certificate.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

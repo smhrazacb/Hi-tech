@@ -1,9 +1,12 @@
 ﻿using Catalog.API.Data.Interfaces;
 using Catalog.API.Entities;
+using Catalog.API.Entities.Dtos;
 using Catalog.API.Extensions;
 using Catalog.API.Filter;
 using Catalog.API.Repositories.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using static Catalog.API.Entities.Dtos.CEnums;
 
 namespace Catalog.API.Repositories
 {
@@ -38,27 +41,41 @@ namespace Catalog.API.Repositories
                 .Find(p => p.Id == _id)
                 .FirstOrDefaultAsync();
         }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByCategory(PaginationFilter pagefilter, string _categoryName)
+        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByCategory(PaginationFilter pagefilter, FilterDto myfilter)
         {
+            SortDefinition<Category> sortDefinition = myfilter.IsAccending
+                ? Builders<Category>.Sort.Ascending(myfilter.Orderby.ToString())
+                : Builders<Category>.Sort.Descending(myfilter.Orderby.ToString());
+
             return await _context.CategoryList
-                .AggregateByPage(Builders<Category>.Filter.Eq(x => x.CategoryName, _categoryName),
-                Builders<Category>.Sort.Ascending(x => x.CategoryName),
+                .AggregateByPage(Builders<Category>.Filter.Eq(x => x.CategoryName, myfilter.FilterItemName),
+                sortDefinition,
                 page: pagefilter.PageNumber,
                 pageSize: pagefilter.PageSize);
         }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsBySubCategory(PaginationFilter pagefilter, string _subcatagoryname)
+        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsBySubCategory(PaginationFilter pagefilter, FilterDto myfilter)
         {
+            SortDefinition<Category> sortDefinition = myfilter.IsAccending
+                 ? Builders<Category>.Sort.Ascending(myfilter.Orderbyvalue)
+                 : Builders<Category>.Sort.Descending(myfilter.Orderbyvalue);
+
             return await _context.CategoryList
-                .AggregateByPage(Builders<Category>.Filter.Eq(x => x.SubCategory.SubCategoryName, _subcatagoryname),
-                Builders<Category>.Sort.Ascending(x => x.CategoryName),
+                .AggregateByPage(Builders<Category>.Filter.Eq(x => x.SubCategory.SubCategoryName, myfilter.FilterItemName),
+                sortDefinition,
                 page: pagefilter.PageNumber,
                 pageSize: pagefilter.PageSize);
         }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByName(PaginationFilter pagefilter, string _name)
+        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByName(PaginationFilter pagefilter, FilterDto myfilter)
         {
+
+            // Create a sort definition based on the field name and sort direction
+            SortDefinition<Category> sortDefinition = myfilter.IsAccending
+                ? Builders<Category>.Sort.Ascending(myfilter.Orderbyvalue)
+                : Builders<Category>.Sort.Descending(myfilter.Orderbyvalue);
+
             return await _context.CategoryList
-                .AggregateByPage(Builders<Category>.Filter.Eq(x => x.SubCategory.Product.Name, _name),
-                Builders<Category>.Sort.Ascending(x => x.CategoryName),
+                .AggregateByPage(Builders<Category>.Filter.Eq(x => x.SubCategory.Product.Name, myfilter.FilterItemName),
+                sortDefinition,
                 page: pagefilter.PageNumber,
                 pageSize: pagefilter.PageSize);
         }
@@ -67,11 +84,9 @@ namespace Catalog.API.Repositories
             var filter1 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.ManufacturerPartNo, mfp);
             var filter2 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.Manufacturer, mf);
             var res = await _context.CategoryList.Find(filter1 & filter2).ToListAsync();
-            if (res == null)
-            {
-                Console.WriteLine();
-            }
             return res;
         }
+
+
     }
 }

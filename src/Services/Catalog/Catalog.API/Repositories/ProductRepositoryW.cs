@@ -33,8 +33,7 @@ namespace Catalog.API.Repositories
             var updateResult = await _context
                                         .CategoryList
                                         .ReplaceOneAsync(filter: g => g.Id == _product.Id, replacement: _product);
-            return updateResult.IsAcknowledged
-                               && updateResult.ModifiedCount > 0;
+            return  updateResult.ModifiedCount > 0;
         }
         public async Task<BulkWriteResult<Category>> UpdateProducts(IEnumerable<Category> products)
         {

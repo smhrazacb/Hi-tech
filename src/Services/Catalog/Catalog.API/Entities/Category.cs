@@ -3,11 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalog.API.Entities
 {
-    public class Category
+    public class Category : BaseEntity
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
         public string CategoryName { get; set; }
         public SubCategory SubCategory { get; set; }
 

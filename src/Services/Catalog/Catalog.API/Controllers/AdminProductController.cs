@@ -35,60 +35,68 @@ namespace Catalog.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(CSVDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CSVDto>> UplaodCSVProducts(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("File is not selected or empty");
-            // Save the file to disk
-            var destPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/upload");
-            if (!Directory.Exists(destPath))
-                Directory.CreateDirectory(destPath);
-
-            var filePath = Path.Combine(destPath,
-                Path.GetFileNameWithoutExtension(file.FileName)
-                  + "_"
-                  + DateTime.Now.ToString("yyyyddMMHHmmss")
-                  + Path.GetExtension(file.FileName));
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
-                Console.WriteLine(filePath);
-            }
-            var result = _csv2category.Read(filePath);
+                if (file == null || file.Length == 0)
+                    return BadRequest("File is not selected or empty");
+                // Save the file to disk
+                var destPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/upload");
+                if (!Directory.Exists(destPath))
+                    Directory.CreateDirectory(destPath);
 
-            foreach (var item in result.NewProducts)
-            {
-                var res = repositoryR
-                    .GetProductsByMFP(item.SubCategory.Product.ManufacturerPartNo,
-                    item.SubCategory.Product.Manufacturer);
-                if (res.Result.Count() != 0)
+                var filePath = Path.Combine(destPath,
+                    Path.GetFileNameWithoutExtension(file.FileName)
+                      + "_"
+                      + DateTime.Now.ToString("yyyyddMMHHmmss")
+                      + Path.GetExtension(file.FileName));
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    item.Id = res.Result.FirstOrDefault().Id;
-                    result.UpdateProducts.Add(item);
+                    await file.CopyToAsync(stream);
+                    Console.WriteLine(filePath);
                 }
-            }
+                var result = _csv2category.Read(filePath);
 
-            foreach (var item in result.UpdateProducts)
-            {
-                result.NewProducts.Remove(item);
-            }
-            // Update db already existed products 
-            if (result.UpdateProducts.Count() != 0)
-            {
-                var bulkWriteResult = await repositoryW.UpdateProducts(result.UpdateProducts);
-            }
-            // Update db New Products
-            if (result.NewProducts.Count() != 0)
-            {
-                await repositoryW.UploadProducts(result.NewProducts);
-            }
-            // Populate Summary 
-            result.DuplicatePartNumbersCount = result.DuplicatePartNumbers.Count();
-            result.InvalidEntriesCount = result.InvalidEntries.Count();
-            result.NewProductsCount = result.NewProducts.Count();
-            result.UpdateProductsCount = result.UpdateProducts.Count();
+                foreach (var item in result.NewProducts)
+                {
+                    var res = repositoryR
+                        .GetProductsByMFP(item.SubCategory.Product.ManufacturerPartNo,
+                        item.SubCategory.Product.Manufacturer);
+                    if (res.Result.Count() != 0)
+                    {
+                        item.Id = res.Result.FirstOrDefault().Id;
+                        result.UpdateProducts.Add(item);
+                    }
+                }
 
-            return Ok(result);
+                foreach (var item in result.UpdateProducts)
+                {
+                    result.NewProducts.Remove(item);
+                }
+                // Update db already existed products 
+                if (result.UpdateProducts.Count() != 0)
+                {
+                    var bulkWriteResult = await repositoryW.UpdateProducts(result.UpdateProducts);
+                }
+                // Update db New Products
+                if (result.NewProducts.Count() != 0)
+                {
+                    await repositoryW.UploadProducts(result.NewProducts);
+                }
+                // Populate Summary 
+                result.DuplicatePartNumbersCount = result.DuplicatePartNumbers.Count();
+                result.InvalidEntriesCount = result.InvalidEntries.Count();
+                result.NewProductsCount = result.NewProducts.Count();
+                result.UpdateProductsCount = result.UpdateProducts.Count();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         /// Update a Product
@@ -96,10 +104,18 @@ namespace Catalog.API.Controllers
         /// <param name="product"></param>
         /// <returns></returns>
         [HttpPut]
-        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProduct([FromBody] Category product)
         {
-            return Ok(await repositoryW.UpdateProduct(product));
+            if (await repositoryR.GetProductById(product.Id) == null)
+                return NotFound();
+            if (await repositoryW.UpdateProduct(product))
+            {
+                return NoContent();
+            }
+            return BadRequest();
         }
         /// <summary>
         /// Delete a Product if Id matched
@@ -107,10 +123,16 @@ namespace Catalog.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
-        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteProductById(string id)
         {
-            return Ok(await repositoryW.DeleteProduct(id));
+            if (await repositoryR.GetProductById(id) == null)
+                return NotFound();
+            if (await repositoryW.DeleteProduct(id))
+                return Ok();
+            return BadRequest();
         }
     }
 }

@@ -4,19 +4,22 @@ using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
+using System.Diagnostics;
 using System.Net;
 
 namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class AdminProductController : ControllerBase
     {
         private readonly IProductRepositoryR repositoryR;
         private readonly IProductRepositoryW repositoryW;
         private readonly ICSV2Category _csv2category;
+        private readonly ILogger<AdminProductController> _logger;
 
         public AdminProductController(IProductRepositoryR repositoryR, IProductRepositoryW repositoryW, ICSV2Category csv2category)
         {
@@ -72,7 +75,7 @@ namespace Catalog.API.Controllers
             // Update db already existed products 
             if (result.UpdateProducts.Count() != 0)
             {
-                var res = await repositoryW.UpdateProducts(result.UpdateProducts);
+                var bulkWriteResult = await repositoryW.UpdateProducts(result.UpdateProducts);
             }
             // Update db New Products
             if (result.NewProducts.Count() != 0)

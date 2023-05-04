@@ -14,8 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Services\Cat
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F7CE2252-3968-4101-8535-FAC943A9DBA4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototype", "Prototype", "{553F25EC-E58E-489B-A8C3-5F9C0FF6E9C7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{EF0B6891-2729-4894-A409-DF88788FC622}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OcelotApiGw", "ApiGateways\OcelotApiGw\OcelotApiGw\OcelotApiGw.csproj", "{7992D308-4FDA-4B89-B3B6-F416F79C5883}"
@@ -29,8 +27,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Messages", "BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj", "{AA756CA2-E02F-4054-BC2C-255F3A4DE36E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common.Logging", "Common.Logging", "{D50200E1-45E6-43BA-B740-9A30B4EAACA2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClientApp", "WebClientApp", "{2121806E-4896-4B73-AD8D-ACF0139937C6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ident", "Ident", "{A11E2B1A-31EF-4325-831F-05B275556410}"
 EndProject
@@ -48,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Infrastructure", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{4D328928-EB80-4F48-8E5A-A24A004AC726}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIscConsole", "Extra\MIscConsole\MIscConsole.csproj", "{B92C91FC-3DF0-485F-8066-1E6EEBE25A27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MIscConsole", "Extra\MIscConsole\MIscConsole.csproj", "{B92C91FC-3DF0-485F-8066-1E6EEBE25A27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

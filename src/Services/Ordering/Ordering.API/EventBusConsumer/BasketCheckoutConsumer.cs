@@ -30,6 +30,8 @@ namespace Ordering.API.EventBusConsumer
             _logger.LogInformation($"BasketCheckoutEvent consumed successfully. Created Order Id : {command.OrderId}");
             // send delete basket event to rabbitmq
             await _publishEndpoint.Publish(orderCompleteEvent);
+
+            _logger.LogInformation($"Publishing OrderCompleteEvent for Order Id : {command.OrderId}");
         }
     }
 }

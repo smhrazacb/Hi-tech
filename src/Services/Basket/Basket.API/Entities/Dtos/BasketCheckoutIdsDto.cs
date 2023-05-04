@@ -3,7 +3,6 @@
     public class BasketCheckoutIdsDto
     {
         public Guid ShoppingCartId { get; set; }
-        public Guid UserId { get; set; }
         public decimal TotalPrice { get; set; }
         // BillingAddress
         public string FirstName { get; set; }

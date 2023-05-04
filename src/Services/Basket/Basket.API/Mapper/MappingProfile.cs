@@ -16,8 +16,8 @@ namespace Basket.API.Mapping
                 .ReverseMap();
             CreateMap<BasketCheckoutEvent, BasketCheckoutIdsDto>()
                 .ReverseMap();
-            CreateMap<ShoppingItem, EventCartItem>()
-             .ReverseMap();
+            CreateMap<CatalogStockDelEvent, ShoppingCart>()
+             .ReverseMap();  
         }
     }
 }

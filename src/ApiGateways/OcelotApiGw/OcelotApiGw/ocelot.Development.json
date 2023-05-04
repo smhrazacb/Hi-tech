@@ -1,150 +1,34 @@
 {
-  "Routes": [
+  "ReRoutes": [
     //Catalog API
-
     {
-      "DownstreamPathTemplate": "/api/v1/AdminProduct/",
+      "DownstreamPathTemplate": "/api/{version}/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "catalog.api",
-          "Port": "80"
+          "Host": "catalog-api",
+          "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/AdminProduct/",
-      "UpstreamhttpMethod": [ "POST" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/AdminProduct/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/AdminProduct/{id}",
-      "UpstreamhttpMethod": [ "DELETE" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/AdminProduct/",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/AdminProduct/",
-      "UpstreamhttpMethod": [ "PUT" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products",
-      "UpstreamhttpMethod": [ "GET" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products/{id}",
-      "UpstreamhttpMethod": [ "GET", "DELETE" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products/Category",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products/Category",
-      "UpstreamhttpMethod": [ "GET" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products/SubCategory",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products/SubCategory",
-      "UpstreamhttpMethod": [ "GET" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products/Name",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "catalog.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products/Name",
-      "UpstreamhttpMethod": [ "GET" ],
-      "SwaggerKey": "Products"
+      "UpstreamPathTemplate": "/api/{version}/c/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
     },
     // Basket.API
     {
-      "DownstreamPathTemplate": "/api/v1/Basket",
+      "DownstreamPathTemplate": "/api/{version}/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "basket.api",
-          "Port": "80"
+          "Host": "basket-api",
+          "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/Basket",
-      "UpstreamhttpMethod": [ "POST", "PUT" ],
-      "SwaggerKey": "Basket"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Basket/{guid}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "basket.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Basket/{guid}",
-      "UpstreamhttpMethod": [ "GET", "DELETE" ],
-      "SwaggerKey": "Basket"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Basket/Checkout",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "basket.api",
-          "Port": "80"
-        }
-      ],
-      "UpstreamPathTemplate": "/Basket/Checkout",
-      "UpstreamhttpMethod": [ "POST" ],
-      "SwaggerKey": "Basket"
+      "UpstreamPathTemplate": "/api/{version}/b/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      }
     }
   ],
   "SwaggerEndPoints": [

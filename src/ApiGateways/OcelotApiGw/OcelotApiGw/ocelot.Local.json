@@ -2,71 +2,46 @@
   "Routes": [
     //Catalog API
     {
-      "DownstreamPathTemplate": "/api/v1/Products",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/{version}/{everything}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "/Products",
-      "UpstreamhttpsMethod": [ "GET", "POST", "PUT" ],
+      "UpstreamPathTemplate": "/api/{version}/c/{everything}",
+      "UpstreamHttpMethod": [ ],
       "SwaggerKey": "Products"
     },
+    // Basket.API
     {
-      "DownstreamPathTemplate": "/api/v1/Products/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/{version}/{everything}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": 5002
         }
       ],
-      "UpstreamPathTemplate": "/Products/{id}",
-      "UpstreamhttpsMethod": [ "GET", "DELETE" ],
-      "SwaggerKey": "Products"
+      "UpstreamPathTemplate": "/api/{version}/b/{everything}",
+      "UpstreamHttpMethod": [],
+      "SwaggerKey": "Basket"
     },
+    //Ordering APi
     {
-      "DownstreamPathTemplate": "/api/v1/Products/Category",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/{version}/{everything}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": 5003
         }
       ],
-      "UpstreamPathTemplate": "/Products/Category",
-      "UpstreamhttpsMethod": [ "GET" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products/SubCategory",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "5000"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products/SubCategory",
-      "UpstreamhttpsMethod": [ "GET" ],
-      "SwaggerKey": "Products"
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/Products/Name",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "5000"
-        }
-      ],
-      "UpstreamPathTemplate": "/Products/Name",
-      "UpstreamhttpsMethod": [ "GET" ],
-      "SwaggerKey": "Products"
+      "UpstreamPathTemplate": "/api/{version}/o/{everything}",
+      "UpstreamHttpMethod": [],
+      "SwaggerKey": "Ordering"
     }
-
   ],
   "SwaggerEndPoints": [
     {
@@ -75,12 +50,32 @@
         {
           "Name": "Products API",
           "Version": "v1",
-          "Url": "https://localhost:5000/swagger/v1/swagger.json"
+          "Url": "http://localhost:5001/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Basket",
+      "Config": [
+        {
+          "Name": "Basket API",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Ordering",
+      "Config": [
+        {
+          "Name": "Ordering API",
+          "Version": "v1",
+          "Url": "http://localhost:5003/swagger/v1/swagger.json"
         }
       ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5010"
+    "BaseUrl": "http://localhost:5010"
   }
 }

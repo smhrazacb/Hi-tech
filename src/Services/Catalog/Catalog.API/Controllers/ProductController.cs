@@ -15,16 +15,13 @@ namespace Catalog.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepositoryR repository;
-        private readonly IMapper _mapper;
         private readonly IUriService uriService;
 
-        public ProductsController(IProductRepositoryR repository, IMapper mapper, IUriService uriService)
+        public ProductsController(IProductRepositoryR repository, IUriService uriService)
         {
             this.repository = repository;
-            _mapper = mapper;
             this.uriService = uriService;
         }
-
         /// <summary>
         /// Returns All Category, Subcategory and SucCategory Counts
         /// </summary>
@@ -57,6 +54,7 @@ namespace Catalog.API.Controllers
         /// <summary>
         /// Returns list of Product detail if Category matched Maxpage size is 50
         /// </summary>
+        /// <param name="filter"></param>
         /// <param name="category"></param>
         /// <returns></returns>
         [Route("[action]/")]
@@ -79,6 +77,7 @@ namespace Catalog.API.Controllers
         /// <summary>
         /// Returns list of Product detail if SubCategory matched Maxpage size is 50
         /// </summary>
+        /// <param name="filter"></param>
         /// <param name="subCategory"></param>
         /// <returns></returns>
         [Route("[action]/")]
@@ -101,6 +100,7 @@ namespace Catalog.API.Controllers
         /// <summary>
         /// Returns list of Product detail if Name matched Maxpage size is 50
         /// </summary>
+        /// <param name="filter"></param>
         /// <param name="name"></param>
         /// <returns></returns>
         [Route("[action]/")]
@@ -120,7 +120,5 @@ namespace Catalog.API.Controllers
 
             return Ok(pagedReponse);
         }
-
-
     }
 }

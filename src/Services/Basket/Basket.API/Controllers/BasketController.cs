@@ -9,6 +9,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
+using Polly;
 using System.Net;
 
 namespace Basket.API.Controllers
@@ -22,6 +23,7 @@ namespace Basket.API.Controllers
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<BasketController> _logger;
 
         public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor)
         {
@@ -103,13 +105,16 @@ namespace Basket.API.Controllers
             var basket = await _repository.GetBasket(basketCheckoutIdsDto.ShoppingCartId);
             if (basket == null)
                 return NotFound();
+
             // Validate basket price with current product price
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
             basketCheckoutEvent.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
+
             // send checkout event to rabbitmq
             basketCheckoutEvent.ShoppingItems = shoppingItems;
             await _publishEndpoint.Publish(basketCheckoutEvent);
+            _logger.LogInformation($"Publishing BasketCheckoutEvent for basket Id : {basket.ShoppingCartId}");
 
             return Accepted(basketCheckoutEvent);
         }

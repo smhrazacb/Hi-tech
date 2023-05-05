@@ -1,0 +1,15 @@
+Status,Sno,Column Name,Update Date,Update By,Sample Data,Data Type
+OK,1,Category,2. May. 2023,Sohail,Passive Components,String
+OK,2,SubCategory,2. May. 2023,Sohail,EMI / RFI Components,String
+OK,3,ManufacturerPartNo,2. May. 2023,Sohail,BLM18AG601SN1D,String
+OK,4,Manufacturer,2. May. 2023,Sohail,Murata Electronics,String
+OK,5,ItemName,2. May. 2023,Sohail,Ferrite Beads and Chips,String
+OK,6,Description,2. May. 2023,Sohail,FERRITE BEAD 600 OHM 0603 1LN,String
+OK,7,Stock,2. May. 2023,Sohail,44,Integer
+OK,8,Price,2. May. 2023,Sohail,28.005,Integer
+OK,9,Packaging,2. May. 2023,Sohail,Tape & Reel (TR),String
+OK,10,Series,2. May. 2023,Sohail,"EMIFIL®, BLM18",String
+OK,11,DatasheetUrl,2. May. 2023,Sohail,link,URL
+OK,12,ImageUrls,2. May. 2023,Sohail,link,URL
+OK,13,AdditionalFields,2. May. 2023,Sohail,"[{MountingType,Surface Mount},{Package/Case,IND 0603 }]",String
+-,14,Obsolete,5. May. 2023,Shah Meer,0,Bool

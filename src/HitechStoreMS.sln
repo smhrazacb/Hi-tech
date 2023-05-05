@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EA3B01AC-D553-4216-A3CD-B6450EFBF422}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{D0EFBC6D-94BC-4451-A280-FB96BCE34A9A}"
-	ProjectSection(SolutionItems) = preProject
-		Ident\EsparkIndent.Server\encryption-certificate.pfx = Ident\EsparkIndent.Server\encryption-certificate.pfx
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Services\Catalog\Catalog.API\Catalog.API.csproj", "{D6D9BE3A-60D3-43F4-B7BF-80283AFA4418}"
 EndProject

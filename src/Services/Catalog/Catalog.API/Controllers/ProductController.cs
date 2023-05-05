@@ -64,56 +64,11 @@ namespace Catalog.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> Category([FromQuery] GetbyItemDto requestDto)
-        {
-
-            var route = Request.Path.Value;
-            var validFilter = new PaginationFilter(requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
-            var (totalRecords, products) = await repository.GetProductsByCategory(validFilter, requestDto.Filterdto);
-
-            if (products == null)
-                return NotFound();
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse(products, validFilter, totalRecords, uriService, route);
-            return Ok(pagedReponse);
-        }
-        /// <summary>
-        /// Returns list of Product detail if SubCategory matched Maxpage size is 50
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="subCategory"></param>
-        /// <returns></returns>
-        [Route("[action]/")]
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> SubCategory([FromQuery] GetbyItemDto requestDto)
+        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> GetFileteredProducts([FromQuery] GetbyItemDto requestDto)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
-            var (totalRecords, products) = await repository.GetProductsBySubCategory(validFilter, requestDto.Filterdto);
-
-            if (products == null)
-                return NotFound();
-
-            var pagedReponse = PaginationHelper.CreatePagedReponse(products, validFilter, totalRecords, uriService, route);
-            return Ok(pagedReponse);
-        }
-        /// <summary>
-        /// Returns list of Product detail if Name matched Maxpage size is 50
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        [Route("[action]/")]
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> Name([FromQuery] GetbyItemDto requestDto)
-        {
-            var route = Request.Path.Value;
-            var validFilter = new PaginationFilter(requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
-            var (totalRecords, products) = await repository.GetProductsByName(validFilter, requestDto.Filterdto);
+            var (totalRecords, products) = await repository.GetFilteredProducts(validFilter, requestDto.Filterdto);
 
             if (products == null)
                 return NotFound();

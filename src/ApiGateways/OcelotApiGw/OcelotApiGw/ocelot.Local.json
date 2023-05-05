@@ -12,7 +12,7 @@
       ],
       "UpstreamPathTemplate": "/api/{version}/c/{everything}",
       "UpstreamHttpMethod": [ ],
-      "SwaggerKey": "Products"
+      "SwaggerKey": "Catalog"
     },
     // Basket.API
     {
@@ -45,10 +45,10 @@
   ],
   "SwaggerEndPoints": [
     {
-      "Key": "Products",
+      "Key": "Catalog",
       "Config": [
         {
-          "Name": "Products API",
+          "Name": "Catalog API",
           "Version": "v1",
           "Url": "http://localhost:5001/swagger/v1/swagger.json"
         }

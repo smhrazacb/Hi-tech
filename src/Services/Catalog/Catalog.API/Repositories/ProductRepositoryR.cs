@@ -40,15 +40,7 @@ namespace Catalog.API.Repositories
                 .Find(p => p.Id == _id)
                 .FirstOrDefaultAsync();
         }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByCategory(PaginationFilter pagefilter, FilterDto myfilter)
-        {
-            return await ApplyFilter(pagefilter, myfilter);
-        }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsBySubCategory(PaginationFilter pagefilter, FilterDto myfilter)
-        {
-            return await ApplyFilter(pagefilter, myfilter);
-        }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetProductsByName(PaginationFilter pagefilter, FilterDto myfilter)
+        public async Task<(long totalRecords, IEnumerable<Category>)> GetFilteredProducts(PaginationFilter pagefilter, FilterDto myfilter)
         {
             return await ApplyFilter(pagefilter, myfilter);
         }

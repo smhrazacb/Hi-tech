@@ -1,18 +1,23 @@
-﻿namespace Catalog.API.Entities.Dtos
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.ComponentModel;
+using System.Reflection;
+
+namespace Catalog.API.Entities.Dtos
 {
     public class CEnums
     {
-        public enum OrderBy
+        public enum PorductAttrib
         {
             CategoryName,
             SubCategoryName,
-            Manufacturer, 
+            Manufacturer,
             ManufacturerPartNo,
-            Name, 
+            Name,
             Price,
-            Packaging, 
+            Packaging,
             Stock,
-            Series, 
+            Series,
         }
     }
 }

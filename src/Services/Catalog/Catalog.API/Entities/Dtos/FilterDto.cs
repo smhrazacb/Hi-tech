@@ -1,54 +1,49 @@
-﻿using static Catalog.API.Entities.Dtos.CEnums;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.ComponentModel;
+using static Catalog.API.Entities.Dtos.CEnums;
 
 namespace Catalog.API.Entities.Dtos
 {
-    public class FilterDto
+    public class FilterDto : SortFilterDtoBase
     {
-        private OrderBy orderby;
-
-        public bool IsAccending { get; set; }
-        public OrderBy Orderby
+        public PorductAttrib? Filterby { get; set; }
+        public string? FilterValue { get; set; }
+        public string Filetrbyvalue()
+        {
+            return GetEnumaValue(Filterby);
+        }
+    }
+    public class SortDto : SortFilterDtoBase
+    {
+        private PorductAttrib? orderby;
+        /// <summary>
+        /// Default Value "Stock"
+        /// </summary>
+        public PorductAttrib? Orderby
         {
             get => orderby;
             set
             {
+                if (value == null)
+                    orderby = PorductAttrib.Stock;
                 orderby = value;
-                switch (Orderby)
-                {
-                    case OrderBy.CategoryName:
-                        Orderbyvalue = "CategoryName";
-                        break;
-                    case OrderBy.SubCategoryName:
-                        Orderbyvalue = "SubCategory.SubCategoryName";
-                        break;
-                    case OrderBy.Manufacturer:
-                        Orderbyvalue = "SubCategory.Product.Manufacturer";
-                        break;
-                    case OrderBy.ManufacturerPartNo:
-                        Orderbyvalue = "SubCategory.Product.ManufacturerPartNo";
-                        break;
-                    case OrderBy.Name:
-                        Orderbyvalue = "SubCategory.Product.Name";
-                        break;
-                    case OrderBy.Price:
-                        Orderbyvalue = "SubCategory.Product.Price";
-                        break;
-                    case OrderBy.Packaging:
-                        Orderbyvalue = "SubCategory.Product.Packaging";
-                        break;
-                    case OrderBy.Stock:
-                        Orderbyvalue = "SubCategory.Product.Stock";
-                        break;
-                    case OrderBy.Series:
-                        Orderbyvalue = "SubCategory.Product.Series";
-                        break;
-                    default:
-                        break;
-                }
             }
         }
-        public string Orderbyvalue { get; set; }
-        public string FilterItemName { get; set; }
-   
+        /// <summary>
+        /// Default is Desending order
+        /// </summary>
+        [DefaultValue(false)]
+        public bool IsAccending { get; set; }
+        public string Orderbyvalue()
+        {
+            return GetEnumaValue(Orderby);
+        }
+    }
+    public class SortFilterDto 
+    {
+        public SortDto Sortdto { get; set; }
+        public IEnumerable<FilterDto> Filters { get; set; }
+    
     }
 }

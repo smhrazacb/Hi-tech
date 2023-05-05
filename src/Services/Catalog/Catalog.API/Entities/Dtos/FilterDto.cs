@@ -5,18 +5,12 @@ using static Catalog.API.Entities.Dtos.CEnums;
 
 namespace Catalog.API.Entities.Dtos
 {
-    public class FilterDto : SortFilterDtoBase
-    {
-        public PorductAttrib? Filterby { get; set; }
-        public string? FilterValue { get; set; }
-        public string Filetrbyvalue()
-        {
-            return GetEnumaValue(Filterby);
-        }
-    }
-    public class SortDto : SortFilterDtoBase
+    public class FilterDto
     {
         private PorductAttrib? orderby;
+        public PorductAttrib? Filterby { get; set; }
+        [DefaultValue("")]
+        public string FilterValue { get; set; }
         /// <summary>
         /// Default Value "Stock"
         /// </summary>
@@ -35,15 +29,48 @@ namespace Catalog.API.Entities.Dtos
         /// </summary>
         [DefaultValue(false)]
         public bool IsAccending { get; set; }
+        public string Filetrbyvalue()
+        {
+            return GetEnumaValue(Filterby);
+        }
+
         public string Orderbyvalue()
         {
             return GetEnumaValue(Orderby);
         }
-    }
-    public class SortFilterDto 
-    {
-        public SortDto Sortdto { get; set; }
-        public IEnumerable<FilterDto> Filters { get; set; }
-    
+        private string GetEnumaValue(PorductAttrib? porductAttrib)
+        {
+            switch (porductAttrib)
+            {
+                case PorductAttrib.CategoryName:
+                    return "CategoryName";
+
+                case PorductAttrib.SubCategoryName:
+                    return "SubCategory.SubCategoryName";
+
+                case PorductAttrib.Manufacturer:
+                    return "SubCategory.Product.Manufacturer";
+
+                case PorductAttrib.ManufacturerPartNo:
+                    return "SubCategory.Product.ManufacturerPartNo";
+
+                case PorductAttrib.Name:
+                    return "SubCategory.Product.Name";
+
+                case PorductAttrib.Price:
+                    return "SubCategory.Product.Price";
+
+                case PorductAttrib.Packaging:
+                    return "SubCategory.Product.Packaging";
+
+                case PorductAttrib.Stock:
+                    return "SubCategory.Product.Stock";
+
+                case PorductAttrib.Series:
+                    return "SubCategory.Product.Series";
+
+            }
+            return "SubCategory.Product.Name";
+        }
     }
 }

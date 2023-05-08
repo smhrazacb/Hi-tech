@@ -10,14 +10,6 @@ namespace Catalog.API.Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-        public DateTime ModifiedDate { get; private set; }
-
-        public BaseEntity()
-        {
-            this.ModifiedDate = DateTime.Now;
-        }
+        public DateTime ModifiedDate { get; private set; } = DateTime.Now;
     }
 }

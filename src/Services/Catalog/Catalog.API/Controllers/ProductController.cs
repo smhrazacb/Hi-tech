@@ -34,7 +34,7 @@ namespace Catalog.API.Controllers
         public async Task<ActionResult<IEnumerable<CategoryWithCount>>> Products()
         {
             var products = await repository.GetProducts();
-
+          
             return Ok(products);
         }
         /// <summary>
@@ -61,14 +61,14 @@ namespace Catalog.API.Controllers
         /// <param name="category"></param>
         /// <returns></returns>
         [Route("[action]/")]
-        [HttpGet]
+        [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> GetFileteredProducts([FromQuery] GetbyItemDto requestDto)
+        public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> GetFileteredProducts([FromBody] GetbyItemDto requestDto)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
-            var (totalRecords, products) = await repository.GetFilteredProducts(validFilter, requestDto.Filterdto);
+            var (totalRecords, products) = await repository.GetFilteredProducts(validFilter, requestDto.FilterSortdto);
 
             if (products == null)
                 return NotFound();

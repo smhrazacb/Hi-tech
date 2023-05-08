@@ -4,6 +4,7 @@ using Catalog.API.Entities.Dtos;
 using Catalog.API.Extensions;
 using Catalog.API.Filter;
 using Catalog.API.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -40,9 +41,27 @@ namespace Catalog.API.Repositories
                 .Find(p => p.Id == _id)
                 .FirstOrDefaultAsync();
         }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetFilteredProducts(PaginationFilter pagefilter, FilterDto myfilter)
+        public async Task<(long totalRecords, IEnumerable<Category>)> GetFilteredProducts
+            (PaginationFilter pagefilter, FilterSortDto myfilter)
         {
-            return await ApplyFilter(pagefilter, myfilter);
+            SortDefinition<Category> sortDefinition = (bool)myfilter.Sortdto.IsAccending
+                              ? Builders<Category>.Sort.Ascending(myfilter.Sortdto.Orderbyvalue())
+                              : Builders<Category>.Sort.Descending(myfilter.Sortdto.Orderbyvalue());
+
+            var filters = Builders<Category>.Filter.Empty;
+            if (myfilter.Filters != null || myfilter.Filters.Count() != 0)
+            {
+                var filtersdef = new List<FilterDefinition<Category>>();
+                foreach (var item in myfilter.Filters)
+                {
+                    if (item.FilterValue != null)
+                        filtersdef.Add(Builders<Category>.Filter.Eq(item.Filetrbyvalue(), item.FilterValue));
+                }
+                if (filtersdef.Count != 0)
+                    filters = Builders<Category>.Filter.And(filtersdef);
+            }
+            return await _context.CategoryList
+                .AggregateByPage(filters, sortDefinition, page: pagefilter.PageNumber, pageSize: pagefilter.PageSize);
         }
         public async Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf)
         {
@@ -50,19 +69,6 @@ namespace Catalog.API.Repositories
             var filter2 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.Manufacturer, mf);
             var res = await _context.CategoryList.Find(filter1 & filter2).ToListAsync();
             return res;
-        }
-        private async Task<(long totalRecords, IEnumerable<Category>)> ApplyFilter(PaginationFilter pagefilter, FilterDto myfilter)
-        {
-            SortDefinition<Category> sortDefinition = myfilter.IsAccending
-                             ? Builders<Category>.Sort.Ascending(myfilter.Orderbyvalue())
-                             : Builders<Category>.Sort.Descending(myfilter.Orderbyvalue());
-
-            FilterDefinition<Category> filterDefinition = (myfilter.FilterValue == string.Empty)
-                             ? Builders<Category>.Filter.Empty
-                             : Builders<Category>.Filter.Eq(myfilter.Filetrbyvalue(), myfilter.FilterValue);
-
-            return await _context.CategoryList
-                .AggregateByPage(filterDefinition, sortDefinition, page: pagefilter.PageNumber, pageSize: pagefilter.PageSize);
         }
     }
 }

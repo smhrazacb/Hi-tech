@@ -3,9 +3,15 @@
 
 You need signing certificate which will be required for launching Microservices:
 Run ".\HiTech-Microservices\src\Extra\MIscConsole\MIscConsole.csproj"
+
 ![image](https://user-images.githubusercontent.com/124603258/236895669-ac04fb2a-1748-4c8e-8624-ef0713d2caa0.png)
+
+
 Signing certificate is added to each Microservice.
+
+
 ![Untitled](https://user-images.githubusercontent.com/124603258/236897173-749f778f-84f4-418f-90e6-cf8c090b8d10.png)
+
 
 For Containerization.
 You will need the following tools:

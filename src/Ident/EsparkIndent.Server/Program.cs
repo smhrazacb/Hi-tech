@@ -2,6 +2,7 @@ using EsparkIndent.Server.Entities;
 using EsparkIndent.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
 using System.Configuration;
@@ -26,7 +27,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Configure the context to use Microsoft SQL Server.
-    options.UseNpgsql(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("IdentConnectionString"));
 
     // Register the entity sets needed by OpenIddict.
     // Note: use the generic overload if you need

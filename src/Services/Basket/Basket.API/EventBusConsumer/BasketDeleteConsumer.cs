@@ -14,11 +14,12 @@ namespace Basket.API.EventBusConsumer
         private readonly IBasketRepository _repository;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public BasketDeleteConsumer(IMapper mapper, ILogger<BasketDeleteConsumer> logger, IBasketRepository repository)
+        public BasketDeleteConsumer(IMapper mapper, ILogger<BasketDeleteConsumer> logger, IBasketRepository repository, IPublishEndpoint publishEndpoint)
         {
             _mapper = mapper;
             _logger = logger;
             _repository = repository;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task Consume(ConsumeContext<OrderCompleteEvent> context)
@@ -34,7 +35,8 @@ namespace Basket.API.EventBusConsumer
             await _repository.DeleteBasket(basket.ShoppingCartId);
             _logger.LogInformation($"OrderCompleteEvent consumed successfully. Deleted Shopping Cart Id : {basket.ShoppingCartId}");
             
-            var catalogStockDelEvent = _mapper.Map<CatalogStockDelEvent>(basket.ShoppingItems);
+            var catalogStockDelEvent = _mapper.Map<CatalogStockDelEvent>(basket);
+            catalogStockDelEvent.OrderId = context.Message.OrderId;
             await _publishEndpoint.Publish(catalogStockDelEvent);
             _logger.LogInformation($"Publishing CatalogStockDelEvent for Order Id : {context.Message.OrderId}");
         }

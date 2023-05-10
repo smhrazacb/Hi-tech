@@ -25,15 +25,14 @@ namespace Basket.API.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<BasketController> _logger;
 
-        public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor)
+        public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor, ILogger<BasketController> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
-
-
         /// <summary>
         /// <para>Returns a requested Basket if Id existed</para> 
         /// </summary>

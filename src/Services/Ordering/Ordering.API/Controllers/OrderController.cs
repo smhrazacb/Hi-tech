@@ -20,6 +20,11 @@ namespace Ordering.API.Controllers
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+        /// <summary>
+        /// Return Order
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpGet("{userName}", Name = "GetOrder")]
         [ProducesResponseType(typeof(IEnumerable<OrdersVm>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrder(string userName)
@@ -28,7 +33,11 @@ namespace Ordering.API.Controllers
             var orders = await _mediator.Send(query);
             return Ok(orders);
         }
-
+        /// <summary>
+        /// For Testing only
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         // testing purpose
         [HttpPost(Name = "CheckoutOrder")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -37,20 +46,26 @@ namespace Ordering.API.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
-
+        /// <summary>
+        /// Update Order
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPut(Name = "UpdateOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderCommand command)
         {
             await _mediator.Send(command);
             return NoContent();
         }
-
+        /// <summary>
+        /// Detele Order
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}", Name = "DeleteOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteOrder(int id)
         {

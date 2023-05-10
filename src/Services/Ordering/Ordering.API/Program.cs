@@ -74,14 +74,13 @@ builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
         Title = "Ordering API",
-        Description = "To add items into shopping carts",
+        Description = "For Browse and manage Products",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {
@@ -127,6 +126,7 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     options.IncludeXmlComments(xmlPath);
 });
+
 var app = builder.Build();
 //Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -134,7 +134,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Ordering API"); });
+    app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.json", "Ordering API"); });
 }
 app.UseAuthentication();
 app.UseAuthorization();

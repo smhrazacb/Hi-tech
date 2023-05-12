@@ -5,7 +5,6 @@ namespace EventBus.Messages.Events
     public class BasketCheckoutEvent : IntegrationBaseEvent
     {
         public IEnumerable<EventCartItem> ShoppingItems { get; set; }
-        public Guid ShoppingCartId { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
 

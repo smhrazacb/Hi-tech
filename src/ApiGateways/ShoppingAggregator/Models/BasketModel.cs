@@ -1,0 +1,11 @@
+﻿using System.Collections.Generic;
+
+namespace ShoppingAggregator.Models
+{
+    public class BasketModel
+    {
+        public string UserId { get; set; }
+        public IEnumerable<CatalogModel> Items { get; set; } = new List<CatalogModel>();
+        public decimal TotalPrice { get; set; }
+    }
+}

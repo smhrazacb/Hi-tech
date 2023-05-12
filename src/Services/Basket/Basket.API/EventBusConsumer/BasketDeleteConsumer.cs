@@ -25,15 +25,15 @@ namespace Basket.API.EventBusConsumer
         public async Task Consume(ConsumeContext<OrderCompleteEvent> context)
         {
             // Get Basket
-            var basket = await _repository.GetBasket(context.Message.ShoppingCartId);
+            var basket = await _repository.GetBasket(context.Message.UserId);
             if (basket == null)
             {
-                _logger.LogInformation($"ShoppingCart not found Id : {context.Message.ShoppingCartId}");
+                _logger.LogInformation($"ShoppingCart not found Id : {context.Message.UserId}");
                 return;
             }
             // remove the basket
-            await _repository.DeleteBasket(basket.ShoppingCartId);
-            _logger.LogInformation($"OrderCompleteEvent consumed successfully. Deleted Shopping Cart Id : {basket.ShoppingCartId}");
+            await _repository.DeleteBasket(basket.UserId);
+            _logger.LogInformation($"OrderCompleteEvent consumed successfully. Deleted Shopping Cart Id : {basket.UserId}");
             
             var catalogStockDelEvent = _mapper.Map<CatalogStockDelEvent>(basket);
             catalogStockDelEvent.OrderId = context.Message.OrderId;

@@ -4,9 +4,8 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {
     public class CheckoutOrderCommand : IRequest<int>
     {
-        public Guid ShoppingCartId { get; set; }
-        public int OrderId { get; set; }
         public string UserId { get; set; }
+        public int OrderId { get; set; }
         public decimal TotalPrice { get; set; }
         public IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
 

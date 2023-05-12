@@ -42,9 +42,9 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [AllowAnonymous]
-        public async Task<ActionResult<ShoppingCart>> GetBasket(Guid guid)
+        public async Task<ActionResult<ShoppingCart>> GetBasket(string userid)
         {
-            var basket = await _repository.GetBasket(guid);
+            var basket = await _repository.GetBasket(userid);
             if (basket == null)
                 return NotFound();
             return Ok(basket);
@@ -59,6 +59,7 @@ namespace Basket.API.Controllers
         public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
         {
             var shoppingCart = _mapper.Map<ShoppingCart>(shoppingCartDto);
+            shoppingCart.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
             return Ok(await _repository.UpdateBasket(shoppingCart));
         }
         /// <summary>
@@ -71,7 +72,7 @@ namespace Basket.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
         {
-            var basket = await _repository.GetBasket(shoppingCart.ShoppingCartId);
+            var basket = await _repository.GetBasket(shoppingCart.UserId);
             if (basket == null)
                 return NotFound();
             return Ok(await _repository.UpdateBasket(shoppingCart));
@@ -83,9 +84,9 @@ namespace Basket.API.Controllers
         /// <returns></returns>
         [HttpDelete("{guid}", Name = "DeleteBasket")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteBasket(Guid guid)
+        public async Task<IActionResult> DeleteBasket(string userid)
         {
-            await _repository.DeleteBasket(guid);
+            await _repository.DeleteBasket(userid);
             return Ok();
         }
         /// <summary>
@@ -101,7 +102,7 @@ namespace Basket.API.Controllers
         public async Task<ActionResult<BasketCheckoutEvent>> Checkout([FromBody] BasketCheckoutIdsDto basketCheckoutIdsDto)
         {
             // Get Basket
-            var basket = await _repository.GetBasket(basketCheckoutIdsDto.ShoppingCartId);
+            var basket = await _repository.GetBasket(basketCheckoutIdsDto.UserId);
             if (basket == null)
                 return NotFound();
 
@@ -113,7 +114,7 @@ namespace Basket.API.Controllers
             // send checkout event to rabbitmq
             basketCheckoutEvent.ShoppingItems = shoppingItems;
             await _publishEndpoint.Publish(basketCheckoutEvent);
-            _logger.LogInformation($"Publishing BasketCheckoutEvent for basket Id : {basket.ShoppingCartId}");
+            _logger.LogInformation($"Publishing BasketCheckoutEvent for basket Id : {basket.UserId}");
 
             return Accepted(basketCheckoutEvent);
         }

@@ -12,10 +12,10 @@ namespace Ordering.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByShoppingCart(Guid shoppingcartid)
+        public async Task<IEnumerable<Order>> GetOrdersByShoppingCart(string userid)
         {
             var orderList = await _dbContext.Orders
-                                 .Where(o => o.ShoppingCartId == shoppingcartid)
+                                 .Where(o => o.UserId == userid)
                                  .ToListAsync();
             return orderList;
         }

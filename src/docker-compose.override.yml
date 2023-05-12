@@ -81,6 +81,12 @@ services:
     ports:
       - "8003:80"
 
+  #shoppingaggregator:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  ports:
+  #    - "80"
+
   ocelotapigw:
     container_name: ocelotapigw
     environment:
@@ -97,7 +103,6 @@ services:
     ports:
         - "5672:5672"
         - "15672:15672"
-
 
 
 

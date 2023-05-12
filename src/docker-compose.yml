@@ -46,11 +46,18 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
 
+  #shoppingaggregator:
+  #  image: ${DOCKER_REGISTRY-}shoppingaggregator
+  #  build:
+  #    context: .
+  #    dockerfile: ApiGateways/ShoppingAggregator/Dockerfile
+
 volumes:
   mongo_data:
   postgres_data_order:
   postgres_data_ident:
   redis_data:
+
 
 
 

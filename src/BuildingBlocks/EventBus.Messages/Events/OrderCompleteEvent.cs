@@ -3,6 +3,6 @@
     public class OrderCompleteEvent : IntegrationBaseEvent
     {
         public int OrderId { get; set; }
-        public Guid ShoppingCartId { get; set; }
+        public string UserId { get; set; }
     }
 }

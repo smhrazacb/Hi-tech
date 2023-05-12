@@ -7,10 +7,8 @@ namespace Ordering.Infrastructure.Persistence
 {
     public class OrderContext : DbContext
     {
-        private readonly IIdentityService _identityService;
-        public OrderContext(IIdentityService identityService, DbContextOptions<OrderContext> options) : base(options)
+        public OrderContext(DbContextOptions<OrderContext> options) : base(options)
         {
-            _identityService = identityService;
         }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }

@@ -8,7 +8,8 @@
         "catalog.api": "StartDebugging",
         "ident.server": "StartDebugging",
         "ocelotapigw": "StartDebugging",
-        "ordering.api": "StartDebugging"
+        "ordering.api": "StartDebugging",
+        "shoppingaggregator": "StartDebugging"
       }
     }
   }

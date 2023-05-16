@@ -32,9 +32,9 @@ namespace Catalog.API.Data
                                 Manufacturer= "ABC",
                                 ManufacturerPartNo = "1n4001",
                                 Packaging = "Per Piece",
-                                Price = 200,
+                                UnitPrice = 200,
                                 Series = "Automotive",
-                                Stock = 9
+                                Quantity = 9
                             }
                         }
                 },
@@ -53,9 +53,9 @@ namespace Catalog.API.Data
                                 Manufacturer = "ABC",
                                 ManufacturerPartNo = "tn4001",
                                 Packaging = "Per Piece",
-                                Price = 100,
+                                UnitPrice = 100,
                                 Series = "Automotive",
-                                Stock = 50
+                                Quantity = 50
                             }
                         }
                 },
@@ -72,9 +72,9 @@ namespace Catalog.API.Data
                              Manufacturer= "ABghC",
                              ManufacturerPartNo = "fgdf4",
                              Packaging = "Per Piece",
-                             Price = 2030,
+                             UnitPrice = 2030,
                              Series = "Automotive",
-                             Stock = 9
+                             Quantity = 9
                          },
                      }
                  },
@@ -91,9 +91,9 @@ namespace Catalog.API.Data
                             Manufacturer = "ABC",
                             ManufacturerPartNo = "tn4fgf001",
                             Packaging = "Per Piece",
-                            Price = 16400,
+                            UnitPrice = 16400,
                             Series = "Automotive",
-                            Stock = 560
+                            Quantity = 560
                         },
                     }
                 },
@@ -110,9 +110,9 @@ namespace Catalog.API.Data
                             Manufacturer= "AdfBffC",
                             ManufacturerPartNo = "gdfdfg45345",
                             Packaging = "Per Piece",
-                            Price = 900,
+                            UnitPrice = 900,
                             Series = "Automotive",
-                            Stock = 4
+                            Quantity = 4
                         },
                     }
                 }

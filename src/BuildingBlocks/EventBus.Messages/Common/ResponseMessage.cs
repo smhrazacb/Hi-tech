@@ -1,11 +1,15 @@
-﻿namespace Catalog.API.Responses
+﻿namespace EventBus.Messages.Common
 {
-    public class Response<T>
+    public class ResponseMessage<T>
     {
-        public Response()
+        public ResponseMessage()
         {
         }
-        public Response(T data)
+        public ResponseMessage(string errorMessage)
+        {
+            Message = errorMessage;
+        }
+        public ResponseMessage(T data)
         {
             Succeeded = true;
             Message = string.Empty;

@@ -33,18 +33,18 @@ namespace Catalog.API.EventBusConsumer
                     orderStockReport.Add(new OrderStockStatus(item, tmsg));
                     continue;
                 }
-                if (category.SubCategory.Product.Stock < item.Quantity)
+                if (category.SubCategory.Product.Quantity < item.Quantity)
                 {
-                    var tmsg = $"Productid {item.ProductId} Stock unavailable. Orderd : {item.Quantity} available : {category.SubCategory.Product.Stock}";
+                    var tmsg = $"Productid {item.ProductId} Stock unavailable. Orderd : {item.Quantity} available : {category.SubCategory.Product.Quantity}";
                     _logger.LogError(tmsg);
                     orderStockReport.Add(new OrderStockStatus(item, tmsg));
                     continue;
                 }
                 else
                 {
-                    category.SubCategory.Product.Stock = (uint)(category.SubCategory.Product.Stock - item.Quantity);
+                    category.SubCategory.Product.Quantity = (uint)(category.SubCategory.Product.Quantity - item.Quantity);
                     await _repositoryW.UpdateProduct(category);
-                    var tmsg = $"Productid {item.ProductId} available stock : {category.SubCategory.Product.Stock} ({category.SubCategory.Product.Stock + item.Quantity})";
+                    var tmsg = $"Productid {item.ProductId} available stock : {category.SubCategory.Product.Quantity} ({category.SubCategory.Product.Quantity + item.Quantity})";
                     _logger.LogInformation(tmsg);
                 }
             }

@@ -1,17 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Catalog.API.Entities
+﻿namespace ShoppingAggregator.Models 
 {
     public class Product
     {
         public string Manufacturer { get; set; }
         public string ManufacturerPartNo { get; set; }
-        //public string Category { get; set; }
-        //public string SubCategory { get; set; }
         public string Series { get; set; }
-
-        [BsonElement("Name")]
         public string Name { get; set; }
         public string ProductNameShortdesc { get; set; }
         public string Packaging { get; set; }

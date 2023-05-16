@@ -1,7 +1,9 @@
-﻿namespace Catalog.API.Responses
+﻿using EventBus.Messages.Common;
+
+namespace Catalog.API.Responses
 
 {
-    public class PagedResponse<T> : Response<T>
+    public class PagedResponse<T> : ResponseMessage<T>
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

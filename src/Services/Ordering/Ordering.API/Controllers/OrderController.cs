@@ -64,7 +64,8 @@ namespace Ordering.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id}", Name = "DeleteOrder")]
+        [HttpDelete("[action]/{id}", Name = "DeleteOrder")]
+        //[Route("[action]/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteOrder(int id)

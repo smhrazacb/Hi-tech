@@ -3,6 +3,7 @@ using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using Basket.API.Repositories.Interfaces;
+using EventBus.Messages.Common;
 using EventBus.Messages.Events;
 using EventBus.Messages.Models;
 using MassTransit;
@@ -34,20 +35,22 @@ namespace Basket.API.Controllers
             _logger = logger;
         }
         /// <summary>
-        /// <para>Returns a requested Basket if Id existed</para> 
+        ///     Returns a requested Basket if Id existed
         /// </summary>
-        /// <param name="guid"></param>
+        /// <param name="userid"></param>
         /// <returns></returns>
-        [HttpGet("{guid}", Name = "GetBasket")]
-        [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [HttpGet("{userid}", Name = "GetBasket")]
+        [ProducesResponseType(typeof(ResponseMessage<ShoppingCart>), (int)HttpStatusCode.OK)]
         [AllowAnonymous]
-        public async Task<ActionResult<ShoppingCart>> GetBasket(string userid)
+        public async Task<ActionResult<ResponseMessage<ShoppingCart>>> GetBasket(string userid)
         {
             var basket = await _repository.GetBasket(userid);
             if (basket == null)
-                return NotFound();
-            return Ok(basket);
+            {
+                return new ResponseMessage<ShoppingCart>(HttpStatusCode.NotFound.ToString());
+            }
+            var response = new ResponseMessage<ShoppingCart>(basket);
+            return Ok(response);
         }
         /// <summary>
         /// <para>Create a new Basket with product</para>

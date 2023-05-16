@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EventBus.Messages.Common;
+using Microsoft.AspNetCore.Mvc;
 using ShoppingAggregator.Models;
 using ShoppingAggregator.Services.Interfaces;
 using System.Net;
@@ -21,28 +22,35 @@ namespace ShoppingAggregator.Controllers
         }
 
         [HttpGet("{userName}", Name = "GetShopping")]
-        [ProducesResponseType(typeof(ShoppingModel), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingModel>> GetShopping(string userName)
+        [ProducesResponseType(typeof(ResponseMessage<ShoppingModel>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ResponseMessage<ShoppingModel>>> GetShopping(string userName)
         {
             var basket = await _basketService.GetBasket(userName);
-
-            foreach (var item in basket.Items)
+            if (basket.Succeeded)
             {
-                var product = await _catalogService.GetCatalog(item.Id);
-                await Console.Out.WriteLineAsync(   "fdf");
-            }            
+                for (int i = 0; i < basket.Data.ShoppingItems.Count(); i++)
+                {
+                    var basPro = basket.Data.ShoppingItems.ElementAt(i);
+                    var product = await _catalogService.GetCatalog(basPro.ProductId);
 
+                    basPro.CategoryName = product.Data.CategoryName;
+                    basPro.ModifiedDate = product.Data.ModifiedDate;
+                    basPro.SubCategoryName = product.Data.SubCategory.SubCategoryName;
+                    basPro.Packaging = product.Data.SubCategory.Product.Packaging;
+                    basPro.Name = product.Data.SubCategory.Product.Name;
+                    basPro.AdditionalFields = product.Data.SubCategory.Product.AdditionalFields;
+                    basket.Data.ShoppingItems.ElementAt(i).Equals(basPro);
+                }
+            }
             var orders = await _orderService.GetOrdersByUserName(userName);
-
             var shoppingModel = new ShoppingModel
             {
                 UserName = userName,
-                BasketWithProducts = basket,
+                BasketWithProducts = basket.Data,
                 Orders = orders
             };
-            
+
             return Ok(shoppingModel);
         }
-
     }
 }

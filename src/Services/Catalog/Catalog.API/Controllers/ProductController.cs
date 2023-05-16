@@ -6,7 +6,9 @@ using Catalog.API.Helpers;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Responses;
 using Catalog.API.Services;
+using EventBus.Messages.Common;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver.Core.WireProtocol.Messages;
 using System.Net;
 using static Catalog.API.Entities.Dtos.CEnums;
 
@@ -34,7 +36,7 @@ namespace Catalog.API.Controllers
         public async Task<ActionResult<IEnumerable<CategoryWithCount>>> Products()
         {
             var products = await repository.GetProducts();
-          
+
             return Ok(products);
         }
         /// <summary>
@@ -43,16 +45,15 @@ namespace Catalog.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id:length(24)}", Name = "Product")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IEnumerable<Category>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Category>>> Product(string id)
+        [ProducesResponseType(typeof(ResponseMessage<Category>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ResponseMessage<Category>>> Product(string id)
         {
             var products = await repository.GetProductById(id);
 
             if (products == null)
-                return NotFound();
+                return new ResponseMessage<Category>(HttpStatusCode.NotFound.ToString());
 
-            return Ok(products);
+            return Ok(new ResponseMessage<Category>(products));
         }
         /// <summary>
         /// Returns list of Product detail if Category matched Maxpage size is 50

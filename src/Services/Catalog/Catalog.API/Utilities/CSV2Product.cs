@@ -50,13 +50,13 @@ namespace Catalog.API.Utilities
                         obj.SubCategory.Product.ManufacturerPartNo = reader.GetString(2);
                         obj.SubCategory.Product.Manufacturer = reader.GetString(3);
                         obj.SubCategory.Product.Name = reader.GetString(4);
-                        obj.SubCategory.Product.Description = reader.GetString(5);
+                        obj.SubCategory.Product.ProductNameShortdesc = reader.GetString(5);
                         int intValue = reader.GetInt32(6);
                         // converting Int32 to Uint32                    
                         uint uintValue = unchecked((uint)intValue);
 
-                        obj.SubCategory.Product.Stock = uintValue;
-                        obj.SubCategory.Product.Price = reader.GetDecimal(7);
+                        obj.SubCategory.Product.Quantity = uintValue;
+                        obj.SubCategory.Product.UnitPrice = reader.GetDecimal(7);
                         obj.SubCategory.Product.Packaging = reader.GetString(8);
                         obj.SubCategory.Product.Series = reader.GetString(9);
                         obj.SubCategory.Product.DataSheetUrl = reader.GetString(10);

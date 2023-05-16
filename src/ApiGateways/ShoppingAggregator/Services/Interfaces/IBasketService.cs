@@ -1,10 +1,11 @@
-﻿using ShoppingAggregator.Models;
+﻿using EventBus.Messages.Common;
+using ShoppingAggregator.Models;
 using System.Threading.Tasks;
 
 namespace ShoppingAggregator.Services.Interfaces
 {
     public interface IBasketService
     {
-        Task<BasketModel> GetBasket(string userName);
+        Task<ResponseMessage<BasketModel>> GetBasket(string userName);
     }
 }

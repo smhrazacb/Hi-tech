@@ -10,7 +10,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
-using Polly;
 using System.Net;
 
 namespace Basket.API.Controllers
@@ -20,12 +19,11 @@ namespace Basket.API.Controllers
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class BasketController : ControllerBase
     {
-        private readonly IBasketRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<BasketController> _logger;
-
+        private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IBasketRepository _repository;
         public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor, ILogger<BasketController> logger)
         {
             _repository = repository;
@@ -34,64 +32,7 @@ namespace Basket.API.Controllers
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
         }
-        /// <summary>
-        ///     Returns a requested Basket if Id existed
-        /// </summary>
-        /// <param name="userid"></param>
-        /// <returns></returns>
-        [HttpGet("{userid}", Name = "GetBasket")]
-        [ProducesResponseType(typeof(ResponseMessage<ShoppingCart>), (int)HttpStatusCode.OK)]
-        [AllowAnonymous]
-        public async Task<ActionResult<ResponseMessage<ShoppingCart>>> GetBasket(string userid)
-        {
-            var basket = await _repository.GetBasket(userid);
-            if (basket == null)
-            {
-                return new ResponseMessage<ShoppingCart>(HttpStatusCode.NotFound.ToString());
-            }
-            var response = new ResponseMessage<ShoppingCart>(basket);
-            return Ok(response);
-        }
-        /// <summary>
-        /// <para>Create a new Basket with product</para>
-        /// </summary>
-        /// <param name="shoppingCartDto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
-        {
-            var shoppingCart = _mapper.Map<ShoppingCart>(shoppingCartDto);
-            shoppingCart.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
-            return Ok(await _repository.UpdateBasket(shoppingCart));
-        }
-        /// <summary>
-        /// <para>Update Basket if Id existed</para>
-        /// </summary>
-        /// <param name="shoppingCart"></param>
-        /// <returns></returns>
-        [HttpPut]
-        [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
-        {
-            var basket = await _repository.GetBasket(shoppingCart.UserId);
-            if (basket == null)
-                return NotFound();
-            return Ok(await _repository.UpdateBasket(shoppingCart));
-        }
-        /// <summary>
-        /// <para>Delete a Basket if existed</para> 
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        [HttpDelete("{guid}", Name = "DeleteBasket")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteBasket(string userid)
-        {
-            await _repository.DeleteBasket(userid);
-            return Ok();
-        }
+
         /// <summary>
         /// Process a order and returns its detail with Id which can be used for order querry
         /// </summary>
@@ -120,6 +61,67 @@ namespace Basket.API.Controllers
             _logger.LogInformation($"Publishing BasketCheckoutEvent for basket Id : {basket.UserId}");
 
             return Accepted(basketCheckoutEvent);
+        }
+
+        /// <summary>
+        /// <para>Create a new Basket with product</para>
+        /// </summary>
+        /// <param name="shoppingCartDto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
+        {
+            var shoppingCart = _mapper.Map<ShoppingCart>(shoppingCartDto);
+            shoppingCart.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
+            return Ok(await _repository.UpdateBasket(shoppingCart));
+        }
+
+        /// <summary>
+        /// <para>Delete a Basket if existed</para>
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        [HttpDelete("{guid}", Name = "DeleteBasket")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteBasket(string userid)
+        {
+            await _repository.DeleteBasket(userid);
+            return Ok();
+        }
+
+        /// <summary>
+        ///     Returns a requested Basket if Id existed
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        [HttpGet("{userid}", Name = "GetBasket")]
+        [ProducesResponseType(typeof(ResponseMessage<ShoppingCart>), (int)HttpStatusCode.OK)]
+        [AllowAnonymous]
+        public async Task<ActionResult<ResponseMessage<ShoppingCart>>> GetBasket(string userid)
+        {
+            var basket = await _repository.GetBasket(userid);
+            if (basket == null)
+            {
+                return new ResponseMessage<ShoppingCart>(HttpStatusCode.NotFound.ToString());
+            }
+            var response = new ResponseMessage<ShoppingCart>(basket);
+            return Ok(response);
+        }
+        /// <summary>
+        /// <para>Update Basket if Id existed</para>
+        /// </summary>
+        /// <param name="shoppingCart"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
+        {
+            var basket = await _repository.GetBasket(shoppingCart.UserId);
+            if (basket == null)
+                return NotFound();
+            return Ok(await _repository.UpdateBasket(shoppingCart));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
+using System.Threading;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace EsparkIndent.Server.Entities
@@ -58,6 +59,28 @@ namespace EsparkIndent.Server.Entities
                     {
                         Requirements.Features.ProofKeyForCodeExchange
                     }
+                });
+            }
+            if (await manager.FindByClientIdAsync("shopping_aggrigator_server") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "shopping_aggrigator_server",
+                    ClientSecret = "secret",
+                    ConsentType = ConsentTypes.Explicit,
+
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.GrantTypes.ClientCredentials,
+
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + "order_api",
+                        Permissions.Prefixes.Scope + "catalog_api",
+                        Permissions.Prefixes.Scope + "basket_api",                    }
                 });
             }
             // Note: when using introspection instead of local token validation,

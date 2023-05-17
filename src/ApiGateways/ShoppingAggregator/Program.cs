@@ -1,8 +1,17 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Client;
+using OpenIddict.Validation.AspNetCore;
+using Polly;
 using ShoppingAggregator.Infrastructure;
 using ShoppingAggregator.Services;
 using ShoppingAggregator.Services.Interfaces;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,10 +80,7 @@ builder.Services.AddHttpClient<IBasketService, BasketService>(c =>
 
 builder.Services.AddHttpClient<IOrderService, OrderService>(c =>
     c.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]));
-
-//register delegating handlers
-builder.Services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+   
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -89,8 +95,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+X509Certificate2 LoadCertificate(string thumbprint)
+{
+    var bytes = File.ReadAllBytes(thumbprint);
+    return new X509Certificate2(bytes, "123456");
+}

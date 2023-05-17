@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using OpenIddict.Client;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,10 +14,12 @@ namespace ShoppingAggregator.Infrastructure
          : DelegatingHandler
     {
         private readonly IHttpContextAccessor _httpContextAccesor;
+        private readonly HttpClient _client;
 
-        public HttpClientAuthorizationDelegatingHandler(IHttpContextAccessor httpContextAccesor)
+        public HttpClientAuthorizationDelegatingHandler(OpenIddictClientService service, IHttpContextAccessor httpContextAccesor, HttpClient client)
         {
             _httpContextAccesor = httpContextAccesor;
+            _client = client;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -40,10 +44,28 @@ namespace ShoppingAggregator.Infrastructure
 
         async Task<string> GetToken()
         {
-            const string ACCESS_TOKEN = "access_token";
 
-            return await _httpContextAccesor.HttpContext
-                .GetTokenAsync(ACCESS_TOKEN);
+            // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
+            var configuration = await _client.GetDiscoveryDocumentAsync("http://localhost:8000/");
+            if (configuration.IsError)
+            {
+                throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
+            }
+
+            var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = configuration.TokenEndpoint,
+                Scope = "openid email profile offline_access order_api basket_api catalog_api",
+                ClientId = "shopping_aggrigator_server",
+                ClientSecret = "secret"
+            });
+
+            if (tokenResponse.IsError)
+            {
+                throw new Exception($"An error occurred while retrieving an access token: {tokenResponse.Error}");
+            }
+            return tokenResponse.AccessToken;
+
         }
     }
 }

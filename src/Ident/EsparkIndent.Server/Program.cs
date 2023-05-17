@@ -88,7 +88,8 @@ builder.Services.AddOpenIddict()
         options.AllowAuthorizationCodeFlow()
                .AllowDeviceCodeFlow()
                .AllowPasswordFlow()
-               .AllowRefreshTokenFlow();
+               .AllowRefreshTokenFlow()
+               .AllowClientCredentialsFlow();
 
         // Mark the "email", "profile", "roles" and "demo_api" scopes as supported scopes.
         options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles, "demo_api");

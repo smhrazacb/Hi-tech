@@ -64,20 +64,6 @@ namespace Basket.API.Controllers
         }
 
         /// <summary>
-        /// <para>Create a new Basket with product</para>
-        /// </summary>
-        /// <param name="shoppingCartDto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingCart>> CreateBasket([FromBody] ShoppingCartDto shoppingCartDto)
-        {
-            var shoppingCart = _mapper.Map<ShoppingCart>(shoppingCartDto);
-            shoppingCart.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
-            return Ok(await _repository.UpdateBasket(shoppingCart));
-        }
-
-        /// <summary>
         /// <para>Delete a Basket if existed</para>
         /// </summary>
         /// <param name="guid"></param>
@@ -116,6 +102,7 @@ namespace Basket.API.Controllers
         [HttpPut]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
         {
             var basket = await _repository.GetBasket(shoppingCart.UserId);

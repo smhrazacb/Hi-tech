@@ -71,6 +71,10 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddControllers();
 
+//register delegating handlers
+builder.Services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 // Add API Services 
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
                 c.BaseAddress = new Uri(builder.Configuration["ApiSettings:CatalogUrl"]));
@@ -79,7 +83,8 @@ builder.Services.AddHttpClient<IBasketService, BasketService>(c =>
     c.BaseAddress = new Uri(builder.Configuration["ApiSettings:BasketUrl"]));
 
 builder.Services.AddHttpClient<IOrderService, OrderService>(c =>
-    c.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]));
+    c.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]))
+    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>(); 
    
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

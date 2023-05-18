@@ -1,71 +1,61 @@
 ﻿using IdentityModel.Client;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using OpenIddict.Client;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
+using static IdentityModel.OidcConstants;
 
-namespace ShoppingAggregator.Infrastructure
+namespace ShoppingAggregator.Infrastructure;
+
+public class HttpClientAuthorizationDelegatingHandler
+        : DelegatingHandler
 {
-    public class HttpClientAuthorizationDelegatingHandler
-         : DelegatingHandler
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public HttpClientAuthorizationDelegatingHandler(IHttpContextAccessor httpContextAccessor)
     {
-        private readonly IHttpContextAccessor _httpContextAccesor;
-        private readonly HttpClient _client;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        public HttpClientAuthorizationDelegatingHandler(OpenIddictClientService service, IHttpContextAccessor httpContextAccesor, HttpClient client)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        var authorizationHeader = _httpContextAccessor.HttpContext
+            .Request.Headers["Authorization"];
+
+        if (!string.IsNullOrWhiteSpace(authorizationHeader))
         {
-            _httpContextAccesor = httpContextAccesor;
-            _client = client;
+            request.Headers.Add("Authorization", new List<string>() { authorizationHeader });
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        var token = await GetTokenAsync();
+
+        if (token != null)
         {
-            var authorizationHeader = _httpContextAccesor.HttpContext
-                .Request.Headers["Authorization"];
-
-            if (!string.IsNullOrEmpty(authorizationHeader))
-            {
-                request.Headers.Add("Authorization", new List<string>() { authorizationHeader });
-            }
-
-            var token = await GetToken();
-
-            if (token != null)
-            {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
-
-            return await base.SendAsync(request, cancellationToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        async Task<string> GetToken()
+        return await base.SendAsync(request, cancellationToken);
+    }
+
+    async Task<string> GetTokenAsync()
+    {// Retrieve the OpenIddict server configuration document containing the endpoint URLs.
+        var client = new HttpClient();
+        var configuration = await client.GetDiscoveryDocumentAsync("http://localhost:8000/");
+        if (configuration.IsError)
         {
-
-            // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
-            var configuration = await _client.GetDiscoveryDocumentAsync("http://localhost:8000/");
-            if (configuration.IsError)
-            {
-                throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
-            }
-
-            var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = configuration.TokenEndpoint,
-                Scope = "openid email profile offline_access order_api basket_api catalog_api",
-                ClientId = "shopping_aggrigator_server",
-                ClientSecret = "secret"
-            });
-
-            if (tokenResponse.IsError)
-            {
-                throw new Exception($"An error occurred while retrieving an access token: {tokenResponse.Error}");
-            }
-            return tokenResponse.AccessToken;
-
+            throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
         }
+
+        var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+        {
+            Address = configuration.TokenEndpoint,
+            Scope = "openid email profile offline_access order_api basket_api catalog_api",
+            ClientId = "shopping_aggrigator_server",
+            ClientSecret = "secret"
+        });
+
+        if (tokenResponse.IsError)
+        {
+            throw new Exception($"An error occurred while retrieving an access token: {tokenResponse.Error}");
+        }
+
+        return tokenResponse.AccessToken;
     }
 }

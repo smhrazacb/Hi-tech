@@ -31,6 +31,9 @@ namespace Ordering.API.Controllers
         {
             var query = new GetOrdersListQuery(userName);
             var orders = await _mediator.Send(query);
+            if (orders.Count() == 0)
+                return NotFound();
+
             return Ok(orders);
         }
         /// <summary>

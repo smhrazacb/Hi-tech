@@ -43,7 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{4D328928
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MIscConsole", "Extra\MIscConsole\MIscConsole.csproj", "{B92C91FC-3DF0-485F-8066-1E6EEBE25A27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingAggregator", "ApiGateways\ShoppingAggregator\ShoppingAggregator.csproj", "{2F276502-2E88-4688-8EFA-06B05255E250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingAggregator", "ApiGateways\ShoppingAggregator\ShoppingAggregator.csproj", "{2F276502-2E88-4688-8EFA-06B05255E250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.APITests", "Services\Catalog\Catalog.APITests\Catalog.APITests.csproj", "{04EC0107-ACDE-4FA9-86F8-782472DDB48A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +151,14 @@ Global
 		{2F276502-2E88-4688-8EFA-06B05255E250}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F276502-2E88-4688-8EFA-06B05255E250}.Release|x64.ActiveCfg = Release|Any CPU
 		{2F276502-2E88-4688-8EFA-06B05255E250}.Release|x64.Build.0 = Release|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Debug|x64.Build.0 = Debug|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Release|x64.ActiveCfg = Release|Any CPU
+		{04EC0107-ACDE-4FA9-86F8-782472DDB48A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

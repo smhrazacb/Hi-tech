@@ -53,7 +53,11 @@ namespace Basket.API.Controllers
             // Validate basket price with current product price
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
+
             basketCheckoutEvent.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
+
+            if (basket.UserId != basketCheckoutEvent.UserId)
+                return Conflict($"Basket UserId: {basket.UserId} Mismatched with Current Logged in User: {basketCheckoutEvent.UserId}");
 
             // send checkout event to rabbitmq
             basketCheckoutEvent.ShoppingItems = shoppingItems;
@@ -105,9 +109,6 @@ namespace Basket.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
         {
-            var basket = await _repository.GetBasket(shoppingCart.UserId);
-            if (basket == null)
-                return NotFound();
             return Ok(await _repository.UpdateBasket(shoppingCart));
         }
     }

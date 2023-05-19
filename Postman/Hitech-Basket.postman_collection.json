@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "fb972cb7-3032-40a9-a8b0-f9337f3862da",
+		"_postman_id": "913eb280-b52e-4b6a-8ce9-b5b3ae24146d",
 		"name": "Hitech-Basket",
 		"description": "To add items into shopping carts\n\nContact Support:\n Name: Contact",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "25241277"
+		"_exporter_id": "26076298"
 	},
 	"item": [
 		{
@@ -185,12 +185,30 @@
 					"_postman_previewlanguage": "text",
 					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				}
 			]
 		},
 		{
 			"name": "<br>Create a new Basket with product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json() ;\r",
+							"\r",
+							"pm.globals.set(\"testShoppingCartId\", response.shoppingCartId);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -205,7 +223,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"shoppingItems\": [\n    {\n      \"productId\": \"645b98dacb5a281f2ab41885\",\n      \"productNameShortdesc\": \"Ferrite Beads and Chips\",\n      \"quantity\": \"5\",\n      \"unitPrice\": \"142.8255\"\n    }\n  ]\n}",
+					"raw": "{\n  \"shoppingItems\": [\n    {\n      \"productId\": \"{{testProductId}}\",\n      \"productNameShortdesc\": \"Testing products\",\n      \"quantity\": \"5\",\n      \"unitPrice\": \"100\"\n    }\n  ]\n}",
 					"options": {
 						"raw": {
 							"headerFamily": "json",
@@ -421,6 +439,23 @@
 		},
 		{
 			"name": "Process a order and returns its detail with Id which can be used for order querry",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 202\", function () {\r",
+							"    pm.response.to.have.status(202);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json() ;\r",
+							"\r",
+							"pm.globals.set(\"testBasketId\", response.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -435,7 +470,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"shoppingCartId\": \"0e603217-602f-45c8-8058-f86d77d4bab1\",\n  \"totalPrice\": \"500\",\n  \"firstName\": \"aA\",\n  \"lastName\": \"BB\",\n  \"emailAddress\": \"ASDAS@DF@GDF.COM\",\n  \"addressLine\": \"DFGDF\",\n  \"country\": \"pAKISTAN\",\n  \"state\": \"Si\",\n  \"zipCode\": \"54655\",\n  \"cardName\": \"asdasd\",\n  \"cardNumber\": \"465456-4564-5456\",\n  \"expiration\": \"54-54-2022\",\n  \"cvv\": \"453\",\n  \"paymentMethod\": \"1\"\n}",
+					"raw": "{\n  \"shoppingCartId\": \"{{testShoppingCartId}}\",\n  \"totalPrice\": \"500\",\n  \"firstName\": \"mohib\",\n  \"lastName\": \"fayyaz\",\n  \"emailAddress\": \"ASDAS@DF@GDF.COM\",\n  \"addressLine\": \"DFGDF\",\n  \"country\": \"pAKISTAN\",\n  \"state\": \"Si\",\n  \"zipCode\": \"54655\",\n  \"cardName\": \"asdasd\",\n  \"cardNumber\": \"465456-4564-5456\",\n  \"expiration\": \"54-54-2022\",\n  \"cvv\": \"453\",\n  \"paymentMethod\": \"1\"\n}",
 					"options": {
 						"raw": {
 							"headerFamily": "json",
@@ -618,6 +653,16 @@
 		"type": "oauth2",
 		"oauth2": [
 			{
+				"key": "accessTokenUrl",
+				"value": "http://192.168.0.108:8000/connect/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "http://192.168.0.108:8000/connect/authorize",
+				"type": "string"
+			},
+			{
 				"key": "client_authentication",
 				"value": "body",
 				"type": "string"
@@ -635,16 +680,6 @@
 			{
 				"key": "clientId",
 				"value": "spa_clientp",
-				"type": "string"
-			},
-			{
-				"key": "accessTokenUrl",
-				"value": "http://192.168.18.214:8000/connect/token",
-				"type": "string"
-			},
-			{
-				"key": "authUrl",
-				"value": "http://192.168.18.214:8000/connect/authorize",
 				"type": "string"
 			},
 			{
@@ -687,7 +722,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "192.168.18.214:8010"
+			"value": "192.168.0.108:8010"
 		}
 	]
 }

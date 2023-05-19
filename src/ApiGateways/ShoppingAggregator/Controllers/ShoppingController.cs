@@ -42,12 +42,12 @@ namespace ShoppingAggregator.Controllers
                     basket.Data.ShoppingItems.ElementAt(i).Equals(basPro);
                 }
             }
-            var orders = await _orderService.GetOrdersByUserName(userName);
+            var orderResponse = await _orderService.GetOrdersByUserName(userName);
             var shoppingModel = new ShoppingModel
             {
                 UserName = userName,
                 BasketWithProducts = basket.Data,
-                Orders = orders
+                Orders = orderResponse.Data
             };
 
             return Ok(shoppingModel);

@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using Sylvan.Data;
+using System.Configuration;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
@@ -108,7 +109,12 @@ builder.Services.AddSingleton<IUriService>(o =>
     var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
     return new UriService(uri);
 });
-
+builder.Services.AddSingleton(p =>
+new DbContextSettings(
+    builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString"),
+    builder.Configuration.GetValue<string>("DatabaseSettings:DatabaseName"),
+    builder.Configuration.GetValue<string>("DatabaseSettings:CollectionName")
+    ));
 // Add RabitMQ Configuration 
 // MassTransit-RabbitMQ Configuration
 builder.Services.AddMassTransit(config =>

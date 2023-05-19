@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using EventBus.Messages.Common;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
@@ -27,14 +28,15 @@ namespace Ordering.API.Controllers
         /// <returns></returns>
         [HttpGet("{userName}", Name = "GetOrder")]
         [ProducesResponseType(typeof(IEnumerable<OrdersVm>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrder(string userName)
+        public async Task<ActionResult<ResponseMessage<IEnumerable<OrdersVm>>>> GetOrder(string userName)
         {
             var query = new GetOrdersListQuery(userName);
             var orders = await _mediator.Send(query);
             if (orders.Count() == 0)
-                return NotFound();
+                return new ResponseMessage<IEnumerable<OrdersVm>>(HttpStatusCode.NotFound.ToString());
+            var response = new ResponseMessage<IEnumerable<OrdersVm>>(orders);
 
-            return Ok(orders);
+            return Ok(response);
         }
         /// <summary>
         /// For Testing only

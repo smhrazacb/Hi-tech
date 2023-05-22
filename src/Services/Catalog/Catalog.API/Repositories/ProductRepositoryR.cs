@@ -17,7 +17,7 @@ namespace Catalog.API.Repositories
         private readonly IProductContext _context;
         public ProductRepositoryR(IProductContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
         public async Task<IEnumerable<CategoryWithCount>> GetProducts()
         {
@@ -41,7 +41,7 @@ namespace Catalog.API.Repositories
                 .Find(p => p.Id == _id)
                 .FirstOrDefaultAsync();
         }
-        public async Task<(long totalRecords, IEnumerable<Category>)> GetFilteredProducts
+        public async Task<FilterResult> GetFilteredProducts
             (PaginationFilter pagefilter, FilterSortDto myfilter)
         {
             SortDefinition<Category> sortDefinition = (bool)myfilter.Sortdto.IsAccending
@@ -60,8 +60,9 @@ namespace Catalog.API.Repositories
                 if (filtersdef.Count != 0)
                     filters = Builders<Category>.Filter.And(filtersdef);
             }
-            return await _context.CategoryList
+            var (a, b)=  await _context.CategoryList
                 .AggregateByPage(filters, sortDefinition, page: pagefilter.PageNumber, pageSize: pagefilter.PageSize);
+            return new FilterResult() {TotalRecords=a, Items=b }; 
         }
         public async Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf)
         {

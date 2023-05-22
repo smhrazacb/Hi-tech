@@ -1,29 +1,41 @@
-﻿using Catalog.API.Entities;
-using MongoDB.Driver;
+﻿using Amazon.SecurityToken.Model.Internal.MarshallTransformations;
+using Catalog.API.Entities;
+using Catalog.API.Entities.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Catalog.API.Data
+namespace Catalog.APITests.TestData
 {
-    public class ProductContextSeed
+    public static class ProductData
     {
-        public static void SeedData(IMongoCollection<Category> productCollection)
+        public static IEnumerable<CategoryWithCount> GetTestProductsCount()
         {
-            bool existProduct = productCollection.Find(p => true).Any();
-            if (!existProduct)
+            // genertate test data list of CategoryWithCount
+            var products = new List<CategoryWithCount>
             {
-                productCollection.InsertManyAsync(GetPreconfiguredProducts());
-            }
+                new CategoryWithCount {CategoryName="category1", SubCategoryName="subcategory1", SubCategoryCount=1},
+                new CategoryWithCount {CategoryName="category2", SubCategoryName="subcategory2", SubCategoryCount=2},
+                new CategoryWithCount {CategoryName="category3", SubCategoryName="subcategory3", SubCategoryCount=3},
+                new CategoryWithCount {CategoryName="category4", SubCategoryName="subcategory4", SubCategoryCount=4},
+            };
+            return products;
         }
+        // gererate test data for new Entities.Category()        // gererate test data for new Entities.Category()
         public static IEnumerable<Category> GetPreconfiguredProducts()
         {
             return new List<Category>()
             {
                 new Category()
                 {
-                    CategoryName = "Electronics",
+                    Id = "1",
+                    CategoryName = "Mechanical",
                     SubCategory =
                         new SubCategory()
                         {
-                            SubCategoryName = "Component",
+                            SubCategoryName = "Tools",
                             Product =
                                 new Product()
                             {
@@ -40,6 +52,7 @@ namespace Catalog.API.Data
                 },
                 new Category()
                 {
+                    Id = "2",
                     CategoryName = "Electronics",
                     SubCategory =
                         new SubCategory()
@@ -61,6 +74,7 @@ namespace Catalog.API.Data
                 },
                  new Category()
                  {
+                     Id = "2",
                      CategoryName = "Mechanical",
                      SubCategory = new SubCategory()
                         {
@@ -80,6 +94,7 @@ namespace Catalog.API.Data
                  },
                 new Category()
                 {
+                    Id = "3",
                     CategoryName = "Mechanical",
                     SubCategory = new SubCategory()
                     {
@@ -99,6 +114,7 @@ namespace Catalog.API.Data
                 },
                 new Category()
                 {
+                    Id = "4",
                     CategoryName = "Mechanical",
                     SubCategory = new SubCategory()
                     {
@@ -115,7 +131,7 @@ namespace Catalog.API.Data
                             Quantity = 4
                         },
                     }
-                }
+                },
             };
         }
     }

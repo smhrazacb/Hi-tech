@@ -24,8 +24,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-// For username 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 // Add RabitMQ Configuration 
 // MassTransit-RabbitMQ Configuration
@@ -131,7 +130,6 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
-builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 var app = builder.Build();
 

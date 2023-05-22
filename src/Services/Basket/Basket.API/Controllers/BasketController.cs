@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using System.Net;
+using System.Security.Claims;
 
 namespace Basket.API.Controllers
 {
@@ -19,18 +20,17 @@ namespace Basket.API.Controllers
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class BasketController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<BasketController> _logger;
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IBasketRepository _repository;
-        public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor, ILogger<BasketController> logger)
+
+        public BasketController(ILogger<BasketController> logger, IMapper mapper, IPublishEndpoint publishEndpoint, IBasketRepository repository)
         {
-            _repository = repository;
+            _logger = logger;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
-            _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
+            _repository = repository;
         }
 
         /// <summary>
@@ -53,8 +53,6 @@ namespace Basket.API.Controllers
             // Validate basket price with current product price
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
-
-            basketCheckoutEvent.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
 
             if (basket.UserId != basketCheckoutEvent.UserId)
                 return Conflict($"Basket UserId: {basket.UserId} Mismatched with Current Logged in User: {basketCheckoutEvent.UserId}");
@@ -107,9 +105,10 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [AllowAnonymous]
-        public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
+        public async Task<ActionResult<ResponseMessage<ShoppingCart>>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
         {
-            return Ok(await _repository.UpdateBasket(shoppingCart));
+            var basket = await _repository.UpdateBasket(shoppingCart);
+            return Ok(new ResponseMessage<ShoppingCart>(basket));
         }
     }
 }

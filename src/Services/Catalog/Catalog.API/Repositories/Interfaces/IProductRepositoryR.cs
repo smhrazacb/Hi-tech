@@ -9,7 +9,7 @@ namespace Catalog.API.Repositories.Interfaces
     {
         Task<IEnumerable<CategoryWithCount>> GetProducts();
         Task<Category> GetProductById(string id);
-        Task<(long totalRecords, IEnumerable<Category>)> GetFilteredProducts(PaginationFilter pagefilter, FilterSortDto myfilter);
+        Task<FilterResult> GetFilteredProducts(PaginationFilter pagefilter, FilterSortDto myfilter);
         Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf);
     }
 }

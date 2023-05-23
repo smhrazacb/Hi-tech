@@ -5,7 +5,6 @@ using Catalog.API.EventBusConsumer;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
-using Catalog.API.Utilities;
 using EventBus.Messages.Common;
 using EventBus.Messages.Events;
 using MassTransit;

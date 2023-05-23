@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Basket.API.Repositories.Interfaces;
+using Basket.API.Services.Interfaces;
 using EventBus.Messages.Events;
 using EventBus.Messages.Models;
 using MassTransit;

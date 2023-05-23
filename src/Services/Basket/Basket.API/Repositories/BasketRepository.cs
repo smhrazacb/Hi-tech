@@ -1,9 +1,9 @@
 ﻿using Basket.API.Entities;
-using Basket.API.Repositories.Interfaces;
+using Basket.API.Services.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
-namespace Basket.API.Repositories
+namespace Basket.API.Services
 {
     public class BasketRepository : IBasketRepository
     {
@@ -15,7 +15,7 @@ namespace Basket.API.Repositories
         }
         public async Task DeleteBasket(string userId)
         {
-            await _redisCache.RemoveAsync(userId);
+             await _redisCache.RemoveAsync(userId);
         }
 
         public async Task<ShoppingCart> GetBasket(string userid)

@@ -19,19 +19,34 @@ using System.Net;
 using Catalog.APITests.TestData;
 using Catalog.API.Filter;
 using Amazon.Runtime.Internal.Util;
+using Microsoft.AspNetCore.Http;
+using Catalog.API.Responses;
 
 namespace Catalog.API.Controllers.Tests
 {
     [TestClass()]
     public class ProductsControllerTests
     {
+        private readonly Mock<IProductRepositoryR> _IProductRepositoryR;
+        private readonly Mock<IUriService> _IUriService;
+        private readonly Mock<HttpContext> _HttpContext;
+
+        public ProductsControllerTests()
+        {
+            _IProductRepositoryR = new Mock<IProductRepositoryR>();
+            _IUriService = new Mock<IUriService>();
+            _HttpContext = new Mock<HttpContext>();
+            var path = new PathString("/api/v1/products");
+            _HttpContext.Setup(_ => _.Request.Path).Returns(path);
+
+        }
+
         [Fact]
         public async void Product_GetCountWitCategory_Valid()
         {
-            Mock<IProductRepositoryR> mockRepor = new Mock<IProductRepositoryR>();
-            mockRepor.Setup(repo => repo.GetProducts()).ReturnsAsync(ProductData.GetTestProductsCount());
+            _IProductRepositoryR.Setup(repo => repo.GetProducts()).ReturnsAsync(ProductData.GetTestProductsCount());
 
-            ProductsController pc = new ProductsController(mockRepor.Object, Mock.Of<IUriService>());
+            ProductsController pc = new ProductsController(_IProductRepositoryR.Object, Mock.Of<IUriService>());
             var result = await pc.Products();
 
             result.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
@@ -41,15 +56,16 @@ namespace Catalog.API.Controllers.Tests
         [Fact()]
         public async void Product_GetById_Valid()
         {
+            //Arrange
             string id = "1";
-            Mock<IProductRepositoryR> mockRepor = new Mock<IProductRepositoryR>();
-            mockRepor.Setup(repo => repo.GetProductById(id))
+            _IProductRepositoryR.Setup(repo => repo.GetProductById(It.IsAny<string>()))
                 .ReturnsAsync(ProductData.GetPreconfiguredProducts().Where(x => x.Id == id).FirstOrDefault());
 
-            ProductsController pc = new ProductsController(mockRepor.Object, Mock.Of<IUriService>());
+            //Act
+            ProductsController pc = new ProductsController(_IProductRepositoryR.Object, Mock.Of<IUriService>());
             var result = await pc.Product(id);
 
-            // generate unit test         
+            //Assert        
             result.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
             result.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should()
                 .BeOfType<ResponseMessage<Category>>().Which.Data.Id.Should().Be(id);
@@ -58,15 +74,16 @@ namespace Catalog.API.Controllers.Tests
         [Fact()]
         public async void Product_GetById_NotFound()
         {
-            string id = "5";
-            Mock<IProductRepositoryR> mockRepor = new Mock<IProductRepositoryR>();
-            mockRepor.Setup(repo => repo.GetProductById(id))
+            //Arrange
+            string id = "6";
+            _IProductRepositoryR.Setup(repo => repo.GetProductById(It.IsAny<string>()))
                 .ReturnsAsync(ProductData.GetPreconfiguredProducts().Where(x => x.Id == id).FirstOrDefault());
 
-            ProductsController pc = new ProductsController(mockRepor.Object, Mock.Of<IUriService>());
+            //Act
+            ProductsController pc = new ProductsController(_IProductRepositoryR.Object, Mock.Of<IUriService>());
             var result = await pc.Product(id);
 
-            // generate unit test                 
+            //Assert
             result.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
             result.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should()
                 .BeOfType<ResponseMessage<Category>>().Which.Message.Should().Be("NotFound");
@@ -88,27 +105,27 @@ namespace Catalog.API.Controllers.Tests
                 Sortdto = new SortDto() { Orderby = CEnums.PorductAttrib.Stock, IsAccending = false }
             };
 
-            var (a, b) = ((long)ProductData.GetPreconfiguredProducts().Count(),
-                ProductData.GetPreconfiguredProducts().Where(x => x.CategoryName == "Mechanical" && x.SubCategory.SubCategoryName == "Tools"));
+            var data = new FilterResult()
+            {
+                TotalRecords = ProductData.GetPreconfiguredProducts().Count(),
+                Items = ProductData.GetPreconfiguredProducts().Where(x => x.CategoryName == "Mechanical" && x.SubCategory.SubCategoryName == "Tools")
+            };
 
-            Mock<IProductRepositoryR> mockRepor = new Mock<IProductRepositoryR>();
-            mockRepor.Setup(repo => repo.GetFilteredProducts(pagefilter, myfilter)).
-                ReturnsAsync(new FilterResult() {TotalRecords=5, Items= ProductData.GetPreconfiguredProducts()});
+            _IProductRepositoryR.Setup(repo =>
+            repo.GetFilteredProducts(It.IsAny<PaginationFilter>(), It.IsAny<FilterSortDto>()))
+                .Returns(Task.FromResult(data));
 
-
-            var mockUriService = new Mock<IUriService>();
-            mockUriService.Setup(uri => uri.GetPageUri(pagefilter, ""));
-            ProductsController pc = new ProductsController(mockRepor.Object, Mock.Of<IUriService>());
+            _IUriService.Setup(uri => uri.GetPageUri(pagefilter, ""));
 
             // Act
-
+            ProductsController pc = new ProductsController(_IProductRepositoryR.Object, Mock.Of<IUriService>());
+            pc.ControllerContext.HttpContext = _HttpContext.Object;
             var result = await pc.GetFileteredProducts(new GetbyItemDto() { Paginationfilter = pagefilter, FilterSortdto = myfilter });
 
             // Assert
-            result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
-            result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<List<CategoryWithCount>>().Which.Should().HaveCount(2);
+            result.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
+            result.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<PagedResponse<IEnumerable<Category>>>().Which.Succeeded.Should().Be(true);
+            result.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeOfType<PagedResponse<IEnumerable<Category>>>().Which.Data.FirstOrDefault().Id.Should().Be("1");
         }
-
-
     }
 }

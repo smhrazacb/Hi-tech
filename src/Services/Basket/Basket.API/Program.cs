@@ -1,6 +1,7 @@
 using Basket.API.EventBusConsumer;
-using Basket.API.Repositories;
-using Basket.API.Repositories.Interfaces;
+using Basket.API.Services;
+using Basket.API.Services.Interfaces;
+using Basket.API.Services.Services;
 using EventBus.Messages.Common;
 using MassTransit;
 using Microsoft.OpenApi.Models;
@@ -25,6 +26,8 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<IIdentityService, IdentityService>();
 
 // Add RabitMQ Configuration 
 // MassTransit-RabbitMQ Configuration

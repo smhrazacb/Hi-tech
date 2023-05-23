@@ -74,7 +74,7 @@ namespace Catalog.APITests.TestData
                 },
                  new Category()
                  {
-                     Id = "2",
+                     Id = "3",
                      CategoryName = "Mechanical",
                      SubCategory = new SubCategory()
                         {
@@ -94,7 +94,7 @@ namespace Catalog.APITests.TestData
                  },
                 new Category()
                 {
-                    Id = "3",
+                    Id = "4",
                     CategoryName = "Mechanical",
                     SubCategory = new SubCategory()
                     {
@@ -114,7 +114,7 @@ namespace Catalog.APITests.TestData
                 },
                 new Category()
                 {
-                    Id = "4",
+                    Id = "5",
                     CategoryName = "Mechanical",
                     SubCategory = new SubCategory()
                     {
@@ -133,6 +133,11 @@ namespace Catalog.APITests.TestData
                     }
                 },
             };
+        }
+
+        public static IEnumerable<Category> CategoryData(int index)
+        {
+            return new List<Category>() { GetPreconfiguredProducts().ElementAt(index) };
         }
     }
 }

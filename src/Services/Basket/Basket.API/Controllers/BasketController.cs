@@ -2,7 +2,8 @@
 using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
-using Basket.API.Repositories.Interfaces;
+using Basket.API.Services;
+using Basket.API.Services.Interfaces;
 using EventBus.Messages.Common;
 using EventBus.Messages.Events;
 using EventBus.Messages.Models;
@@ -20,13 +21,15 @@ namespace Basket.API.Controllers
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class BasketController : ControllerBase
     {
+        private readonly IIdentityService _IIdentityService;
         private readonly ILogger<BasketController> _logger;
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IBasketRepository _repository;
 
-        public BasketController(ILogger<BasketController> logger, IMapper mapper, IPublishEndpoint publishEndpoint, IBasketRepository repository)
+        public BasketController(IIdentityService iIdentityService, ILogger<BasketController> logger, IMapper mapper, IPublishEndpoint publishEndpoint, IBasketRepository repository)
         {
+            _IIdentityService = iIdentityService;
             _logger = logger;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
@@ -54,6 +57,8 @@ namespace Basket.API.Controllers
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
 
+            basketCheckoutEvent.UserId = _IIdentityService.GetUserIdentity();
+
             if (basket.UserId != basketCheckoutEvent.UserId)
                 return Conflict($"Basket UserId: {basket.UserId} Mismatched with Current Logged in User: {basketCheckoutEvent.UserId}");
 
@@ -75,7 +80,7 @@ namespace Basket.API.Controllers
         public async Task<IActionResult> DeleteBasket(string userid)
         {
             await _repository.DeleteBasket(userid);
-            return Ok();
+            return NoContent();
         }
 
         /// <summary>

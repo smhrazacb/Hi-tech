@@ -69,7 +69,6 @@ namespace Catalog.API.Controllers
         {
             var validFilter = new PaginationFilter(requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
             var filterResult = await _repository.GetFilteredProducts(validFilter, requestDto.FilterSortdto);
-
             var route = Request.Path.Value;
             var pagedReponse = PaginationHelper.CreatePagedReponse(filterResult.Items, validFilter, filterResult.TotalRecords, _uriService, route);
             

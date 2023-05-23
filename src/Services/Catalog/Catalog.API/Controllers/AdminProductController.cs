@@ -1,7 +1,7 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
-using Catalog.API.Utilities;
+using Catalog.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;

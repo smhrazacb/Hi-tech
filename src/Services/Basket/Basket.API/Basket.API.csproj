@@ -48,5 +48,8 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="..\..\..\Tests\IntegrationTests\ServicesTest\ServicesTest.csproj" />
+	</ItemGroup>
 
 </Project>

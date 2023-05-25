@@ -1,22 +1,14 @@
-﻿using Xunit;
-using Catalog.API.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Catalog.API.Entities;
+using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
-using Microsoft.AspNetCore.Http;
-using Moq;
-using Catalog.API.Repositories;
-using Catalog.API.Entities.Dtos;
 using Catalog.APITests.TestData;
-using Newtonsoft.Json;
-using Catalog.API.Entities;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Moq;
+using Newtonsoft.Json;
+using Xunit;
 
 namespace Catalog.API.Controllers.Tests
 {

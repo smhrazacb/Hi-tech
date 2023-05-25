@@ -34,9 +34,9 @@
 	<ItemGroup>
 	  <Folder Include="dockerEnv\upload\" />
 	</ItemGroup>
-	<ItemGroup>
+	<!--<ItemGroup>
 	  <ProjectReference Include="..\..\..\BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj" />
-	</ItemGroup>
+	</ItemGroup>-->
 	<ItemGroup>
 	  <None Update="_encryption-certificate.pfx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>

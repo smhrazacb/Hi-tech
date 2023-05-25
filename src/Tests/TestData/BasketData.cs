@@ -1,13 +1,7 @@
 ﻿using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
-using MassTransit.Futures.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Basket.APITests.TestData
+namespace TestData.TestData
 {
     public static class BasketData
     {

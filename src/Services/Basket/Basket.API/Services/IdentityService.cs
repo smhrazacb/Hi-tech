@@ -1,9 +1,4 @@
-﻿
-using AspNet.Security.OpenIdConnect.Primitives;
-using Basket.API.Services;
-using EventBus.Messages.Events;
-using Microsoft.AspNetCore.Http;
-using OpenIddict.Abstractions;
+﻿using OpenIddict.Abstractions;
 
 namespace Basket.API.Services
 .Services

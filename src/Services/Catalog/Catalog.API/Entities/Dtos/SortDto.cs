@@ -1,7 +1,5 @@
 ﻿using static Catalog.API.Entities.Dtos.CEnums;
 using System.ComponentModel;
-using Catalog.API.Data;
-using System.Reflection;
 
 namespace Catalog.API.Entities.Dtos
 {

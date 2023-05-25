@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Catalog.API.Entities;
+﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Filter;
 using Catalog.API.Helpers;
@@ -8,9 +7,7 @@ using Catalog.API.Responses;
 using Catalog.API.Services;
 using EventBus.Messages.Common;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver.Core.WireProtocol.Messages;
 using System.Net;
-using static Catalog.API.Entities.Dtos.CEnums;
 
 namespace Catalog.API.Controllers
 {

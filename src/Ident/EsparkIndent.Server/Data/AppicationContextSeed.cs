@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
-using System.Threading;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace EsparkIndent.Server.Entities

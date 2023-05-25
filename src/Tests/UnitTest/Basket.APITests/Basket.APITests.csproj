@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Services\Basket\Basket.API\Basket.API.csproj" />
+    <ProjectReference Include="..\..\TestData\TestData.csproj" />
   </ItemGroup>
 
 </Project>

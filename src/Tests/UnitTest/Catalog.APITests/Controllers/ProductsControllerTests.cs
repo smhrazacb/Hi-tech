@@ -1,26 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xunit;
-using Catalog.API.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Catalog.API.Data;
 using Catalog.API.Entities;
 using EventBus.Messages.Common;
-using System.Net;
-using Catalog.APITests.TestData;
 using Catalog.API.Filter;
-using Amazon.Runtime.Internal.Util;
 using Microsoft.AspNetCore.Http;
 using Catalog.API.Responses;
+using TestData.TestData;
 
 namespace Catalog.API.Controllers.Tests
 {

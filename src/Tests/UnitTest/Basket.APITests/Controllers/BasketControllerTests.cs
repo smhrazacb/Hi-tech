@@ -1,29 +1,16 @@
-﻿using Xunit;
-using Basket.API.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using Basket.API.Services.Interfaces;
-using Basket.APITests.TestData;
 using AutoMapper;
 using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Basket.API.Mapping;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using EventBus.Messages.Common;
 using EventBus.Messages.Events;
-using System.Security.Principal;
-using AspNet.Security.OpenIdConnect.Primitives;
-using Polly;
-using Microsoft.AspNetCore.Identity;
 using Basket.API.Services;
 using Basket.API.Entities;
+using TestData.TestData;
 
 namespace Basket.API.Controllers.Tests
 {

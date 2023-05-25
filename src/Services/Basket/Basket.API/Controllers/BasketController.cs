@@ -1,5 +1,4 @@
-﻿using AspNet.Security.OpenIdConnect.Primitives;
-using AutoMapper;
+﻿using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using Basket.API.Services;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using System.Net;
-using System.Security.Claims;
 
 namespace Basket.API.Controllers
 {
@@ -81,6 +79,11 @@ namespace Basket.API.Controllers
         {
             await _repository.DeleteBasket(userid);
             return NoContent();
+        }
+
+        public Task DeleteBasket(object userId)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

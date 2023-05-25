@@ -2,12 +2,12 @@
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
-using Catalog.APITests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
+using TestData.TestData;
 using Xunit;
 
 namespace Catalog.API.Controllers.Tests
@@ -45,15 +45,7 @@ namespace Catalog.API.Controllers.Tests
                 ProductData.GetPreconfiguredProducts().First().SubCategory.Product.ManufacturerPartNo
             };
 
-            //Setup mock file using a memory stream
-            var content =
-                "Category,SubCategory,ManufacturerPartNo,Manufacturer,ItemName,Description,Stock,Price,Packaging,Series,DatasheetUrl,ImageUrls,AdditionalFields\r\nPassive Components,EMI / RFI Components,BLM18AG601SN1D,Murata Electronics,Ferrite Beads and Chips,FERRITE BEAD 600 OHM 0603 1LN,44,28.005,Tape & Reel (TR),\"EMIFIL®, BLM18\",https://www.murata.com/en-us/products/productdata/8796738650142/ENFA0003.pdf,https://media.digikey.com/Renders/Murata%20Renders/0603(LQG18).jpg,\"[{MountingType,Surface Mount},{Package/Case,IND 0603 }]\"\r\nPassive Components,EMI / RFI Components,MMZ0603S601CT000,TDK Corporation,Ferrite Beads and Chips,FERRITE BEAD 600 OHM 0201 1LN,8,33.606,Tape & Reel (TR),MMZ,https://product.tdk.com/en/system/files?file=dam/doc/product/emc/emc/beads/catalog/beads_commercial_signal_mmz0603_en.pdf,https://media.digikey.com/Renders/TDK%20Renders/MMZ0603xxxxCT000.jpg,\"[{MountingType,Surface Mount},{Package/Case,IND 0603 }]\"\r\n";
-            var fileName = "test.csv";
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(content);
-            writer.Flush();
-            stream.Position = 0;
+  
 
             CSVDto cSVDto = new CSVDto()
             {
@@ -64,9 +56,6 @@ namespace Catalog.API.Controllers.Tests
 
             _ICSV2Category.Setup(x => x.Read(It.IsAny<string>())).
                 Returns(cSVDto);
-
-            //create FormFile with desired data
-            IFormFile file = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
             _IProductRepositoryR.SetupSequence(x => x.GetProductsByMFP(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(ProductData.GetPreconfiguredProducts()
@@ -79,7 +68,7 @@ namespace Catalog.API.Controllers.Tests
             // Act
             AdminProductController apc = new AdminProductController(
                 _IProductRepositoryR.Object, _IProductRepositoryW.Object, _ICSV2Category.Object);
-            var result = await apc.UplaodCSVProducts(file);
+            var result = await apc.UplaodCSVProducts(ProductData.GetFile());
 
             // Assert
             result.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);

@@ -11,15 +11,6 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Services\appsettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Services\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +36,11 @@
     <ProjectReference Include="..\..\..\Services\Catalog\Catalog.API\Catalog.API.csproj" />
     <!--<ProjectReference Include="..\..\..\Services\Catalog\Catalog.API\Catalog.API.csproj" />-->
     <ProjectReference Include="..\..\..\Services\Ordering\Ordering.Application\Ordering.Application.csproj" />
+    <ProjectReference Include="..\..\TestData\TestData.csproj" />
   </ItemGroup>
-
+	<ItemGroup>
+		<None Update="xunit.runner.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

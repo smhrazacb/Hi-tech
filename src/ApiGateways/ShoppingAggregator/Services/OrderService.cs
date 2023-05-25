@@ -1,8 +1,6 @@
 ﻿using ShoppingAggregator.Extensions;
 using ShoppingAggregator.Models;
 using ShoppingAggregator.Services.Interfaces;
-using IdentityModel.Client;
-using System.Net.Http.Headers;
 using EventBus.Messages.Common;
 
 namespace ShoppingAggregator.Services

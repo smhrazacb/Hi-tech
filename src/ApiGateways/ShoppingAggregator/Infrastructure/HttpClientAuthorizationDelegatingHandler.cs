@@ -1,6 +1,5 @@
 ﻿using IdentityModel.Client;
 using System.Net.Http.Headers;
-using static IdentityModel.OidcConstants;
 
 namespace ShoppingAggregator.Infrastructure;
 

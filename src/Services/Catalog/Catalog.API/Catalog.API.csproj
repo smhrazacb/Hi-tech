@@ -34,6 +34,9 @@
 	<ItemGroup>
 	  <Folder Include="dockerEnv\upload\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj" />
+	</ItemGroup>
 	<!--<ItemGroup>
 	  <ProjectReference Include="..\..\..\BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj" />
 	</ItemGroup>-->

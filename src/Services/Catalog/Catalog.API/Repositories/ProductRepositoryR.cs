@@ -4,11 +4,7 @@ using Catalog.API.Entities.Dtos;
 using Catalog.API.Extensions;
 using Catalog.API.Filter;
 using Catalog.API.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using static Catalog.API.Entities.Dtos.CEnums;
 
 namespace Catalog.API.Repositories
 {

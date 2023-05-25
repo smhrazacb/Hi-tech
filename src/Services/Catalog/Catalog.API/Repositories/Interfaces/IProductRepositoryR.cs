@@ -1,7 +1,6 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Filter;
-using static Catalog.API.Entities.Dtos.CEnums;
 
 namespace Catalog.API.Repositories.Interfaces
 {

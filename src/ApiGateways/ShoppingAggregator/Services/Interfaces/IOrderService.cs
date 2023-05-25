@@ -1,7 +1,5 @@
 ﻿using EventBus.Messages.Common;
 using ShoppingAggregator.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ShoppingAggregator.Services.Interfaces
 {

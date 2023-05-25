@@ -2,10 +2,6 @@
 using ShoppingAggregator.Extensions;
 using ShoppingAggregator.Models;
 using ShoppingAggregator.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ShoppingAggregator.Services
 {

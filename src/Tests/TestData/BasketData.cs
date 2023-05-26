@@ -1,7 +1,7 @@
 ﻿using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 
-namespace TestData.TestData
+namespace TestData
 {
     public static class BasketData
     {

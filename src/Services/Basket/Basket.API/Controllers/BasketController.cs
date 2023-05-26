@@ -54,7 +54,7 @@ namespace Basket.API.Controllers
             // Validate basket price with current product price
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
-
+            var aa = _IIdentityService.GetUserName();
             basketCheckoutEvent.UserId = _IIdentityService.GetUserIdentity();
 
             if (basket.UserId != basketCheckoutEvent.UserId)
@@ -71,19 +71,14 @@ namespace Basket.API.Controllers
         /// <summary>
         /// <para>Delete a Basket if existed</para>
         /// </summary>
-        /// <param name="guid"></param>
+        /// <param name="string"></param>
         /// <returns></returns>
-        [HttpDelete("{guid}", Name = "DeleteBasket")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [HttpDelete("{userid}", Name = "DeleteBasket")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteBasket(string userid)
         {
             await _repository.DeleteBasket(userid);
             return NoContent();
-        }
-
-        public Task DeleteBasket(object userId)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
+using Catalog.API.Entities;
 
 namespace TestData
 {
@@ -28,6 +29,32 @@ namespace TestData
                     Quantity = 50,
                     UnitPrice = 100
                     }
+                }
+            };
+        }
+        public static ShoppingCart GetBasketData(IEnumerable<Category> categories)
+        {
+            return new ShoppingCart()
+            {
+                UserId = "admin@admin.com",
+                ShoppingItems = new List<ShoppingItem>()
+                {
+                    new ShoppingItem()
+                    {
+                    ProductId = categories.FirstOrDefault().Id,
+                    PictureUrl = categories.FirstOrDefault().SubCategory.Product.ImageUrl,
+                    ProductNameShortdesc = categories.FirstOrDefault().SubCategory.Product.ProductNameShortdesc,
+                    Quantity = (int)(categories.FirstOrDefault().SubCategory.Product.Quantity-2),
+                    UnitPrice = categories.FirstOrDefault().SubCategory.Product.UnitPrice
+                    }, new ShoppingItem()
+                    {
+                    ProductId = categories.LastOrDefault().Id,
+                    PictureUrl = categories.LastOrDefault().SubCategory.Product.ImageUrl,
+                    ProductNameShortdesc = categories.LastOrDefault().SubCategory.Product.ProductNameShortdesc,
+                    Quantity = (int)(categories.LastOrDefault().SubCategory.Product.Quantity-2),
+                    UnitPrice = categories.LastOrDefault().SubCategory.Product.UnitPrice
+                    },
+                    
                 }
             };
         }

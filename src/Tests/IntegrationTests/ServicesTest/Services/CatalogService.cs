@@ -3,11 +3,12 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using ServicesTest.Infrastructure;
 using System.Net.Http.Headers;
 
 namespace ServicesTest.Services
 {
-    public class CatalogService : IClassFixture<CatalogWebApplicationFactory<Catalog.API.Startup>>, IDisposable
+    public class CatalogService : IClassFixture<CatalogWebApplicationFactory<Catalog.API.Startup>>
     {
         public readonly HttpClient client;
         public readonly CatalogWebApplicationFactory<Catalog.API.Startup> factory;
@@ -18,12 +19,12 @@ namespace ServicesTest.Services
             {
                 AllowAutoRedirect = false,
             });
-            var token = GetTokenAsync();
+            var token = AuthHelper.GetTokenAsync();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Result);
             // old database
             dropDatabase();
         }
-        void dropDatabase()
+        public void dropDatabase()
         {
             var settingsOptions = factory.Services.GetService<DbContextSettings>();
             var client = new MongoClient(settingsOptions.ConnectionString);
@@ -34,36 +35,5 @@ namespace ServicesTest.Services
                     client.DropDatabase(settingsOptions.DatabaseName);
             }
         }
-        public void Dispose()
-        {
-            dropDatabase();
-        }
-        async Task<string> GetTokenAsync()
-        {// Retrieve the OpenIddict server configuration document containing the endpoint URLs.
-            var client = new HttpClient();
-            var configuration = await client.GetDiscoveryDocumentAsync("http://localhost:8000/");
-            if (configuration.IsError)
-            {
-                throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
-            }
-
-            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = configuration.TokenEndpoint,
-                Scope = "openid email profile offline_access order_api basket_api catalog_api",
-                ClientId = "shopping_aggrigator_server",
-                ClientSecret = "secret"
-            });
-
-            if (tokenResponse.IsError)
-            {
-                throw new Exception($"An error occurred while retrieving an access token: {tokenResponse.Error}");
-            }
-
-            return tokenResponse.AccessToken;
-        }
-
-
-
     }
 }

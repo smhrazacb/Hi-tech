@@ -3,14 +3,14 @@ using Basket.API.Services.Interfaces;
 using AutoMapper;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using Basket.API.Mapping;
+using Basket.API.Mapper;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using EventBus.Messages.Common;
 using EventBus.Messages.Events;
 using Basket.API.Services;
 using Basket.API.Entities;
-using TestData.TestData;
+using TestData;
 
 namespace Basket.API.Controllers.Tests
 {
@@ -20,7 +20,7 @@ namespace Basket.API.Controllers.Tests
         private readonly Mock<ILogger<BasketController>> _ILogger;
         private readonly Mock<IPublishEndpoint> _IPublishEndpoint;
         private readonly Mock<IBasketRepository> _IBasketRepository;
-        private readonly Mapper _Mapper;
+        private readonly AutoMapper.Mapper _Mapper;
 
         public BasketControllerTests()
         {
@@ -31,7 +31,7 @@ namespace Basket.API.Controllers.Tests
             _IBasketRepository = new Mock<IBasketRepository>();
             var myProfile = new MappingProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            _Mapper = new Mapper(configuration);
+            _Mapper = new AutoMapper.Mapper(configuration);
         }
 
         [Fact()]

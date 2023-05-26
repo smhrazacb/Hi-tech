@@ -14,9 +14,10 @@ namespace Catalog.APITests.Fixtures
 
             DbContextSettings = new DbContextSettings(
                 config.GetValue<string>("DatabaseSettings:ConnectionString"),
-                $"test_db_{Guid.NewGuid()}",
+                config.GetValue<string>("DatabaseSettings:DatabaseName"),
                 config.GetValue<string>("DatabaseSettings:CollectionName")
                 );
+            dropDatabase();
 
             this.DbContext = new ProductContext(DbContextSettings);
         }
@@ -25,8 +26,17 @@ namespace Catalog.APITests.Fixtures
         public ProductContext DbContext { get; }
         public void Dispose()
         {
+            dropDatabase();
+        }
+        void dropDatabase()
+        {
             var client = new MongoClient(DbContextSettings.ConnectionString);
-            client.DropDatabase(DbContextSettings.DatabaseName);
+            var databases = client.ListDatabaseNames().ToList();
+            foreach (var item in databases)
+            {
+                if (item == DbContextSettings.DatabaseName)
+                    client.DropDatabase(DbContextSettings.DatabaseName);
+            }
         }
     }
 }

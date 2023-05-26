@@ -1,6 +1,7 @@
 ﻿using Catalog.API.Data;
 using Catalog.API.Data.Interfaces;
 using Catalog.API.EventBusConsumer;
+using Catalog.API.Mapper;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
@@ -97,7 +98,7 @@ namespace Catalog.API
             services.AddScoped<IProductRepositoryR, ProductRepositoryR>();
             services.AddScoped<IProductRepositoryW, ProductRepositoryW>();
             services.AddScoped<ICSV2Category, CSV2Category>();
-            services.AddAutoMapper(typeof(Controllers.MappingProfile));
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IUriService>(o =>
             {

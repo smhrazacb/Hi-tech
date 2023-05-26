@@ -4,7 +4,7 @@ using Basket.API.Entities.Dtos;
 using EventBus.Messages.Events;
 using EventBus.Messages.Models;
 
-namespace Basket.API.Mapping
+namespace Basket.API.Mapper
 {
     public class MappingProfile : Profile
     {

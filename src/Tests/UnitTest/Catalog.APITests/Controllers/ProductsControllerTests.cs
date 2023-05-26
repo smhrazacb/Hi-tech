@@ -11,7 +11,7 @@ using EventBus.Messages.Common;
 using Catalog.API.Filter;
 using Microsoft.AspNetCore.Http;
 using Catalog.API.Responses;
-using TestData.TestData;
+using TestData;
 
 namespace Catalog.API.Controllers.Tests
 {

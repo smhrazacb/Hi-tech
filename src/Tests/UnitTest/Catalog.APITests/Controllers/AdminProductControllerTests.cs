@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
-using TestData.TestData;
+using TestData;
 using Xunit;
 
 namespace Catalog.API.Controllers.Tests

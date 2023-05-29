@@ -6,13 +6,8 @@ using Sylvan.Data.Csv;
 using System.Data;
 using System.Diagnostics;
 
-namespace Catalog.API.Utilities
+namespace Catalog.API.Services
 {
-
-    public interface ICSV2Category
-    {
-        public CSVDto Read(string path);
-    }
     public class CSV2Category : ICSV2Category
     {
         public CSVDto Read(string path)

@@ -1,8 +1,8 @@
-﻿using AspNet.Security.OpenIdConnect.Primitives;
-using AutoMapper;
+﻿using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
-using Basket.API.Repositories.Interfaces;
+using Basket.API.Services;
+using Basket.API.Services.Interfaces;
 using EventBus.Messages.Common;
 using EventBus.Messages.Events;
 using EventBus.Messages.Models;
@@ -19,18 +19,19 @@ namespace Basket.API.Controllers
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class BasketController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IIdentityService _IIdentityService;
         private readonly ILogger<BasketController> _logger;
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IBasketRepository _repository;
-        public BasketController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, IHttpContextAccessor httpContextAccessor, ILogger<BasketController> logger)
+
+        public BasketController(IIdentityService iIdentityService, ILogger<BasketController> logger, IMapper mapper, IPublishEndpoint publishEndpoint, IBasketRepository repository)
         {
-            _repository = repository;
+            _IIdentityService = iIdentityService;
+            _logger = logger;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
-            _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
+            _repository = repository;
         }
 
         /// <summary>
@@ -53,7 +54,11 @@ namespace Basket.API.Controllers
             // Validate basket price with current product price
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
-            basketCheckoutEvent.UserId = _httpContextAccessor.HttpContext.User.FindFirst(OpenIdConnectConstants.Claims.Username).Value;
+            var aa = _IIdentityService.GetUserName();
+            basketCheckoutEvent.UserId = _IIdentityService.GetUserIdentity();
+
+            if (basket.UserId != basketCheckoutEvent.UserId)
+                return Conflict($"Basket UserId: {basket.UserId} Mismatched with Current Logged in User: {basketCheckoutEvent.UserId}");
 
             // send checkout event to rabbitmq
             basketCheckoutEvent.ShoppingItems = shoppingItems;
@@ -66,14 +71,14 @@ namespace Basket.API.Controllers
         /// <summary>
         /// <para>Delete a Basket if existed</para>
         /// </summary>
-        /// <param name="guid"></param>
+        /// <param name="string"></param>
         /// <returns></returns>
-        [HttpDelete("{guid}", Name = "DeleteBasket")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [HttpDelete("{userid}", Name = "DeleteBasket")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteBasket(string userid)
         {
             await _repository.DeleteBasket(userid);
-            return Ok();
+            return NoContent();
         }
 
         /// <summary>
@@ -103,12 +108,10 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [AllowAnonymous]
-        public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
+        public async Task<ActionResult<ResponseMessage<ShoppingCart>>> UpdateBasket([FromBody] ShoppingCart shoppingCart)
         {
-            var basket = await _repository.GetBasket(shoppingCart.UserId);
-            if (basket == null)
-                return NotFound();
-            return Ok(await _repository.UpdateBasket(shoppingCart));
+            var basket = await _repository.UpdateBasket(shoppingCart);
+            return Ok(new ResponseMessage<ShoppingCart>(basket));
         }
     }
 }

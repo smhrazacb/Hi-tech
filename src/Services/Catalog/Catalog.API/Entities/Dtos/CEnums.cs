@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.ComponentModel;
-using System.Reflection;
-
-namespace Catalog.API.Entities.Dtos
+﻿namespace Catalog.API.Entities.Dtos
 {
     public class CEnums
     {

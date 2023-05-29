@@ -1,17 +1,8 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using OpenIddict.Client;
-using OpenIddict.Validation.AspNetCore;
-using Polly;
 using ShoppingAggregator.Infrastructure;
 using ShoppingAggregator.Services;
 using ShoppingAggregator.Services.Interfaces;
-using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 

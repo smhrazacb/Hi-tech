@@ -5,7 +5,9 @@ namespace Ordering.Domain.Entities
 {
     public class OrderItem
     {
-        public int Id { get; private set; }
+        [Key]
+        [Column("id")]
+        public int OrderId { get; private set; }
         public string ProductId { get; set; }
         public string ProductNameShortdesc { get; set; }
         public decimal UnitPrice { get; set; }

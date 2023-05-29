@@ -1,12 +1,11 @@
 ﻿using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
-using Catalog.API.Utilities;
+using Catalog.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
-using System.Diagnostics;
 using System.Net;
 
 namespace Catalog.API.Controllers
@@ -122,7 +121,7 @@ namespace Catalog.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
+        [HttpDelete("{id}", Name = "DeleteProduct")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]

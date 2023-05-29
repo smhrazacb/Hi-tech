@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Catalog.API.Entities
+﻿namespace Catalog.API.Entities
 {
     public class Category : BaseEntity
     {

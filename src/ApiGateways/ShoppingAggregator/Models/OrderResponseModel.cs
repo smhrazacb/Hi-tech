@@ -2,7 +2,7 @@
 {
     public class OrderResponseModel
     {
-        public int OrderId { get; protected set; }
+        public int Id { get; protected set; }
         public string UserId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? LastModifiedDate { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Catalog.API.Utilities
+namespace Catalog.API.Services
 {
     public class PictureUtil
     {
@@ -10,7 +10,7 @@ namespace Catalog.API.Utilities
 
             try
             {
-                System.Net.HttpWebRequest webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(imageUrl);
+                System.Net.HttpWebRequest webRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(imageUrl);
                 webRequest.AllowWriteStreamBuffering = true;
                 webRequest.Timeout = 30000;
 

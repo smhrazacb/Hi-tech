@@ -1,6 +1,6 @@
 ﻿using Basket.API.Entities;
 
-namespace Basket.API.Repositories.Interfaces
+namespace Basket.API.Services.Interfaces
 {
     public interface IBasketRepository
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EventBus.Messages.Models;
+﻿using EventBus.Messages.Models;
 
 namespace EventBus.Messages.Events
 {

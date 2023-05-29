@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Catalog.API.Entities;
 
-namespace Catalog.API.Controllers
+namespace Catalog.API.Mapper
 {
     public class MappingProfile : Profile
     {

@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.ComponentModel;
-using static Catalog.API.Entities.Dtos.CEnums;
-
-namespace Catalog.API.Entities.Dtos
+﻿namespace Catalog.API.Entities.Dtos
 {
     public class FilterSortDto
     {

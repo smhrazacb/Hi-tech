@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -9,15 +10,43 @@ namespace WebHookTest.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WebHooKServerController : ControllerBase
     {
         private readonly WebhooksContext _dbContext;
         private readonly IGrantUrlTesterService _grantUrlTester;
+        private readonly IWebhooksRetriever _retriever;
+        private readonly IWebhooksSender _sender;
 
-        public WeatherForecastController(WebhooksContext dbContext, IGrantUrlTesterService grantUrlTester)
+        public WebHooKServerController(WebhooksContext dbContext, IGrantUrlTesterService grantUrlTester, IWebhooksRetriever retriever, IWebhooksSender sender)
         {
             _dbContext = dbContext;
             _grantUrlTester = grantUrlTester;
+            _retriever = retriever;
+            _sender = sender;
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<IActionResult> GenerateTestEvent()
+        {
+            var subscriptions = await _retriever.GetSubscriptionsOfType(WebhookType.OrderPaid);
+            var whook = new WebhookData(WebhookType.OrderPaid, "hook Received");
+            await _sender.SendAll(subscriptions, whook);
+            return Ok();
+        }
+
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(WebhookSubscription), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetByUserAndId(int id)
+        {
+            var userId = "testuser";
+            var subscription = await _dbContext.Subscriptions.SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+            if (subscription != null)
+            {
+                return Ok(subscription);
+            }
+            return NotFound($"Subscriptions {id} not found");
         }
 
         [HttpPost]
@@ -31,9 +60,9 @@ namespace WebHookTest.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            var grantOk = await _grantUrlTester.TestGrantUrl(request.Url, request.GrantUrl, request.Token ?? string.Empty);
+            //var grantOk = await _grantUrlTester.TestGrantUrl(request.Url, request.GrantUrl, request.Token ?? string.Empty);
 
-            if (grantOk)
+            if (true)
             {
                 var subscription = new WebhookSubscription()
                 {

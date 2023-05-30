@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WebHookTest.Data;
@@ -38,26 +39,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
-app.Map("/webhook", HandleWebhook);
 app.Run();
 
 
-static void HandleWebhook(IApplicationBuilder app)
-{
-    app.Run(async context =>
-    {
-        if (context.Request.Method == "POST")
-        {
-            // Process the webhook payload
-            // You can access the payload using await context.Request.ReadFromJsonAsync<T>()
-
-            // Perform your desired actions with the payload
-
-            await context.Response.WriteAsync("Webhook received.");
-        }
-        else
-        {
-            context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
-        }
-    });
-}

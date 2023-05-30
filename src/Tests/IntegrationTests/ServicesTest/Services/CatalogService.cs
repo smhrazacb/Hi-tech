@@ -19,8 +19,8 @@ namespace ServicesTest.Services
             {
                 AllowAutoRedirect = false,
             });
-            var token = AuthHelper.GetTokenAsync();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Result);
+            var token = AuthHelper.GetTokenAsync().Result;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             // old database
             dropDatabase();
         }
@@ -35,5 +35,6 @@ namespace ServicesTest.Services
                     client.DropDatabase(settingsOptions.DatabaseName);
             }
         }
+
     }
 }

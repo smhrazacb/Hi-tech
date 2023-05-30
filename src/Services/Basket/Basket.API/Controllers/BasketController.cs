@@ -68,6 +68,11 @@ namespace Basket.API.Controllers
             return Accepted(basketCheckoutEvent);
         }
 
+        public Task Checkout(ShoppingCart shoppingCart)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// <para>Delete a Basket if existed</para>
         /// </summary>

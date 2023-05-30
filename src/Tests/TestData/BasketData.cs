@@ -1,12 +1,24 @@
 ﻿using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using Catalog.API.Entities;
+using MongoDB.Driver;
 
 namespace TestData
 {
     public static class BasketData
     {
-        public static ShoppingCart GetBasketData()
+        public static ShoppingCart GetNullBasketData()
+        {
+            return new ShoppingCart()
+            {
+                UserId = "admin@admin.com",
+                ShoppingItems = new List<ShoppingItem>()
+                {  
+
+                }
+            };
+        }
+            public static ShoppingCart GetBasketData()
         {
             return new ShoppingCart()
             {
@@ -77,6 +89,14 @@ namespace TestData
                 State = "Test",
                 TotalPrice = 100,
                 ZipCode = "Test"
+            };
+        }
+
+        public static BasketCheckoutIdsDto BasketCheckoutIdsDtoNull()
+        {
+            return new BasketCheckoutIdsDto()
+            {
+
             };
         }
     }

@@ -4,6 +4,7 @@ using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
@@ -45,7 +46,7 @@ namespace Catalog.API.Controllers.Tests
                 ProductData.GetPreconfiguredProducts().First().SubCategory.Product.ManufacturerPartNo
             };
 
-  
+
 
             CSVDto cSVDto = new CSVDto()
             {
@@ -98,5 +99,98 @@ namespace Catalog.API.Controllers.Tests
 
             result.Result.Should().BeOfType<NoContentResult>().Which.StatusCode.Should().Be(204);
         }
+
+        [Fact()]
+        public void UpdateProductTest_ReturnNotFound()
+        {
+            // Arrange
+            var product = ProductData.GetPreconfiguredProducts().First();
+
+            _IProductRepositoryR.Setup(x => x.GetProductById(It.IsAny<string>())).Returns(Task.FromResult((Category)null));
+            _IProductRepositoryW.Setup(x => x.UpdateProduct(It.IsAny<Category>())).ReturnsAsync(true);
+            // Act
+            AdminProductController apc = new AdminProductController(
+                _IProductRepositoryR.Object, _IProductRepositoryW.Object, _ICSV2Category.Object);
+            var result = apc.UpdateProduct(product);
+            // Assert
+
+            result.Result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact()]
+        public void UpdateProductTest_ReturnBadRequest()
+        {
+            // Arrange
+            var product = ProductData.GetPreconfiguredProducts().First();
+            _IProductRepositoryR.Setup(x => x.GetProductById(It.IsAny<string>())).ReturnsAsync(product);
+            _IProductRepositoryW.Setup(x => x.UpdateProduct(It.IsAny<Category>())).ReturnsAsync(false);
+            // Act
+            AdminProductController apc = new AdminProductController(
+                _IProductRepositoryR.Object, _IProductRepositoryW.Object, _ICSV2Category.Object);
+            var result = apc.UpdateProduct(product);
+            // Assert
+
+            result.Result.Should().BeOfType<BadRequestResult>();
+
+        }
+
+        [Fact()]
+        public void DeleteProductByIdTest_ReturnOkResult()
+        {
+            // Arrange
+            var product = ProductData.GetPreconfiguredProducts().First();
+
+            _IProductRepositoryR.Setup(x => x.GetProductById(It.IsAny<string>())).ReturnsAsync(product);
+            _IProductRepositoryW.Setup(x => x.DeleteProduct(product.Id)).ReturnsAsync(true);
+            // Act
+            AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object,
+                _IProductRepositoryW.Object, _ICSV2Category.Object);
+            //var result = apc.UpdateProduct(product);
+            var result = apc.DeleteProductById(product.Id);
+            // Assert
+
+            result.Result.Should().BeOfType<OkResult>().Which.StatusCode.Should().Be(200);
+        }
+
+        [Fact()]
+        public void DeleteProductByIdTest_ReturnNotFound()
+        {
+            // Arrange
+            var product = ProductData.GetPreconfiguredProducts().First();
+
+            _IProductRepositoryR.Setup(x => x.GetProductById(It.IsAny<string>())).Returns(Task.FromResult((Category)null));
+            _IProductRepositoryW.Setup(x => x.DeleteProduct(product.Id)).ReturnsAsync(true);
+            // Act
+            AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object,
+                _IProductRepositoryW.Object, _ICSV2Category.Object);
+            //var result = apc.UpdateProduct(product);
+            var result = apc.DeleteProductById(product.Id);
+            // Assert
+
+            result.Result.Should().BeOfType<NotFoundResult>();
+
+        }
+
+        [Fact()]
+        public void DeleteProductByIdTest_ReturnBadRequest()
+        {
+            // Arrange
+            var product = ProductData.GetPreconfiguredProducts().First();
+
+            _IProductRepositoryR.Setup(x => x.GetProductById(It.IsAny<string>())).ReturnsAsync(product);
+            _IProductRepositoryW.Setup(x => x.DeleteProduct(product.Id)).ReturnsAsync(false);
+            // Act
+            AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object,
+                _IProductRepositoryW.Object, _ICSV2Category.Object);
+            //var result = apc.UpdateProduct(product);
+            var result = apc.DeleteProductById(product.Id);
+            // Assert
+
+            result.Result.Should().BeOfType<BadRequestResult>();
+
+
+        }
+
     }
 }
+

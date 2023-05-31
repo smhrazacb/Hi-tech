@@ -7,17 +7,7 @@ namespace TestData
 {
     public static class BasketData
     {
-        public static ShoppingCart GetNullBasketData()
-        {
-            return new ShoppingCart()
-            {
-                UserId = "admin@admin.com",
-                ShoppingItems = new List<ShoppingItem>()
-                {  
 
-                }
-            };
-        }
             public static ShoppingCart GetBasketData()
         {
             return new ShoppingCart()
@@ -92,11 +82,24 @@ namespace TestData
             };
         }
 
-        public static BasketCheckoutIdsDto BasketCheckoutIdsDtoNull()
+        public static BasketCheckoutIdsDto BasketCheckoutIdsDtoDummyDataWithDiffId()
         {
             return new BasketCheckoutIdsDto()
             {
-
+                UserId = "admin1@admin.com",
+                AddressLine = "Test",
+                CardName = "Test",
+                CardNumber = "Test",
+                Country = "Test",
+                CVV = "Test",
+                EmailAddress = "Test",
+                Expiration = "Test",
+                FirstName = "Test",
+                LastName = "Test",
+                PaymentMethod = 1,
+                State = "Test",
+                TotalPrice = 100,
+                ZipCode = "Test"
             };
         }
     }

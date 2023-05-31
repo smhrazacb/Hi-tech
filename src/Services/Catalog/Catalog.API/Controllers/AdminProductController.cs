@@ -2,6 +2,8 @@
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
+using EventBus.Messages.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -19,12 +21,15 @@ namespace Catalog.API.Controllers
         private readonly IProductRepositoryW repositoryW;
         private readonly ICSV2Category _csv2category;
         private readonly ILogger<AdminProductController> _logger;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public AdminProductController(IProductRepositoryR repositoryR, IProductRepositoryW repositoryW, ICSV2Category csv2category)
+        public AdminProductController(IProductRepositoryR repositoryR, IProductRepositoryW repositoryW, ICSV2Category csv2category, ILogger<AdminProductController> logger, IPublishEndpoint publishEndpoint)
         {
             this.repositoryR = repositoryR;
             this.repositoryW = repositoryW;
             _csv2category = csv2category;
+            _logger = logger;
+            _publishEndpoint = publishEndpoint;
         }
 
         /// <summary>
@@ -58,14 +63,25 @@ namespace Catalog.API.Controllers
                 }
                 var result = _csv2category.Read(filePath);
 
+                List<CatalogItemPriceChangeEvent> catalogItemPriceChangeEvents = new();
                 foreach (var item in result.NewProducts)
                 {
-                    var res = repositoryR
-                        .GetProductsByMFP(item.SubCategory.Product.ManufacturerPartNo,
+                    var res = await repositoryR
+                        .GetProductsByMFP(
+                        item.SubCategory.Product.ManufacturerPartNo,
                         item.SubCategory.Product.Manufacturer);
-                    if (res.Result.Count() != 0)
+                    var resFirst = res.FirstOrDefault();
+
+                    if (res.Count() != 0)
                     {
-                        item.Id = res.Result.FirstOrDefault().Id;
+                        if (resFirst.SubCategory.Product.UnitPrice != item.SubCategory.Product.UnitPrice)
+                            catalogItemPriceChangeEvents.Add(new CatalogItemPriceChangeEvent()
+                            {
+                                ProductId = resFirst.Id,
+                                OldUnitPrice = resFirst.SubCategory.Product.UnitPrice,
+                                UnitPrice = item.SubCategory.Product.UnitPrice
+                            });
+                        item.Id = resFirst.Id;
                         result.UpdateProducts.Add(item);
                     }
                 }
@@ -79,6 +95,10 @@ namespace Catalog.API.Controllers
                 {
                     var bulkWriteResult = await repositoryW.UpdateProducts(result.UpdateProducts);
                 }
+                // Publish Price Change Event
+                foreach (var catalogItemPriceChangeEvent in catalogItemPriceChangeEvents)
+                    await PublishPriceChangeEvent(catalogItemPriceChangeEvent);
+
                 // Update db New Products
                 if (result.NewProducts.Count() != 0)
                 {
@@ -108,14 +128,33 @@ namespace Catalog.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProduct([FromBody] Category product)
         {
-            if (await repositoryR.GetProductById(product.Id) == null)
+            var oldproduct = await repositoryR.GetProductById(product.Id);
+            if (oldproduct == null)
                 return NotFound();
+
             if (await repositoryW.UpdateProduct(product))
             {
+                if (oldproduct.SubCategory.Product.UnitPrice != product.SubCategory.Product.UnitPrice)
+                {
+                    CatalogItemPriceChangeEvent catalogItemPriceChangeEvent = new CatalogItemPriceChangeEvent
+                    {
+                        ProductId = product.Id,
+                        OldUnitPrice = oldproduct.SubCategory.Product.UnitPrice,
+                        UnitPrice = product.SubCategory.Product.UnitPrice
+                    };
+                    await PublishPriceChangeEvent(catalogItemPriceChangeEvent);
+                }
                 return NoContent();
             }
             return BadRequest();
         }
+
+        private async Task PublishPriceChangeEvent(CatalogItemPriceChangeEvent catalogItemPriceChangeEvent)
+        {
+            await _publishEndpoint.Publish(catalogItemPriceChangeEvent);
+            _logger.LogInformation($"Publishing CatalogItemPriceChangeEvent for product Id : {catalogItemPriceChangeEvent.ProductId}");
+        }
+
         /// <summary>
         /// Delete a Product if Id matched
         /// </summary>

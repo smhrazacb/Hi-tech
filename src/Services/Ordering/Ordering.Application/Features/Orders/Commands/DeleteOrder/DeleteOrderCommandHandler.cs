@@ -22,10 +22,10 @@ namespace Ordering.Application.Features.Orders.Commands.DeleteOrder
 
         public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
-            var orderToDelete = await _orderRepository.GetByIdAsync(request.Id);
+            var orderToDelete = await _orderRepository.GetByIdAsync(request.OrderId);
             if (orderToDelete == null)
             {
-                throw new NotFoundException(nameof(Order), request.Id);
+                throw new NotFoundException(nameof(Order), request.OrderId);
             }
 
             await _orderRepository.DeleteAsync(orderToDelete);

@@ -1,4 +1,4 @@
-﻿namespace Ordering.Infrastructure.Repositories.Services
+﻿namespace Ordering.API.Services
 {
     public interface IIdentityService
     {

@@ -1,11 +1,15 @@
-﻿namespace Ordering.Application.Features.Orders.Queries.GetOrdersList
+﻿using Ordering.Application.Features.Orders.Commands.UpdateOrder;
+using Ordering.Domain.Entities;
+
+namespace Ordering.Application.Features.Orders.Queries
 {
-    public class OrdersVm
+    public class OrderQueryModel
     {
         public int OrderId { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
-        public IEnumerable<OrderVmItem> ShoppingItems { get; set; }
+        public IEnumerable<GetOrderItem> ShoppingItems { get; set; }
+        public virtual IEnumerable<GetOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -23,7 +27,14 @@
         public string CVV { get; set; }
         public int PaymentMethod { get; set; }
     }
-    public class OrderVmItem
+    public class GetOrderStatus
+    {
+        public EOrderStatus Status { get; set; }
+        public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
+        public string UpdatedBy { get; set; }
+        public virtual Order Order { get; set; }
+    }
+    public class GetOrderItem
     {
         public string ProductId { get; set; }
         public string ProductNameShortdesc { get; set; }

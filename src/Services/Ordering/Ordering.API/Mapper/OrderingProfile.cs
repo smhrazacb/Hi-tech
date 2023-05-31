@@ -11,7 +11,9 @@ namespace Ordering.API.Mapper
 		{
 			CreateMap<CheckoutOrderCommand, BasketCheckoutEvent>().ReverseMap();
 			CreateMap<CheckoutOrderCommandItems, EventCartItem>().ReverseMap();
-			CreateMap<CheckoutOrderCommand, OrderCompleteEvent>().ReverseMap();
+			CreateMap<CheckoutOrderCommand, BasketDeleteEvent>().ReverseMap();
+			CreateMap<CheckoutOrderCommand, CatalogStockDelEvent>().ReverseMap();
+			CreateMap<CheckoutOrderCommand, OrderStatusChangeEvent>().ReverseMap();
 		}
 	}
 }

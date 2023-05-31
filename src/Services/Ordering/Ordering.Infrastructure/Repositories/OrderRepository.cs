@@ -11,12 +11,17 @@ namespace Ordering.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByShoppingCart(string userid)
+        public async Task<IEnumerable<Order>> GetOrdersByUserId(string userid)
         {
-            var orderList = await _dbContext.Orders
+            return await _dbContext.Orders
                                  .Where(o => o.UserId == userid)
                                  .ToListAsync();
-            return orderList;
+        }
+        public async Task<Order> GetOrdersByOrderId(int orderid)
+        {
+            return await _dbContext.Orders
+                                 .Where(o => o.OrderId == orderid)
+                                 .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByUserName(string createdBy)

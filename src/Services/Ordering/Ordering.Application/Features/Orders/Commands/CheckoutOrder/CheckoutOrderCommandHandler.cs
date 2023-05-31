@@ -28,7 +28,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             Order order;
             var orderEntity = _mapper.Map<Order>(request);
             //check duplicate 
-            var duplicateOrder = await _orderRepository.GetOrdersByShoppingCart(orderEntity.UserId);
+            var duplicateOrder = await _orderRepository.GetOrdersByUserId(orderEntity.UserId);
             if (duplicateOrder.Count() != 0)
             {
                 order = duplicateOrder.FirstOrDefault();

@@ -17,15 +17,16 @@ builder.Services.AddHttpClient("extendedhandlerlifetime").SetHandlerLifetime(Tim
 builder.Services.AddHttpClient("GrantClient")
         .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
             .AddTransient<IGrantUrlTesterService, GrantUrlTesterService>()
             .AddTransient<IWebhooksRetriever, WebhooksRetriever>()
             .AddTransient<IWebhooksSender, WebhooksSender>();
+
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

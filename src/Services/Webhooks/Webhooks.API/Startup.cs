@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EventBus.Messages.Common;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Webhooks.API.Data;
+using Webhooks.API.EventBusConsumer;
 using Webhooks.API.Services;
 
 namespace Webhooks.API
@@ -23,9 +26,11 @@ namespace Webhooks.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
             services.AddDbContext<WebhooksContext>(options =>
-                options.UseSqlite($"Filename={Path.Combine("dbEsparkIndent-Server.sqlite3")}"));
+                options.UseSqlite($"Filename={Path.Combine("dbEsparkIndent-Server.sqlite3")}",sqliteOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
+                }));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpClient("extendedhandlerlifetime").SetHandlerLifetime(Timeout.InfiniteTimeSpan);
@@ -42,14 +47,14 @@ namespace Webhooks.API
             // MassTransit-RabbitMQ Configuration
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<CatalogDeleteConsumer>();
+                config.AddConsumer<CatalogItemPriceChangeConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(configRoot["EventBusSettings:HostAddress"]);
-                    cfg.ReceiveEndpoint(EventBusConstants.CatalogStockDelQueue, c =>
+                    cfg.ReceiveEndpoint(EventBusConstants.CatalogItemPriceChangeEvent, c =>
                     {
-                        c.ConfigureConsumer<CatalogDeleteConsumer>(ctx);
+                        c.ConfigureConsumer<CatalogItemPriceChangeConsumer>(ctx);
                     });
                 });
             });

@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using Ordering.API.EventBusConsumer;
 using Ordering.API.Extensions;
+using Ordering.API.Services;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
@@ -79,6 +80,7 @@ namespace Ordering.API
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
                 });
+            services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddAuthentication(options =>
             {

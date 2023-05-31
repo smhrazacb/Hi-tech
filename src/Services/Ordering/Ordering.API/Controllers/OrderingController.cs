@@ -6,6 +6,7 @@ using OpenIddict.Validation.AspNetCore;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Commands.DeleteOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
+using Ordering.Application.Features.Orders.Queries;
 using Ordering.Application.Features.Orders.Queries.GetOrdersList;
 using System.Net;
 
@@ -14,43 +15,47 @@ namespace Ordering.API.Controllers
     [ApiController]
     [Route("api/v1/[controller]")]
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    public class OrderController : ControllerBase
+    public class OrderingController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public OrderController(IMediator mediator)
+        public OrderingController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
         /// <summary>
-        /// Return Order
+        /// Returns Orders by UserName
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        [HttpGet("{userName}", Name = "GetOrder")]
-        [ProducesResponseType(typeof(IEnumerable<OrdersVm>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ResponseMessage<IEnumerable<OrdersVm>>>> GetOrder(string userName)
+        [HttpGet("[action]/{userName}", Name = "Orders")]
+        [ProducesResponseType(typeof(IEnumerable<OrderQueryModel>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ResponseMessage<IEnumerable<OrderQueryModel>>>> Orders(string userName)
         {
             var query = new GetOrdersListQuery(userName);
             var orders = await _mediator.Send(query);
             if (orders.Count() == 0)
-                return new ResponseMessage<IEnumerable<OrdersVm>>(HttpStatusCode.NotFound.ToString());
-            var response = new ResponseMessage<IEnumerable<OrdersVm>>(orders);
+                return new ResponseMessage<IEnumerable<OrderQueryModel>>(HttpStatusCode.NotFound.ToString());
+            var response = new ResponseMessage<IEnumerable<OrderQueryModel>>(orders);
 
             return Ok(response);
         }
         /// <summary>
-        /// For Testing only
+        /// Returns Order by OrderId
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="orderid"></param>
         /// <returns></returns>
-        // testing purpose
-        [HttpPost(Name = "CheckoutOrder")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<int>> CheckoutOrder([FromBody] CheckoutOrderCommand command)
+        [HttpGet("[action]/{orderid}", Name = "Order")]
+        [ProducesResponseType(typeof(OrderQueryModel), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ResponseMessage<OrderQueryModel>>> Order(int orderid)
         {
-            var result = await _mediator.Send(command);
-            return Ok(result);
+            var query = new GetOrder(orderid);
+            var order = await _mediator.Send(query);
+            if (order == null)
+                return new ResponseMessage<OrderQueryModel>(HttpStatusCode.NotFound.ToString());
+            var response = new ResponseMessage<OrderQueryModel>(order);
+            return Ok(response);
         }
+
         /// <summary>
         /// Update Order
         /// </summary>
@@ -70,12 +75,11 @@ namespace Ordering.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("[action]/{id}", Name = "DeleteOrder")]
-        //[Route("[action]/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> DeleteOrder(int id)
+        public async Task<ActionResult> DeleteOrder(int orderid)
         {
-            var command = new DeleteOrderCommand() { Id = id };
+            var command = new DeleteOrderCommand() { OrderId = orderid };
             await _mediator.Send(command);
             return NoContent();
         }

@@ -8,7 +8,6 @@ using Ordering.Application.Models;
 using Ordering.Infrastructure.Mail;
 using Ordering.Infrastructure.Persistence;
 using Ordering.Infrastructure.Repositories;
-using Ordering.Infrastructure.Repositories.Services;
 
 namespace Ordering.Infrastructure
 {
@@ -26,8 +25,9 @@ namespace Ordering.Infrastructure
             services.AddTransient<IEmailService, EmailService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IIdentityService, IdentityService>();
-
+            // Added due to 
+            //Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             return services;
         }
     }

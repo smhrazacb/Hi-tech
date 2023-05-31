@@ -1,13 +1,15 @@
 ﻿using MediatR;
+using Ordering.Domain.Entities;
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {
     public class CheckoutOrderCommand : IRequest<int>
     {
-        public string UserId { get; set; }
         public int OrderId { get; set; }
+        public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
-        public IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
+        public virtual IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
+        public virtual IEnumerable<OrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

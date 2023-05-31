@@ -7,6 +7,7 @@ namespace Ordering.Domain.Entities
     {
         [Key]
         [Column("id")]
+        public int Id { get; set; }
         public int OrderId { get; private set; }
         public string ProductId { get; set; }
         public string ProductNameShortdesc { get; set; }

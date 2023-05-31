@@ -1,4 +1,5 @@
-﻿using Basket.API.Entities;
+﻿using AutoMapper;
+using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
 using Catalog.API.Data;
 using Catalog.API.Entities;
@@ -12,8 +13,10 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using Ordering.Application.Features.Orders.Queries.GetOrdersList;
+using Ordering.Application.Features.Orders.Commands.UpdateOrder;
+using Ordering.Application.Features.Orders.Queries;
 using ServicesTest.Extensions;
+using ServicesTest.Mapper;
 using ServicesTest.Services;
 using System.Text;
 using static MassTransit.ValidationResultExtensions;
@@ -35,7 +38,7 @@ namespace ServicesTest.TestCases
             _Orderfixture = new OrderService(new OrderWebApplicationFactory<Ordering.API.Startup>());
         }
         [Fact]
-        public async void Scenario_Scheckout_Valid()
+        public async void Scenario_checkout_Valid()
         {
 
             var newproducts = await Product_UploadCSV_Valid();
@@ -47,7 +50,7 @@ namespace ServicesTest.TestCases
 
             var checkoutEvent = await Basket_Checkout_Valid();
             retry = 0;
-            var orders = await Order_Get_Valid();
+            var orders = await Order_GetOrders_Valid(TestData.BasketData.GetBasketData().UserId);
 
             foreach (var order in orders)
             {
@@ -58,7 +61,13 @@ namespace ServicesTest.TestCases
                         await Product_Get_Valid(shoppingItem.ProductId, 2);
                 }
             }
+            retry = 0;
+            await Order_Update_Valid(orders.FirstOrDefault()); 
+            
+            retry = 0;
+            await Order_GetOrder_Valid(orders.FirstOrDefault().OrderId);
 
+            await Console.Out.WriteLineAsync("");
             //await Product_GetCountWitCategory_Valid();
             //await Basket_Delete_Valid(userid);
 
@@ -66,23 +75,72 @@ namespace ServicesTest.TestCases
             //    await Product_DeleteProduct_Valid(id);
 
         }
-        public async Task<IEnumerable<OrdersVm>> Order_Get_Valid()
+
+        public async Task<OrderQueryModel> Order_GetOrder_Valid(int orderId)
         {
             // Arrange
-            string url = $"/api/v1/Order/{TestData.BasketData.GetBasketData().UserId}";
+            string url = $"/api/v1/Ordering/Order/{orderId}";
             // Act
             var response = await _Orderfixture.client.GetAsync(url);
-            var result = response.ReadContentAs<ResponseMessage<IEnumerable<OrdersVm>>>();
+            var result = response.ReadContentAs<ResponseMessage<OrderQueryModel>>();
             if (!result.Result.Succeeded)
             {
                 Task.Delay(5000);
                 retry++;
-                if (retry< 15)
-                    return await Order_Get_Valid();
+                if (retry < 15)
+                    return await Order_GetOrder_Valid(orderId);
             }
             // Assert
+            response.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
+            result.Result.Succeeded.Should().Be(true);
+            result.Result.Data.OrderId.Should().Be(orderId);
+            return result.Result.Data;
+        }
+        public async Task<bool> Order_Update_Valid(OrderQueryModel order)
+        {
+            // Arrange
+            //auto mapper configuration
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfile());
+            }).CreateMapper();
+            order.OrderStatuses = new List<GetOrderStatus>() { new GetOrderStatus()
+            {
+                Status=Ordering.Domain.Entities.EOrderStatus.Initiated,
+                UpdatedBy =order.UserId
+            }};
+            var updateOrderCommand = mapper.Map<UpdateOrderCommand>(order);
+            string url = $"/api/v1/Ordering/";
+            var content = new StringContent(JsonConvert.SerializeObject(updateOrderCommand), Encoding.UTF8, "application/json");
 
-
+            // Act
+            var response = await _Orderfixture.client.PutAsync(url, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                Task.Delay(5000);
+                retry++;
+                if (retry < 15)
+                    return await Order_Update_Valid(order);
+            }
+            // Assert
+            response.Should().HaveStatusCode(System.Net.HttpStatusCode.NoContent);
+            return true;
+        }
+        public async Task<IEnumerable<OrderQueryModel>> Order_GetOrders_Valid(string userid)
+        {
+            // Arrange
+            string url = $"/api/v1/Ordering/Orders/{userid}";
+            // Act
+            var response = await _Orderfixture.client.GetAsync(url);
+            var result = response.ReadContentAs<ResponseMessage<IEnumerable<OrderQueryModel>>>();
+            if (!result.Result.Succeeded)
+            {
+                Task.Delay(5000);
+                retry++;
+                if (retry < 15)
+                    return await Order_GetOrders_Valid(userid);
+            }
+            // Assert
             response.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
             result.Result.Succeeded.Should().Be(true);
             result.Result.Data.FirstOrDefault().UserId.Should().Be(TestData.BasketData.GetBasketData().UserId);
@@ -145,8 +203,6 @@ namespace ServicesTest.TestCases
             // Assert
             response.Should().HaveStatusCode(System.Net.HttpStatusCode.NoContent);
         }
-
-
         public async Task<IEnumerable<Category>> Product_UploadCSV_Valid()
         {
             // Arrange
@@ -186,7 +242,7 @@ namespace ServicesTest.TestCases
             // Act
             var response = await _Catalogfixture.client.GetAsync(url);
             var result = response.ReadContentAs<ResponseMessage<Category>>();
-            if (result.Result.Data.SubCategory.Product.Quantity!=qty)
+            if (result.Result.Data.SubCategory.Product.Quantity != qty)
             {
                 Task.Delay(5000);
                 retry++;
@@ -201,7 +257,6 @@ namespace ServicesTest.TestCases
             result.Result.Data.SubCategory.Product.Quantity.Should().Be(qty);
             return result.Result.Data;
         }
-
         public async Task<Category> Product_Get_Valid(string id)
         {
             // Arrange

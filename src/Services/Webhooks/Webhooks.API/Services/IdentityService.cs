@@ -1,16 +1,25 @@
-﻿namespace Webhooks.API.Services;
+﻿using OpenIddict.Abstractions;
 
-public class IdentityService : IIdentityService
+namespace Webhooks.API.Services
+.Services
 {
-    private readonly IHttpContextAccessor _context;
-
-    public IdentityService(IHttpContextAccessor context)
+    public class IdentityService : IIdentityService
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+        private readonly IHttpContextAccessor _IHttpContextAccessor;
 
-    public string GetUserIdentity()
-    {
-        return _context.HttpContext.User.FindFirst("sub").Value;
+        public IdentityService(IHttpContextAccessor context)
+        {
+            _IHttpContextAccessor = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public string GetUserIdentity()
+        {
+            return _IHttpContextAccessor.HttpContext.User.FindFirst(OpenIddictConstants.Claims.Username).Value;
+        }
+
+        public string GetUserName()
+        {
+            return _IHttpContextAccessor.HttpContext.User.Identity.Name;
+        }
     }
 }

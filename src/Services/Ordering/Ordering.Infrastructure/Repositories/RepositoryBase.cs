@@ -55,7 +55,11 @@ namespace Ordering.Infrastructure.Repositories
 
         public virtual async Task<T> GetByIdAsync(int id)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+           return await _dbContext
+                .Set<T>()
+                .Include(i => i.ShoppingItems)
+                .Include(i => i.OrderStatuses)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<T> AddAsync(T entity)

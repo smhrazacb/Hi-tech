@@ -13,26 +13,15 @@ namespace Webhooks.API.Controllers
     public class WebHooKsController : ControllerBase
     {
         private readonly WebhooksContext _dbContext;
-        private readonly IGrantUrlTesterService _grantUrlTester;
         private readonly IWebhooksRetriever _retriever;
         private readonly IWebhooksSender _sender;
+        private readonly IIdentityService _IdentityService;
 
         public WebHooKsController(WebhooksContext dbContext, IGrantUrlTesterService grantUrlTester, IWebhooksRetriever retriever, IWebhooksSender sender)
         {
             _dbContext = dbContext;
-            _grantUrlTester = grantUrlTester;
             _retriever = retriever;
             _sender = sender;
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<IActionResult> GenerateTestEvent()
-        {
-            var subscriptions = await _retriever.GetSubscriptionsOfType(WebhookType.OrderPaid);
-            var whook = new WebhookData(WebhookType.OrderPaid, "hook Received");
-            await _sender.SendAll(subscriptions, whook);
-            return Ok();
         }
 
         [HttpGet("{id:int}")]
@@ -81,6 +70,23 @@ namespace Webhooks.API.Controllers
             {
                 return StatusCode(418, "Grant url can't be validated");
             }
+        }
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> UnsubscribeWebhook(int id)
+        {
+            var userId = _IdentityService.GetUserIdentity();
+            var subscription = await _dbContext.Subscriptions.SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (subscription != null)
+            {
+                _dbContext.Remove(subscription);
+                await _dbContext.SaveChangesAsync();
+                return Accepted();
+            }
+
+            return NotFound($"Subscriptions {id} not found");
         }
     }
 }

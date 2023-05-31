@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using OpenIddict.Abstractions;
 
-namespace Ordering.Infrastructure.Repositories
-.Services
+namespace Ordering.API.Services
 {
     public class IdentityService : IIdentityService
     {

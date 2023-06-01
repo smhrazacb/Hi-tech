@@ -21,6 +21,8 @@ namespace Ordering.Infrastructure.Repositories
         {
             return await _dbContext.Orders
                                  .Where(o => o.OrderId == orderid)
+                                 .Include(o => o.ShoppingItems)
+                                 .Include(o => o.OrderStatuses)
                                  .FirstOrDefaultAsync();
         }
 
@@ -29,7 +31,8 @@ namespace Ordering.Infrastructure.Repositories
             var orderList =
                 await _dbContext
                 .Orders
-                .Include(orderList => orderList.ShoppingItems)
+                .Include(o => o.ShoppingItems)
+                .Include(o => o.OrderStatuses)
                 .Where(o => o.UserId == createdBy)
                 .ToListAsync();
             return orderList;

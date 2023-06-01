@@ -11,7 +11,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
         public virtual IEnumerable<UpdateOrderCommandItems> ShoppingItems { get; set; }
-        public virtual IEnumerable<UpdateOrderCommandOrderStatus> OrderStatuses { get; set; }
+        public IEnumerable<UpdateOrderCommandOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -34,7 +34,6 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         public EOrderStatus Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
-        public virtual Order Order { get; set; }
     }
     public class UpdateOrderCommandItems
     {

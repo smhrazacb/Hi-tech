@@ -8,6 +8,7 @@ using Ordering.API.Services;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
+using Quartz;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
@@ -30,6 +31,7 @@ namespace Ordering.API
             // For username 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Add services to the container.
+            services.AddTransient<IIdentityService, IdentityService>();
             services.AddApplicationServices();
             services.AddInfrastructureServices(configRoot);
             // Add RabitMQ Configuration 
@@ -80,7 +82,6 @@ namespace Ordering.API
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
                 });
-            services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddAuthentication(options =>
             {
@@ -144,6 +145,19 @@ namespace Ordering.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
             });
+
+            // Add the required Quartz.NET services
+            services.AddQuartz(q =>
+            {
+                // Use a Scoped container to create jobs. I'll touch on this later
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+            });
+
+            // Add the Quartz.NET hosted service
+
+            services.AddQuartzHostedService(
+                q => q.WaitForJobsToComplete = true);
+
         }
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {

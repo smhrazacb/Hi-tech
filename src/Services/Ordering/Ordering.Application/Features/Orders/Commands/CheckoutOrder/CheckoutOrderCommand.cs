@@ -8,8 +8,8 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         public int OrderId { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
-        public virtual IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
-        public virtual IEnumerable<OrderStatus> OrderStatuses { get; set; }
+        public  IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
+        public  IEnumerable<CheckoutOrderCommandOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -26,6 +26,19 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         public string Expiration { get; set; }
         public string CVV { get; set; }
         public int PaymentMethod { get; set; }
+       
+    }
+    public class CheckoutOrderCommandOrderStatus
+    {
+        public EOrderStatus Status { get; set; }
+        public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
+        public string UpdatedBy { get; set; }
+
+        public CheckoutOrderCommandOrderStatus(string updatedBy)
+        {
+            UpdatedBy = updatedBy;
+            Status = EOrderStatus.Initiated;
+        }
     }
     public class CheckoutOrderCommandItems
     {

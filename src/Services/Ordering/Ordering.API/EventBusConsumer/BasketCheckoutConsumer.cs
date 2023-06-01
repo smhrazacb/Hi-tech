@@ -16,17 +16,22 @@ namespace Ordering.API.EventBusConsumer
         private readonly IIdentityService _IdentityService;
         private readonly ILogger<BasketCheckoutConsumer> _logger;
 
-        public BasketCheckoutConsumer(IMediator mediator, IMapper mapper, IPublishEndpoint publishEndpoint, ILogger<BasketCheckoutConsumer> logger)
+        public BasketCheckoutConsumer(IMediator mediator, IMapper mapper, IPublishEndpoint publishEndpoint, IIdentityService identityService, ILogger<BasketCheckoutConsumer> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
+            _IdentityService = identityService;
             _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<BasketCheckoutEvent> context)
         {
             var command = _mapper.Map<CheckoutOrderCommand>(context.Message);
+            command.OrderStatuses = new List<CheckoutOrderCommandOrderStatus>()
+                { new CheckoutOrderCommandOrderStatus(_IdentityService.GetUserIdentity())}; ;
+
+
             command.OrderId = await _mediator.Send(command);
             _logger.LogInformation($"BasketCheckoutEvent consumed successfully. Created Order Id : {command.OrderId}");
 

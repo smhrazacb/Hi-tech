@@ -14,7 +14,6 @@ namespace Ordering.Domain.Entities
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public string? PictureUrl { get; set; }
-        public virtual Order Order { get; set; }
 
     }
 }

@@ -1,5 +1,7 @@
-﻿using Ordering.Application.Features.Orders.Commands.UpdateOrder;
+﻿using Newtonsoft.Json.Converters;
+using Ordering.Application.Features.Orders.Commands.UpdateOrder;
 using Ordering.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace Ordering.Application.Features.Orders.Queries
 {
@@ -9,7 +11,7 @@ namespace Ordering.Application.Features.Orders.Queries
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
         public IEnumerable<GetOrderItem> ShoppingItems { get; set; }
-        public virtual IEnumerable<GetOrderStatus> OrderStatuses { get; set; }
+        public IEnumerable<GetOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -32,7 +34,6 @@ namespace Ordering.Application.Features.Orders.Queries
         public EOrderStatus Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
-        public virtual Order Order { get; set; }
     }
     public class GetOrderItem
     {

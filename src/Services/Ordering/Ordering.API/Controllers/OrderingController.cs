@@ -35,9 +35,7 @@ namespace Ordering.API.Controllers
             var orders = await _mediator.Send(query);
             if (orders.Count() == 0)
                 return new ResponseMessage<IEnumerable<OrderQueryModel>>(HttpStatusCode.NotFound.ToString());
-            var response = new ResponseMessage<IEnumerable<OrderQueryModel>>(orders);
-
-            return Ok(response);
+            return new ResponseMessage<IEnumerable<OrderQueryModel>>(orders);
         }
         /// <summary>
         /// Returns Order by OrderId
@@ -51,9 +49,10 @@ namespace Ordering.API.Controllers
             var query = new GetOrder(orderid);
             var order = await _mediator.Send(query);
             if (order == null)
+            {
                 return new ResponseMessage<OrderQueryModel>(HttpStatusCode.NotFound.ToString());
-            var response = new ResponseMessage<OrderQueryModel>(order);
-            return Ok(response);
+            }
+            return new ResponseMessage<OrderQueryModel>(order);
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace Ordering.API.Controllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPut(Name = "UpdateOrder")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderCommand command)

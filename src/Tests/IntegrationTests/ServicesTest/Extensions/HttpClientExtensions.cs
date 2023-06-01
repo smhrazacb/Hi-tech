@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ServicesTest.Extensions
 {
@@ -11,7 +12,12 @@ namespace ServicesTest.Extensions
 
             var dataAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<T>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return JsonSerializer.Deserialize<T>(dataAsString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters ={new JsonStringEnumConverter()}
+            });
         }
     }
 }

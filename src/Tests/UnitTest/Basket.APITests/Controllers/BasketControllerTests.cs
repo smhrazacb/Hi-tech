@@ -42,7 +42,7 @@ namespace Basket.API.Controllers.Tests
 
             //Act
             BasketController pc = new BasketController(_IIdentityService.Object, _ILogger.Object, _Mapper, _IPublishEndpoint.Object, _IBasketRepository.Object);
-            var result = await pc.Checkout(BasketData.BasketCheckoutIdsDtoDummyData());
+            var result = await pc.Checkout(BasketData.BasketCheckoutIdsDtoDummyData(BasketData.GetBasketData().UserId));
 
             // assert        
             result.Result.Should().BeOfType<AcceptedResult>().Which.StatusCode

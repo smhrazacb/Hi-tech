@@ -50,52 +50,52 @@ services:
     ports:
       - "8000:8000"
 
-  #catalog.api:
-  #  environment:
-  #    - aspnetcore_environment=development
-  #    - aspnetcore_urls=http://+:80
-  #    - "databasesettings:connectionstring=mongodb://catalogdb:27017"
-  #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
-  #    - "identityurl=http://host.docker.internal:8000"
-  #  ports:
-  #    - "8001:80"
-  #  volumes:
-  #    - ./Services/Catalog/Catalog.API/dockerEnv/:/root
+  catalog.api:
+    environment:
+      - aspnetcore_environment=development
+      - aspnetcore_urls=http://+:80
+      - "databasesettings:connectionstring=mongodb://catalogdb:27017"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "identityurl=http://host.docker.internal:8000"
+    ports:
+      - "8001:80"
+    volumes:
+      - ./Services/Catalog/Catalog.API/dockerEnv/:/root
   
-  #basket.api:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - "CacheSettings:ConnectionString=basketdb:6379"
-  #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
-  #    - "identityurl=http://host.docker.internal:8000"
-  #  ports:
-  #    - "8002:80"
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=basketdb:6379"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "identityurl=http://host.docker.internal:8000"
+    ports:
+      - "8002:80"
 
-  #ordering.api:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
-  #    - "ConnectionStrings:OrderingConnectionString=Server=orderdbs;Port=5432;Database=orderdb;User Id=admin;Password=admin1234;"
-  #    - "identityurl=http://host.docker.internal:8000"
-  #    - "EmailSettings: FromAddress=ezozkme@gmail.com; ApiKey=sdfsdfsdfsd; FromName=Mehmet;"
-  #  ports:
-  #    - "8003:80"
+  ordering.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "ConnectionStrings:OrderingConnectionString=Server=orderdbs;Port=5432;Database=orderdb;User Id=admin;Password=admin1234;"
+      - "identityurl=http://host.docker.internal:8000"
+      - "EmailSettings: FromAddress=ezozkme@gmail.com; ApiKey=sdfsdfsdfsd; FromName=Mehmet;"
+    ports:
+      - "8003:80"
 
-  #shoppingaggregator:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #  ports:
-  #    - "80"
+  shoppingaggregator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
 
-  #ocelotapigw:
-  #  container_name: ocelotapigw
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #  depends_on:
-  #      - catalog.api
-  #      - basket.api
-  #  ports:
-  #    - "8010:80"
+  ocelotapigw:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+        - catalog.api
+        - basket.api
+    ports:
+      - "8010:80"
 
   rabbitmq:
     container_name: rabbitmq

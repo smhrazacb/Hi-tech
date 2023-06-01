@@ -152,7 +152,8 @@ namespace Catalog.API.Controllers
         private async Task PublishPriceChangeEvent(CatalogItemPriceChangeEvent catalogItemPriceChangeEvent)
         {
             await _publishEndpoint.Publish(catalogItemPriceChangeEvent);
-            _logger.LogInformation($"Publishing CatalogItemPriceChangeEvent for product Id : {catalogItemPriceChangeEvent.ProductId}");
+            _logger.LogInformation($"Publishing CatalogItemPriceChangeEvent for product Id : " +
+                $"{catalogItemPriceChangeEvent.ProductId}");
         }
 
         /// <summary>

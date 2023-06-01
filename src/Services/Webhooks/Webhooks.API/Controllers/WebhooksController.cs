@@ -1,6 +1,8 @@
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Validation.AspNetCore;
 using System.Net;
 using Webhooks.API.Data;
 using Webhooks.API.Model;
@@ -9,19 +11,21 @@ using Webhooks.API.Services;
 namespace Webhooks.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class WebHooKsController : ControllerBase
+    [Route("api/v1/[controller]")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    public class WebhooksController : ControllerBase
     {
         private readonly WebhooksContext _dbContext;
         private readonly IWebhooksRetriever _retriever;
         private readonly IWebhooksSender _sender;
         private readonly IIdentityService _IdentityService;
 
-        public WebHooKsController(WebhooksContext dbContext, IGrantUrlTesterService grantUrlTester, IWebhooksRetriever retriever, IWebhooksSender sender)
+        public WebhooksController(WebhooksContext dbContext, IWebhooksRetriever retriever, IWebhooksSender sender, IIdentityService identityService)
         {
             _dbContext = dbContext;
             _retriever = retriever;
             _sender = sender;
+            _IdentityService = identityService;
         }
 
         [HttpGet("{id:int}")]

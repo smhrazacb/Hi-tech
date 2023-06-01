@@ -9,7 +9,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
         public  IEnumerable<CheckoutOrderCommandItems> ShoppingItems { get; set; }
-        public  IEnumerable<CheckoutOrderCommandOrderStatus> OrderStatuses { get; set; }
+        public IList<CheckoutOrderCommandOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

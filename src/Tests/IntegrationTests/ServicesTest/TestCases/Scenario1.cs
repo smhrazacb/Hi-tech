@@ -16,6 +16,9 @@ using ServicesTest.Extensions;
 using ServicesTest.Mapper;
 using ServicesTest.Services;
 using System.Text;
+using Webhooks.API.Controllers;
+using Webhooks.API.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServicesTest.TestCases
 {
@@ -24,6 +27,7 @@ namespace ServicesTest.TestCases
         private readonly CatalogService _Catalogfixture;
         private readonly BasketService _Basketfixture;
         private readonly OrderService _Orderfixture;
+        private readonly WebhookService _WebhookService;
         int retry = 0;
 
         List<string> productId = new();
@@ -32,6 +36,7 @@ namespace ServicesTest.TestCases
             _Catalogfixture = new CatalogService(new CatalogWebApplicationFactory<Catalog.API.Startup>());
             _Basketfixture = new BasketService(new BasketWebApplicationFactory<Basket.API.Startup>());
             _Orderfixture = new OrderService(new OrderWebApplicationFactory<Ordering.API.Startup>());
+            _WebhookService = new WebhookService(new WebhookWebApplicationFactory<Webhooks.API.Startup>());
             QueueCleanup();
         }
         [Fact]
@@ -43,6 +48,11 @@ namespace ServicesTest.TestCases
             var userid = await Basket_CreateUpdate_Valid(TestData.BasketData.GetBasketData(newproducts));
             retry = 0;
             var mycart = await Basket_Get_Valid(userid);
+
+            // Register Order Status Change Webhook
+            //await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
+            //    .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
+            //    WebhookType.OrderStatus.ToString()));
 
             var checkoutEvent = await Basket_Checkout_Valid(TestData.BasketData.BasketCheckoutIdsDtoDummyData(mycart.UserId));
             retry = 0;
@@ -58,8 +68,8 @@ namespace ServicesTest.TestCases
                 }
             }
             retry = 0;
-            await Order_Update_Valid(orders.FirstOrDefault()); 
-            
+            await Order_Update_Valid(orders.FirstOrDefault());
+
             retry = 0;
             await Order_GetOrder_Valid(orders.FirstOrDefault().OrderId, EOrderStatus.Confirmed);
 
@@ -78,7 +88,7 @@ namespace ServicesTest.TestCases
             string url = $"/api/v1/Ordering/Order/{orderId}";
             // Act
             var response = await _Orderfixture.client.GetAsync(url);
-            var result =await response.ReadContentAs<ResponseMessage<OrderQueryModel>>();
+            var result = await response.ReadContentAs<ResponseMessage<OrderQueryModel>>();
             if (!result.Succeeded)
             {
                 Task.Delay(5000);
@@ -112,7 +122,7 @@ namespace ServicesTest.TestCases
 
             // Act
             var response = await _Orderfixture.client.PutAsync(url, content);
-           
+
             // Assert
             response.Should().HaveStatusCode(System.Net.HttpStatusCode.NoContent);
             return true;
@@ -123,7 +133,7 @@ namespace ServicesTest.TestCases
             string url = $"/api/v1/Ordering/Orders/{userid}";
             // Act
             var response = await _Orderfixture.client.GetAsync(url);
-            var result =await response.ReadContentAs<ResponseMessage<IEnumerable<OrderQueryModel>>>();
+            var result = await response.ReadContentAs<ResponseMessage<IEnumerable<OrderQueryModel>>>();
             if (!result.Succeeded)
             {
                 Task.Delay(5000);
@@ -140,7 +150,7 @@ namespace ServicesTest.TestCases
         public async Task<BasketCheckoutEvent> Basket_Checkout_Valid(BasketCheckoutIdsDto data)
         {
             // Arrange
-        
+
             string url = $"/api/v1/Basket/Checkout";
             var content = new StringContent(JsonConvert
                 .SerializeObject(data), Encoding.UTF8, "application/json");
@@ -162,7 +172,7 @@ namespace ServicesTest.TestCases
 
             // Act
             var response = await _Basketfixture.client.PutAsync(url, content);
-            var result =await response.ReadContentAs<ResponseMessage<ShoppingCart>>();
+            var result = await response.ReadContentAs<ResponseMessage<ShoppingCart>>();
 
             // Assert
             response.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
@@ -208,7 +218,7 @@ namespace ServicesTest.TestCases
             formdata.Add(new StringContent(TestData.ProductData.CSVFileContent()), "file", "file.csv");
             // Act
             var response1 = await _Catalogfixture.client.PostAsync(url, formdata);
-            var result1 =await response1.ReadContentAs<CSVDto>();
+            var result1 = await response1.ReadContentAs<CSVDto>();
             await Console.Out.WriteLineAsync("");
             //Assert
             response1.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
@@ -238,7 +248,7 @@ namespace ServicesTest.TestCases
 
             // Act
             var response = await _Catalogfixture.client.GetAsync(url);
-            var result =await response.ReadContentAs<ResponseMessage<Category>>();
+            var result = await response.ReadContentAs<ResponseMessage<Category>>();
             if (result.Data.SubCategory.Product.Quantity != qty)
             {
                 Task.Delay(5000);
@@ -261,7 +271,7 @@ namespace ServicesTest.TestCases
 
             // Act
             var response = await _Catalogfixture.client.GetAsync(url);
-            var result =await response.ReadContentAs<ResponseMessage<Category>>();
+            var result = await response.ReadContentAs<ResponseMessage<Category>>();
 
 
             // Assert
@@ -277,11 +287,24 @@ namespace ServicesTest.TestCases
 
             // Act
             var response2 = await _Catalogfixture.client.GetAsync(url2);
-            var result2 =await response2.ReadContentAs<IEnumerable<CategoryWithCount>>();
+            var result2 = await response2.ReadContentAs<IEnumerable<CategoryWithCount>>();
 
             // Assert
             response2.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
             result2.Should().HaveCount(4);
+        }
+        public async Task Webhook_SubscribeWebhook_Valid(WebhookSubscriptionRequest data)
+        {
+            // Arrange
+            string url = "/api/v1/Webhooks/";
+            var content = new StringContent(JsonConvert
+                .SerializeObject(data), Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await _WebhookService.client.PostAsync(url, content);
+
+            // Assert
+            response.Should().HaveStatusCode(System.Net.HttpStatusCode.Created);
         }
         public void Dispose()
         {

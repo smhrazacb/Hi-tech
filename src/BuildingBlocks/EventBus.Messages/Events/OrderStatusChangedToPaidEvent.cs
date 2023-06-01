@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace EventBus.Messages.Events
 {
-    public class OrderStatusChangeEvent : IntegrationBaseEvent
+    public class OrderStatusChangedToPaidEvent : IntegrationBaseEvent
     {
         public int OrderId { get; set; }
         public string UserId { get; set; }
-        public IList<EventOrderStatus> Statuses { get; set; }
+        public IList<EventOrderStatus> OrderStatuses { get; set; }
     }
 }

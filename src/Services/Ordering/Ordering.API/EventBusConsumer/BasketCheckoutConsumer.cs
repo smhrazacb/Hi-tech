@@ -43,10 +43,9 @@ namespace Ordering.API.EventBusConsumer
             await _publishEndpoint.Publish(catalogStockDelEvent);
             _logger.LogInformation($"Publishing CatalogStockDelEvent for Order Id : {command.OrderId}");
 
-            //var orderStatusChangeEvent = _mapper.Map<OrderStatusChangeEvent>(command);
-            //orderStatusChangeEvent.Statuses.Add(new EventOrderStatus(EOrderStatus.Initiated, _IdentityService.GetUserName()));
-            //await _publishEndpoint.Publish(orderStatusChangeEvent);
-            //_logger.LogInformation($"Publishing OrderStatusChangeEvent for Order Id : {command.OrderId}");
+            var orderStatusChangeEvent = _mapper.Map<OrderStatusChangedToPaidEvent>(command);
+            await _publishEndpoint.Publish(orderStatusChangeEvent);
+            _logger.LogInformation($"Publishing OrderStatusChangeEvent for Order Id : {command.OrderId}");
         }
     }
 }

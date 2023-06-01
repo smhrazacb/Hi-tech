@@ -13,7 +13,8 @@ namespace Ordering.API.Mapper
 			CreateMap<CheckoutOrderCommandItems, EventCartItem>().ReverseMap();
 			CreateMap<CheckoutOrderCommand, BasketDeleteEvent>().ReverseMap();
 			CreateMap<CheckoutOrderCommand, CatalogStockDelEvent>().ReverseMap();
-			CreateMap<CheckoutOrderCommand, OrderStatusChangeEvent>().ReverseMap();
+			CreateMap<CheckoutOrderCommand, OrderStatusChangedToPaidEvent>().ReverseMap();
+			CreateMap<CheckoutOrderCommandOrderStatus, EventOrderStatus>().ReverseMap();
 		}
 	}
 }

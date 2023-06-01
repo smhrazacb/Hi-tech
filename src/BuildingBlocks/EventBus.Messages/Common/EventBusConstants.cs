@@ -6,5 +6,7 @@
         public const string BasketDeleteQueue = "basketdelete-queue";
         public const string CatalogStockDelQueue = "catalogstockdel-queue";
         public const string CatalogItemPriceChangeEvent = "catalogitempricechange-queue";
+        public const string OrderStatusChangedToPaidEvent = "orderstatuschangetopaid-queue";
+        public const string OrderStatusChangedToCancelEvent = "orderstatuschangetocancel-queue";
     }
 }

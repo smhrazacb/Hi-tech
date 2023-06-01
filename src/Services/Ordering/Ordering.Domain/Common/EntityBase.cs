@@ -9,6 +9,6 @@ namespace Ordering.Domain.Common
         public DateTime CreatedDate { get; set; }
         public DateTime? LastModifiedDate { get; set; }
         public virtual IEnumerable<OrderItem> ShoppingItems { get; set; }
-        public virtual IEnumerable<OrderStatus> OrderStatuses { get; set; }
+        public virtual IList<OrderStatus> OrderStatuses { get; set; }
     }
 }

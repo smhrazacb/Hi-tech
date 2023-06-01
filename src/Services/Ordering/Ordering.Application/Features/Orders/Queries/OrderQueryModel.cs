@@ -11,7 +11,7 @@ namespace Ordering.Application.Features.Orders.Queries
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
         public IEnumerable<GetOrderItem> ShoppingItems { get; set; }
-        public IEnumerable<GetOrderStatus> OrderStatuses { get; set; }
+        public IList<GetOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

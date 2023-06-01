@@ -11,7 +11,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
         public virtual IEnumerable<UpdateOrderCommandItems> ShoppingItems { get; set; }
-        public IEnumerable<UpdateOrderCommandOrderStatus> OrderStatuses { get; set; }
+        public IList<UpdateOrderCommandOrderStatus> OrderStatuses { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

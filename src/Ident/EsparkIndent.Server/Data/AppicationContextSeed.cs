@@ -162,7 +162,7 @@ namespace EsparkIndent.Server.Entities
         {
             var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
 
-            if (await manager.FindByNameAsync("webhook_server") is null)
+            if (await manager.FindByNameAsync("webhook_api") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor
                 {

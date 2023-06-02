@@ -36,6 +36,8 @@ namespace Catalog.API.Controllers.Tests
             _logger = Mock.Of<ILogger<AdminProductController>>();
             _publishEndpoint = Mock.Of<IPublishEndpoint>();
         }
+
+
         [Fact()]
         public async void UplaodCSVProducts_Valid()
         {
@@ -92,38 +94,6 @@ namespace Catalog.API.Controllers.Tests
         [Fact()]
         public async void UplaodCSVProductsWhenNullFile_ReturnBadRequest()
         {
-            // Arrange
-            var newPorducts = new List<Category>(){
-                null
-            };
-
-            var invalidProducts = new List<string>()
-            {
-                null
-            };
-
-            var duplicatePartnumber = new List<string>()
-            {
-                null
-            };
-
-            CSVDto cSVDto = new CSVDto()
-            {
-                DuplicatePartNumbers = duplicatePartnumber,
-                InvalidEntries = invalidProducts,
-                NewProducts = newPorducts,
-            };
-
-            _ICSV2Category.Setup(x => x.Read(It.IsAny<string>())).
-                Returns(cSVDto);
-
-            _IProductRepositoryR.SetupSequence(x => x.GetProductsByMFP(It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(ProductData.GetPreconfiguredProducts()
-                .Where(x => x.SubCategory.Product.ManufacturerPartNo == newPorducts[0].SubCategory.Product.Manufacturer))
-                .ReturnsAsync(ProductData.GetPreconfiguredProducts()
-                .Where(x => x.SubCategory.Product.ManufacturerPartNo == newPorducts[1].SubCategory.Product.Manufacturer));
-
-            _IProductRepositoryW.Setup(x => x.UploadProducts(It.IsAny<IEnumerable<Category>>()));
 
             // Act
             AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object, _IProductRepositoryW.Object,
@@ -134,6 +104,7 @@ namespace Catalog.API.Controllers.Tests
             result.Result.Should().BeOfType<BadRequestObjectResult>();
 
         }
+
 
         [Fact()]
         public void UpdateProductTest()
@@ -153,29 +124,46 @@ namespace Catalog.API.Controllers.Tests
         }
 
         //[Fact()]
-        //public void UpdateProductTestPrice_ReturnWithNewPrice()
+        //public void UpdateProductTestChangePriceEvent_ReturnOkResult()
         //{
         //    // Arrange
-        //    var product = ProductData.GetPreconfiguredProducts().First();
+        //    var oldproduct = ProductData.GetPreconfiguredProducts().First(); //200
+        //    var newproduct = ProductData.GetPreconfiguredProducts().ElementAt(2); //2030
 
-        //    _IProductRepositoryR.Setup(x => x.GetProductById(It.IsAny<string>())).ReturnsAsync(product);
-        //    _IProductRepositoryW.Setup(x => x.UpdateProduct(It.IsAny<Category>())).ReturnsAsync(true);
+        //    _IProductRepositoryR.Setup(x => x.GetProductById(oldproduct.Id))
+        //                        .ReturnsAsync(oldproduct);
+
+        //    _IProductRepositoryW.Setup(x => x.UpdateProduct(newproduct))
+        //            .ReturnsAsync(true);
+
         //    // Act
-        //    AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object,
-        //        _IProductRepositoryW.Object, _ICSV2Category.Object, _logger, _publishEndpoint);
-        //    var changePrice = new CatalogItemPriceChangeEvent()
+
+        //    if (oldproduct.SubCategory.Product.UnitPrice != newproduct.SubCategory.Product.UnitPrice)
         //    {
-        //        ProductId = ,
-        //        OldUnitPrice = product.SubCategory.Product.UnitPrice,
-        //        UnitPrice = 100
-        //    };
-        //    changePrice.
-        //    var result = apc.UpdateProduct(product);
+        //        CatalogItemPriceChangeEvent catalogItemPriceChangeEvent = new CatalogItemPriceChangeEvent
+        //        {
+        //            ProductId = newproduct.Id,
+        //            OldUnitPrice = oldproduct.SubCategory.Product.UnitPrice,
+        //            UnitPrice = newproduct.SubCategory.Product.UnitPrice
+        //        };
+
+        //        _logger.LogInformation($"Publishing CatalogItemPriceChangeEvent for product Id : " +
+        //            $"{catalogItemPriceChangeEvent.ProductId}");
+
+        //    }
+        //    AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object,
+        //    _IProductRepositoryW.Object, _ICSV2Category.Object, _logger, _publishEndpoint);
+
+        //    var result = apc.UpdateProduct(newproduct);
+
+
 
         //    // Assert
 
-        //    result.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
+        //    result.Result.Should().BeOfType<NoContentResult>().Which.StatusCode.Should().Be(204);
+
         //}
+
 
         [Fact()]
         public void UpdateProductTest_ReturnNotFound()

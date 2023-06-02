@@ -49,10 +49,10 @@ namespace ServicesTest.TestCases
             retry = 0;
             var mycart = await Basket_Get_Valid(userid);
 
-            // Register Order Status Change Webhook
-            //await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
-            //    .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
-            //    WebhookType.OrderStatus.ToString()));
+            //Register Order Status Change Webhook
+           await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
+               .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
+               WebhookType.OrderStatus.ToString()));
 
             var checkoutEvent = await Basket_Checkout_Valid(TestData.BasketData.BasketCheckoutIdsDtoDummyData(mycart.UserId));
             retry = 0;

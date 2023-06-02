@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBus.Messages.Events
+namespace EventBus.Messages.Events.Order
 {
-    public class OrderStatusChangedToPaidEvent : IntegrationBaseEvent
+    public class OrderStatusChangedEvent : IntegrationBaseEvent
     {
         public int OrderId { get; set; }
         public string UserId { get; set; }

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Entities.Dtos;
-using EventBus.Messages.Events;
+using EventBus.Messages.Events.Basket;
+using EventBus.Messages.Events.Catalog;
 using EventBus.Messages.Models;
 
 namespace Basket.API.Mapper

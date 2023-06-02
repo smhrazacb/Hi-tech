@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using OpenIddict.Validation.AspNetCore;
 using System.Net;
 using Webhooks.API.Data;
-using Webhooks.API.Model;
+using Webhooks.API.Entities;
 using Webhooks.API.Services;
 
 namespace Webhooks.API.Controllers

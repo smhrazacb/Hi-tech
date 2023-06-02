@@ -1,6 +1,6 @@
 ﻿using EventBus.Messages.Models;
 
-namespace EventBus.Messages.Events
+namespace EventBus.Messages.Events.Basket
 {
     public class BasketCheckoutEvent : IntegrationBaseEvent
     {

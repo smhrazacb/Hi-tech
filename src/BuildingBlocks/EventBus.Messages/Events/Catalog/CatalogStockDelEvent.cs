@@ -1,6 +1,6 @@
 ﻿using EventBus.Messages.Models;
 
-namespace EventBus.Messages.Events
+namespace EventBus.Messages.Events.Catalog
 {
     public class CatalogStockDelEvent : IntegrationBaseEvent
     {

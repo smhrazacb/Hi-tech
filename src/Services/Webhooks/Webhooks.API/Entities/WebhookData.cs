@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Webhooks.API.Model;
+namespace Webhooks.API.Entities;
 
 public class WebhookData
 {

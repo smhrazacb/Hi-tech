@@ -4,7 +4,7 @@ using Basket.API.Entities.Dtos;
 using Basket.API.Services;
 using Basket.API.Services.Interfaces;
 using EventBus.Messages.Common;
-using EventBus.Messages.Events;
+using EventBus.Messages.Events.Basket;
 using EventBus.Messages.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;

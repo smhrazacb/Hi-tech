@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using EventBus.Messages.Events;
+using EventBus.Messages.Events.Catalog;
 using MassTransit;
-using Webhooks.API.Model;
+using Webhooks.API.Entities;
 using Webhooks.API.Services;
 
 namespace Webhooks.API.EventBusConsumer
@@ -20,7 +20,7 @@ namespace Webhooks.API.EventBusConsumer
         }
         public async Task Consume(ConsumeContext<CatalogItemPriceChangeEvent> context)
         {
-            var subscriptions = await _retriever.GetSubscriptionsOfType(WebhookType.CatalogItemPriceChange);
+            var subscriptions = await _retriever.GetSubscriptions(WebhookType.CatalogItemPriceChange);
             _logger.LogInformation("Received CatalogItemPriceChange event and got {SubscriptionsCount} subscriptions to process", subscriptions.Count());
             var whook = new WebhookData(WebhookType.CatalogItemPriceChange, context.Message);
             await _sender.SendAll(subscriptions, whook);

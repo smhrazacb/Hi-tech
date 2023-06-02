@@ -1,4 +1,4 @@
-﻿using Webhooks.API.Model;
+﻿using Webhooks.API.Entities;
 
 namespace Webhooks.API.Services;
 

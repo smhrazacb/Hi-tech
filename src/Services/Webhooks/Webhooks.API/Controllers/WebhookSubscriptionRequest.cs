@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Webhooks.API.Model;
+using Webhooks.API.Entities;
 
 namespace Webhooks.API.Controllers;
 

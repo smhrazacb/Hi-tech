@@ -54,7 +54,7 @@ namespace Webhooks.API
             services.AddMassTransit(config =>
             {
                 config.AddConsumer<CatalogItemPriceChangeConsumer>();
-                config.AddConsumer<OrderStatusChangedToPaidConsumer>();
+                config.AddConsumer<OrderStatusChangedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -65,7 +65,7 @@ namespace Webhooks.API
                     });
                     cfg.ReceiveEndpoint(EventBusConstants.OrderStatusChangedToPaidEvent, c =>
                     {
-                        c.ConfigureConsumer<OrderStatusChangedToPaidConsumer>(ctx);
+                        c.ConfigureConsumer<OrderStatusChangedConsumer>(ctx);
                     });
                 });
             });

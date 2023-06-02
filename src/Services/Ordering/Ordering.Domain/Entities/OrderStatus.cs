@@ -24,6 +24,8 @@ namespace Ordering.Domain.Entities
         Delivered,
         [EnumMember(Value = "cancelled")]
         Cancelled,
+        [EnumMember(Value = "failed")]
+        Failed,
     }
     public class OrderStatus
     {

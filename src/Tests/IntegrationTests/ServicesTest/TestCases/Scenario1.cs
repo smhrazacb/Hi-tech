@@ -4,7 +4,7 @@ using Basket.API.Entities.Dtos;
 using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using EventBus.Messages.Common;
-using EventBus.Messages.Events;
+using EventBus.Messages.Events.Basket;
 using FluentAssertions;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -17,7 +17,7 @@ using ServicesTest.Mapper;
 using ServicesTest.Services;
 using System.Text;
 using Webhooks.API.Controllers;
-using Webhooks.API.Model;
+using Webhooks.API.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServicesTest.TestCases

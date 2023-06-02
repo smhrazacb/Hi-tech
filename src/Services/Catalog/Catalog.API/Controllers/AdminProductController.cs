@@ -2,7 +2,7 @@
 using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
 using Catalog.API.Services;
-using EventBus.Messages.Events;
+using EventBus.Messages.Events.Catalog;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

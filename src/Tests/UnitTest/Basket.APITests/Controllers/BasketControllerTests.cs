@@ -7,13 +7,12 @@ using Basket.API.Mapper;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using EventBus.Messages.Common;
-using EventBus.Messages.Events;
 using Basket.API.Services;
 using Basket.API.Entities;
 using TestData;
 using System.Net;
 using Azure;
-
+using EventBus.Messages.Events.Basket;
 
 namespace Basket.API.Controllers.Tests
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Basket.API.Services.Interfaces;
-using EventBus.Messages.Events;
+using EventBus.Messages.Events.Basket;
 using MassTransit;
 
 namespace Basket.API.EventBusConsumer
@@ -32,6 +32,7 @@ namespace Basket.API.EventBusConsumer
             // remove the basket
             await _repository.DeleteBasket(basket.UserId);
             _logger.LogInformation($"OrderCompleteEvent consumed successfully. Deleted Shopping Cart Id : {basket.UserId}");
+        
         }
     }
 }

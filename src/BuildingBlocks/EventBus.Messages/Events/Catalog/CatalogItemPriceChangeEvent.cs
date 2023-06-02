@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBus.Messages.Events
+namespace EventBus.Messages.Events.Catalog
 {
     public class CatalogItemPriceChangeEvent : IntegrationBaseEvent
     {

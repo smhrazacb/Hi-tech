@@ -1,4 +1,4 @@
-﻿namespace EventBus.Messages.Events
+﻿namespace EventBus.Messages.Events.Basket
 {
     public class BasketDeleteEvent : IntegrationBaseEvent
     {

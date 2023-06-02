@@ -34,10 +34,10 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
 
-        public CheckoutOrderCommandOrderStatus(string updatedBy)
+        public CheckoutOrderCommandOrderStatus(string updatedBy, EOrderStatus status)
         {
             UpdatedBy = updatedBy;
-            Status = EOrderStatus.Initiated;
+            Status = status;
         }
     }
     public class CheckoutOrderCommandItems

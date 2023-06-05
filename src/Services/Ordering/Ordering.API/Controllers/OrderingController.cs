@@ -22,6 +22,7 @@ namespace Ordering.API.Controllers
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+
         /// <summary>
         /// Returns Orders by UserName
         /// </summary>
@@ -37,6 +38,7 @@ namespace Ordering.API.Controllers
                 return new ResponseMessage<IEnumerable<OrderQueryModel>>(HttpStatusCode.NotFound.ToString());
             return new ResponseMessage<IEnumerable<OrderQueryModel>>(orders);
         }
+
         /// <summary>
         /// Returns Order by OrderId
         /// </summary>
@@ -68,6 +70,8 @@ namespace Ordering.API.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
+
+
         /// <summary>
         /// Detele Order
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
+using Ordering.Application.Features.Orders.Commands.UpdateOrderStatus;
 using Ordering.Application.Features.Orders.Queries;
 using Ordering.Domain.Entities;
 
@@ -20,6 +21,8 @@ namespace Ordering.Application.Mappings
             CreateMap<OrderStatus, UpdateOrderCommandOrderStatus>().ReverseMap();
             CreateMap<OrderStatus, GetOrderStatus>().ReverseMap();
             CreateMap<OrderStatus, CheckoutOrderCommandOrderStatus>().ReverseMap();
+            CreateMap<OrderStatus, UpdateOrderStatusCommand>().ReverseMap();
+            CreateMap<OrderStatus, UpdateOrderStatusCommandOrderStatus>().ReverseMap();
         }
     }
 }

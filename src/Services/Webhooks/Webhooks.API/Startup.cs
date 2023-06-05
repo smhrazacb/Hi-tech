@@ -52,20 +52,28 @@ namespace Webhooks.API
             // MassTransit-RabbitMQ Configuration
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<CatalogItemPriceChangeConsumer>();
+                //config.AddConsumer<CatalogItemPriceChangeConsumer>();
                 config.AddConsumer<OrderStatusChangedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(configRoot["EventBusSettings:HostAddress"]);
-                    cfg.ReceiveEndpoint(EventBusConstants.CatalogItemPriceChangeEvent, c =>
-                    {
-                        c.ConfigureConsumer<CatalogItemPriceChangeConsumer>(ctx);
-                    });
-                    cfg.ReceiveEndpoint(EventBusConstants.OrderStatusChangedToPaidEvent, c =>
+                    //cfg.ReceiveEndpoint(EventBusConstants.CatalogItemPriceChangeQueue, c =>
+                    //{
+                    //    c.ConfigureConsumer<CatalogItemPriceChangeConsumer>(ctx);
+                    //});
+                    cfg.ReceiveEndpoint(EventBusConstants.OrderStatus, c =>
                     {
                         c.ConfigureConsumer<OrderStatusChangedConsumer>(ctx);
                     });
+                    //cfg.ReceiveEndpoint(EventBusConstants.OrderConfirmQueue, c =>
+                    //{
+                    //    c.ConfigureConsumer<OrderStatusChangedConsumer>(ctx);
+                    //});
+                    //cfg.ReceiveEndpoint(EventBusConstants.OrderStatusChangedToCancelQueue, c =>
+                    //{
+                    //    c.ConfigureConsumer<OrderStatusChangedConsumer>(ctx);
+                    //}); 
                 });
             });
 

@@ -24,24 +24,25 @@ namespace ServicesTest.TestCases
 {
     public class Scenario1 : IDisposable
     {
+        private readonly WebhookService _WebhookService;
         private readonly CatalogService _Catalogfixture;
         private readonly BasketService _Basketfixture;
         private readonly OrderService _Orderfixture;
-        private readonly WebhookService _WebhookService;
         int retry = 0;
 
         List<string> productId = new();
         public Scenario1()
         {
+            _WebhookService = new WebhookService(new WebhookWebApplicationFactory<Webhooks.API.Startup>());
             _Catalogfixture = new CatalogService(new CatalogWebApplicationFactory<Catalog.API.Startup>());
             _Basketfixture = new BasketService(new BasketWebApplicationFactory<Basket.API.Startup>());
             _Orderfixture = new OrderService(new OrderWebApplicationFactory<Ordering.API.Startup>());
-            _WebhookService = new WebhookService(new WebhookWebApplicationFactory<Webhooks.API.Startup>());
             QueueCleanup();
         }
         [Fact]
         public async void Scenario_checkout_Valid()
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var newproducts = await Product_UploadCSV_Valid();
 
@@ -67,8 +68,8 @@ namespace ServicesTest.TestCases
                         await Product_VerifyStock_Valid(shoppingItem.ProductId, 2);
                 }
             }
-            retry = 0;
-            await Order_Update_Valid(orders.FirstOrDefault());
+            //retry = 0;
+            //await Order_Update_Valid(orders.FirstOrDefault());
 
             retry = 0;
             await Order_GetOrder_Valid(orders.FirstOrDefault().OrderId, EOrderStatus.Confirmed);
@@ -89,7 +90,7 @@ namespace ServicesTest.TestCases
             // Act
             var response = await _Orderfixture.client.GetAsync(url);
             var result = await response.ReadContentAs<ResponseMessage<OrderQueryModel>>();
-            if (!result.Succeeded)
+            if (result.Data.OrderStatuses.LastOrDefault().Status != EOrderStatus.Confirmed)
             {
                 await Task.Delay(5000);
                 retry++;
@@ -113,7 +114,7 @@ namespace ServicesTest.TestCases
             }).CreateMapper();
             order.OrderStatuses = new List<GetOrderStatus>() { new GetOrderStatus()
             {
-                Status=Ordering.Domain.Entities.EOrderStatus.Confirmed,
+                Status=EOrderStatus.Confirmed,
                 UpdatedBy =order.UserId
             }};
             var updateOrderCommand = mapper.Map<UpdateOrderCommand>(order);
@@ -336,6 +337,7 @@ namespace ServicesTest.TestCases
                     foreach (var item in properties)
                     {
                         channel.QueueDelete(item.GetValue(null).ToString());
+                        channel.QueueDelete(item.GetValue(null).ToString()+"_error");
                     }
                 }
             }

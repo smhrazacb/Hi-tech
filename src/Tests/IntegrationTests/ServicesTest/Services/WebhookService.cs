@@ -28,6 +28,6 @@ namespace ServicesTest.Services
             var token = AuthHelper.GetTokenAsync();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Result);
         }
-        
+
     }
 }

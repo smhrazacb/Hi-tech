@@ -34,6 +34,11 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         public EOrderStatus Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
+        public UpdateOrderCommandOrderStatus(string updatedBy, EOrderStatus status)
+        {
+            UpdatedBy = updatedBy;
+            Status = status;
+        }
     }
     public class UpdateOrderCommandItems
     {

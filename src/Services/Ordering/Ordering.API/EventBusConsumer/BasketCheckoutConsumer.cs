@@ -7,6 +7,7 @@ using MassTransit;
 using MediatR;
 using Ordering.API.Services;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
+using Ordering.Application.Features.Orders.Queries.GetOrdersList;
 using Ordering.Domain.Entities;
 
 namespace Ordering.API.EventBusConsumer

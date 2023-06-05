@@ -6,8 +6,8 @@ services:
     restart: always
     ports:
         - "27017:27017"
-    volumes:
-        - mongo_data:/data/db
+    #volumes:
+    #    - mongo_data:/data/db
 
   identdb:
     container_name: identdb
@@ -18,8 +18,8 @@ services:
       - POSTGRES_DB=identdb
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data_ident:/var/lib/postgresql/data/
+    #volumes:
+    #  - postgres_data_ident:/var/lib/postgresql/data/
 
   orderdbs:
     container_name: orderdbs
@@ -30,16 +30,16 @@ services:
       - POSTGRES_DB=orderdb
     ports:
       - "6432:5432"
-    volumes:
-      - postgres_data_order:/var/lib/postgresql/data/
+    #volumes:
+    #  - postgres_data_order:/var/lib/postgresql/data/
 
   basketdb:
     container_name: basketdb
     restart: always    
     ports:
         - "6379:6379"
-    volumes:
-        - redis_data:/data
+    #volumes:
+    #    - redis_data:/data
 
   rabbitmq:
     container_name: rabbitmq

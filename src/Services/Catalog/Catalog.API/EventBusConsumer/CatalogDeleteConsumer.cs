@@ -19,11 +19,14 @@ namespace Catalog.API.EventBusConsumer
         private readonly IProductRepositoryR _repositoryR;
         private readonly IIdentityService _IdentityService;
 
-        public CatalogDeleteConsumer(ILogger<CatalogDeleteConsumer> logger, IProductRepositoryW repositoryW, IProductRepositoryR repositoryR)
+        public CatalogDeleteConsumer(ILogger<CatalogDeleteConsumer> logger, IMapper mapper, IProductRepositoryW repositoryW, IPublishEndpoint publishEndpoint, IProductRepositoryR repositoryR, IIdentityService identityService)
         {
             _logger = logger;
+            _mapper = mapper;
             _repositoryW = repositoryW;
+            _publishEndpoint = publishEndpoint;
             _repositoryR = repositoryR;
+            _IdentityService = identityService;
         }
 
         public async Task Consume(ConsumeContext<CatalogStockDelEvent> context)
@@ -59,13 +62,9 @@ namespace Catalog.API.EventBusConsumer
             }
             _logger.LogInformation($"CatalogStockDelEvent consumed successfully for orderID : {context.Message.OrderId}");
             
-            var eventd = _mapper.Map<OrderStatusChangedEvent>(context.Message);
-            _logger.LogError($"Publishing Order Confirm Event");
-            eventd.OrderStatuses.Add(new EventOrderStatus(
-                _IdentityService.GetUserIdentity(), EventEOrderStatus.Confirmed)
-            );
-            await _publishEndpoint.Publish(eventd);
-
+            var eventDeleted = _mapper.Map<CatalogStockUpdatedEvent>(context.Message);
+            _logger.LogError($"Publishing CatalogStockUpdated Event OrderID {eventDeleted.OrderId}");
+            await _publishEndpoint.Publish(eventDeleted);
         }
     }
 }

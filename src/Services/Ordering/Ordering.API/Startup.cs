@@ -39,6 +39,7 @@ namespace Ordering.API
             services.AddMassTransit(config =>
             {
                 config.AddConsumer<BasketCheckoutConsumer>();
+                config.AddConsumer<CatalogStockUpdatedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -46,6 +47,10 @@ namespace Ordering.API
                     cfg.ReceiveEndpoint(EventBusConstants.BasketCheckoutQueue, c =>
                     {
                         c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
+                    });
+                    cfg.ReceiveEndpoint(EventBusConstants.CatalogStockUpdatedQueue, c =>
+                    {
+                        c.ConfigureConsumer<CatalogStockUpdatedConsumer>(ctx);
                     });
                 });
             });
@@ -145,19 +150,6 @@ namespace Ordering.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
             });
-
-            // Add the required Quartz.NET services
-            services.AddQuartz(q =>
-            {
-                // Use a Scoped container to create jobs. I'll touch on this later
-                q.UseMicrosoftDependencyInjectionScopedJobFactory();
-            });
-
-            // Add the Quartz.NET hosted service
-
-            services.AddQuartzHostedService(
-                q => q.WaitForJobsToComplete = true);
-
         }
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {

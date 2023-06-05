@@ -42,7 +42,6 @@ namespace ServicesTest.Services
                 DropDatabase();
                 services.AddDbContext<OrderContext>(options =>
                 options.UseNpgsql(ConnectionString));
-
             });
             builder.UseEnvironment("Development");
         }

@@ -31,10 +31,10 @@ namespace Webhooks.API.Controllers
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(WebhookSubscription), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetByUserAndId(int id)
+        public async Task<ActionResult<WebhookSubscription>> GetByUserAndId(int id)
         {
-            var userId = "testuser";
-            var subscription = await _dbContext.Subscriptions.SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+            var userId = _IdentityService.GetUserIdentity();
+            var subscription = await _dbContext.WebhookSubscription.SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
             if (subscription != null)
             {
                 return Ok(subscription);
@@ -63,12 +63,12 @@ namespace Webhooks.API.Controllers
                     DestUrl = request.Url,
                     Token = request.Token,
                     Type = Enum.Parse<WebhookType>(request.Event, ignoreCase: true),
-                    UserId = "abc"//_identityService.GetUserIdentity()
+                    UserId = _IdentityService.GetUserIdentity()
                 };
 
                 _dbContext.Add(subscription);
                 await _dbContext.SaveChangesAsync();
-                return CreatedAtAction("GetByUserAndId", new { id = subscription.Id }, subscription);
+                return CreatedAtAction(nameof(GetByUserAndId), new { id = subscription.Id }, subscription);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Webhooks.API.Controllers
         public async Task<IActionResult> UnsubscribeWebhook(int id)
         {
             var userId = _IdentityService.GetUserIdentity();
-            var subscription = await _dbContext.Subscriptions.SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+            var subscription = await _dbContext.WebhookSubscription.SingleOrDefaultAsync(s => s.Id == id && s.UserId == userId);
 
             if (subscription != null)
             {

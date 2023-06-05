@@ -13,12 +13,12 @@ public class WebhooksRetriever : IWebhooksRetriever
     }
     public async Task<IEnumerable<WebhookSubscription>> GetSubscriptions(WebhookType type)
     {
-        var data = await _db.Subscriptions.Where(s => s.Type == type).ToListAsync();
+        var data = await _db.WebhookSubscription.Where(s => s.Type == type).ToListAsync();
         return data;
     }
     public async Task<IEnumerable<WebhookSubscription>> GetSubscriptions(WebhookType type, string userid)
     {
-        var data = await _db.Subscriptions
+        var data = await _db.WebhookSubscription
             .Where(s => s.Type == type)
             .Where(s => s.UserId == userid)
             .ToListAsync();

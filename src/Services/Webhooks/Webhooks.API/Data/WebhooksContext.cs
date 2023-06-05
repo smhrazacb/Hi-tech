@@ -9,8 +9,7 @@ public class WebhooksContext : DbContext
 
     public WebhooksContext(DbContextOptions<WebhooksContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
-    public DbSet<WebhookSubscription> Subscriptions { get; set; }
+    public DbSet<WebhookSubscription> WebhookSubscription { get; set; }
 }
 

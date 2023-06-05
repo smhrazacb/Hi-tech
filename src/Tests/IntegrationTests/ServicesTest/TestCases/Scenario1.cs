@@ -16,9 +16,9 @@ using ServicesTest.Extensions;
 using ServicesTest.Mapper;
 using ServicesTest.Services;
 using System.Text;
+using TestData;
 using Webhooks.API.Controllers;
 using Webhooks.API.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServicesTest.TestCases
 {
@@ -50,9 +50,9 @@ namespace ServicesTest.TestCases
             var mycart = await Basket_Get_Valid(userid);
 
             //Register Order Status Change Webhook
-           await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
-               .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
-               WebhookType.OrderStatus.ToString()));
+            await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
+                .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
+                WebhookType.OrderStatus.ToString()));
 
             var checkoutEvent = await Basket_Checkout_Valid(TestData.BasketData.BasketCheckoutIdsDtoDummyData(mycart.UserId));
             retry = 0;
@@ -91,7 +91,7 @@ namespace ServicesTest.TestCases
             var result = await response.ReadContentAs<ResponseMessage<OrderQueryModel>>();
             if (!result.Succeeded)
             {
-                Task.Delay(5000);
+                await Task.Delay(5000);
                 retry++;
                 if (retry < 15)
                     return await Order_GetOrder_Valid(orderId, orderstatus);
@@ -136,7 +136,7 @@ namespace ServicesTest.TestCases
             var result = await response.ReadContentAs<ResponseMessage<IEnumerable<OrderQueryModel>>>();
             if (!result.Succeeded)
             {
-                Task.Delay(5000);
+                await Task.Delay(5000);
                 retry++;
                 if (retry < 15)
                     return await Order_GetOrders_Valid(userid);
@@ -189,7 +189,7 @@ namespace ServicesTest.TestCases
             var result = await response.ReadContentAs<ResponseMessage<ShoppingCart>>();
             if (!result.Succeeded)
             {
-                Task.Delay(5000);
+                await Task.Delay(5000);
                 retry++;
                 if (retry < 15)
                     return await Basket_Get_Valid(userid);
@@ -251,7 +251,7 @@ namespace ServicesTest.TestCases
             var result = await response.ReadContentAs<ResponseMessage<Category>>();
             if (result.Data.SubCategory.Product.Quantity != qty)
             {
-                Task.Delay(5000);
+               await Task.Delay(5000);
                 retry++;
                 if (retry < 15)
                     return await Product_VerifyStock_Valid(id, qty);
@@ -302,15 +302,21 @@ namespace ServicesTest.TestCases
 
             // Act
             var response = await _WebhookService.client.PostAsync(url, content);
+            var responseaction = await _WebhookService.client.GetAsync(response.Headers.Location.AbsoluteUri);
+            var result = await responseaction.ReadContentAs<WebhookSubscription>();
 
             // Assert
             response.Should().HaveStatusCode(System.Net.HttpStatusCode.Created);
+            responseaction.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
+            result.UserId.Should().Be(BasketData.GetBasketData().UserId);
+            result.Id.Should().Be(1);
         }
         public void Dispose()
         {
             _Orderfixture.factory.DropDatabase();
             _Catalogfixture.dropDatabase();
             _Basketfixture.dropKey();
+            _WebhookService.factory.DropDatabase();
             QueueCleanup();
         }
 

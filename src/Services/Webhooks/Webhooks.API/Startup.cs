@@ -1,10 +1,14 @@
 ﻿using EventBus.Messages.Common;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Webhooks.API.Data;
 using Webhooks.API.EventBusConsumer;
+using Webhooks.API.Extensions;
 using Webhooks.API.Services;
 using Webhooks.API.Services.Services;
 
@@ -32,13 +36,8 @@ namespace Webhooks.API
             services.AddTransient<IIdentityService, IdentityService>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
             services.AddDbContext<WebhooksContext>(options =>
-                options.UseSqlite($"Filename={Path.Combine("dbEsparkIndent-Server.sqlite3")}",sqliteOptionsAction: sqlOptions =>
-                {
-                    sqlOptions.MigrationsAssembly(typeof(Startup).Assembly.FullName);
-                }));
-
+               options.UseNpgsql(configRoot.GetConnectionString("WebhookConnectionString")));
             services.AddHttpClient("extendedhandlerlifetime").SetHandlerLifetime(Timeout.InfiniteTimeSpan);
             //add http client services
             services.AddHttpClient("GrantClient")
@@ -98,18 +97,74 @@ namespace Webhooks.API
                 options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
             });
             services.AddAuthorization();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Shopping Aggregator API",
+                    Description = "For Aggregated",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Contact",
+                        Url = new Uri("https://example.com/contact")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/license")
+                    }
+                });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"   },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
+            });
         }
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Catalog API"); });
-            }
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MigrateDatabase<WebhooksContext>((context, services) =>
+            {
+                var logger = services.GetService<ILogger<WebhookContextSeed>>();
+                WebhookContextSeed
+                    .SeedAsync(context, logger)
+                    .Wait();
+            });
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
             app.Run();
         }
         X509Certificate2 LoadCertificate(string thumbprint)

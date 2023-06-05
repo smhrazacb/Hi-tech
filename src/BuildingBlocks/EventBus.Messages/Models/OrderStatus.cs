@@ -10,20 +10,13 @@ using System.Threading.Tasks;
 
 namespace EventBus.Messages.Models
 {
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum EventEOrderStatus
     {
-        [EnumMember(Value = "initiated")]
         Initiated,
-        [EnumMember(Value = "confirmed")]
         Confirmed,
-        [EnumMember(Value = "shipped")]
         Shipped,
-        [EnumMember(Value = "delivered")]
         Delivered,
-        [EnumMember(Value = "cancelled")]
         Cancelled,
-        [EnumMember(Value = "failed")]
         Failed,
     }
     public class EventOrderStatus

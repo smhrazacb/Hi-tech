@@ -53,6 +53,7 @@ namespace EsparkIndent.Server.Entities
                         Permissions.Prefixes.Scope + "order_api",
                         Permissions.Prefixes.Scope + "catalog_api",
                         Permissions.Prefixes.Scope + "basket_api",
+                        Permissions.Prefixes.Scope + "webhook_api",
                     },
                     Requirements =
                     {

@@ -106,7 +106,7 @@ namespace EsparkIndent.Server
                     options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles, "demo_api");
 
                     // Set the lifetime of your tokens
-                    options.SetAccessTokenLifetime(TimeSpan.FromMinutes(50));
+                    options.SetAccessTokenLifetime(TimeSpan.FromMinutes(500));
                     options.SetRefreshTokenLifetime(TimeSpan.FromDays(1));
                     // Register the signing and encryption credentials.
                     //options.AddDevelopmentEncryptionCertificate()

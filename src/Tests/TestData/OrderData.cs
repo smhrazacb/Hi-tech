@@ -4,6 +4,7 @@ using MassTransit.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Ordering.Application.Features.Orders.Queries;
+using Ordering.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,35 +16,17 @@ namespace TestData
 {
     public class OrderData
     {
-        public static IList<OrderQueryModel> Orders(string userName)
-        {
-            return new List<OrderQueryModel>()
-            {
-                 new OrderQueryModel()
-                {
-                    OrderId = 1,
-                    UserId = "1",
-                    TotalPrice = 100,
-                    OrderStatuses = new List<GetOrderStatus>() { },
-                    // BillingAddress
-                    FirstName = "test",
-                    LastName = "test",
-                    EmailAddress = "",
-                    AddressLine = "",
-                    Country = "",
-                    State = "",
-                    ZipCode = "",
-                    // Payment
-                    CardName = "",
-                    CardNumber = "",
-                    Expiration = "",
-                    CVV = "",
-                    PaymentMethod = 1
-                }
+        public int OrderId { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public List<OrderItem> OrderItems { get; set; }
+        
+    }
 
-            };              
-
-        }
+    public class OrderItem
+    {
+        public int ProductId { get; set;}
+        public int Quantity { get; set; } 
     }
 }
 

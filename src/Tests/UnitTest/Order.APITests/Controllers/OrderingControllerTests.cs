@@ -1,132 +1,120 @@
-﻿//using MassTransit.Mediator;
-//using MediatR;
-//using Moq;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Ordering.API;
-//using Ordering.API.Controllers;
-//using EventBus.Messages.Common;
-//using Microsoft.AspNetCore.Mvc;
-//using Ordering.Application.Features.Orders.Commands.DeleteOrder;
-//using Ordering.Application.Features.Orders.Commands.UpdateOrder;
-//using Ordering.Application.Features.Orders.Queries.GetOrdersList;
-//using Ordering.Application.Features.Orders.Queries;
-//using System.Net;
-//using TestData;
+﻿using MediatR;
+using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Ordering.API;
+using Ordering.API.Controllers;
+using EventBus.Messages.Common;
+using Microsoft.AspNetCore.Mvc;
+using Ordering.Application.Features.Orders.Commands.DeleteOrder;
+using Ordering.Application.Features.Orders.Commands.UpdateOrder;
+using Ordering.Application.Features.Orders.Queries.GetOrdersList;
+using Ordering.Application.Features.Orders.Queries;
+using System.Net;
+using TestData;
 
-//namespace Order.APITests.Controllers;
 
-//    public class OrderingControllerTests
-//    {
-//        private readonly Mock<IMediator> _mediatorMock;
-//        private readonly OrderingController _controller;
 
-//        public OrderingControllerTests()
-//        {
-//            _mediatorMock = new Mock<IMediator>();
-//            _controller = new OrderingController(_mediatorMock.Object);
-//        }
+namespace Order.APITests.Controllers;
 
-//        [Fact]
-//        public async Task Orders_ValidUserName_ReturnsOkResultWithOrders()
-//        {
-//            // Arrange
-//            string userName = "testuser";
-//            var query = new GetOrdersListQuery(userName);
-//            var orders = new List<OrderData> { /* create some test orders */ };
-//            _mediatorMock.Setup(m => m.Send(query, default)).ReturnsAsync(orders);
+public class OrderControllerTests
+{
+   
+    private readonly Mock<IMediator> _mockMediator;
+    private readonly OrderingController _orderController;
 
-//            // Act
-//            var result = await _controller.Orders(userName);
+    public OrderControllerTests()
+    {
+        _mockMediator = new Mock<IMediator>();
+        _orderController = new OrderingController(_mockMediator.Object);
+    }
 
-//            // Assert
-//            var okResult = Assert.IsType<ActionResult<ResponseMessage<IEnumerable<OrderQueryModel>>>>(result);
-//            Assert.Equal(orders, okResult.Value.Data);
-//            Assert.Equal(HttpStatusCode.OK.ToString(), okResult.Value.Message);
-//        }
+    [Fact]
+    public void GetOrder_WithValidUsername_ReturnsOrder()
+    {
+        // Arrange
+        string username = "testUser";
+        var expectedOrder = new OrderData
+        {
+            OrderId = 1,
+            UserId = "123456",
+            UserName = "Test User",
+            OrderItems = new List<OrderItem>
+            {
+                new OrderItem { ProductId = 1, Quantity = 2 },
+                new OrderItem { ProductId = 2, Quantity = 1 }
+            }
+        };
 
-//        [Fact]
-//        public async Task Orders_InvalidUserName_ReturnsNotFoundResult()
-//        {
-//            // Arrange
-//            string userName = "nonexistentuser";
-//            var query = new GetOrdersListQuery(userName);
-//            var emptyOrders = Enumerable.Empty<OrderQueryModel>();
-//            _mediatorMock.Setup(m => m.Send(query, default)).ReturnsAsync(emptyOrders);
+        _mockMediator.Setup(mediator => mediator.Send(username).Returns(/* your expected result */);
 
-//            // Act
-//            var result = await _controller.Orders(userName);
 
-//            // Assert
-//            var notFoundResult = Assert.IsType<ActionResult<ResponseMessage<IEnumerable<OrderQueryModel>>>>(result);
-//            Assert.Equal(HttpStatusCode.NotFound.ToString(), notFoundResult.Value.Message);
-//        }
+        // Act
+        var result = _orderController.Orders(username);
 
-//        [Fact]
-//        public async Task Order_ValidOrderId_ReturnsOkResultWithOrder()
-//        {
-//            // Arrange
-//            int orderId = 123;
-//            var query = new GetOrder(orderId);
-//            var order = new OrderQueryModel { /* create a test order */ };
-//            _mediatorMock.Setup(m => m.Send(query, default)).ReturnsAsync(order);
+        // Assert
+        Assert.Equal(expectedOrder, result);
+    }
 
-//            // Act
-//            var result = await _controller.Order(orderId);
+    [Fact]
+    public void GetOrder_WithInvalidUsername_ReturnsNotFound()
+    {
+        // Arrange
+        string invalidUsername = "invalidUser";
+        Order nullOrder = null;
 
-//            // Assert
-//            var okResult = Assert.IsType<ActionResult<ResponseMessage<OrderQueryModel>>>(result);
-//            Assert.Equal(order, okResult.Value.Data);
-//            Assert.Equal(HttpStatusCode.OK.ToString(), okResult.Value.Message);
-//        }
+        _mockBasketService.Setup(service => service.GetOrder(invalidUsername)).Returns(nullOrder);
 
-//        [Fact]
-//        public async Task Order_InvalidOrderId_ReturnsNotFoundResult()
-//        {
-//            // Arrange
-//            int orderId = 999; // non-existent order ID
-//            var query = new GetOrder(orderId);
-//            _mediatorMock.Setup(m => m.Send(query, default)).ReturnsAsync((OrderQueryModel)null);
+        // Act
+        var result = _orderController.GetOrder(invalidUsername);
 
-//            // Act
-//            var result = await _controller.Order(orderId);
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
 
-//            // Assert
-//            var notFoundResult = Assert.IsType<ActionResult<ResponseMessage<OrderQueryModel>>>(result);
-//            Assert.Equal(HttpStatusCode.NotFound.ToString(), notFoundResult.Value.Message);
-//        }
+    [Fact]
+    public void PlaceOrder_WithValidOrderDto_ReturnsOk()
+    {
+        // Arrange
+        var orderDto = new OrderDto
+        {
+            UserId = "123456",
+            UserName = "Test User",
+            OrderItems = new List<OrderItemDto>
+            {
+                new OrderItemDto { ProductId = 1, Quantity = 2 },
+                new OrderItemDto { ProductId = 2, Quantity = 1 }
+            }
+        };
 
-//        [Fact]
-//        public async Task UpdateOrder_ValidCommand_ReturnsNoContentResult()
-//        {
-//            // Arrange
-//            var command = new UpdateOrderCommand { /* create a test command */ };
+        // Mock the Mediator behavior
+        _mockMediator.Setup(mediator => mediator.Send(It.IsAny<PlaceOrderCommand>())).Returns(/* your expected result */);
 
-//            // Act
-//            var result = await _controller.UpdateOrder(command);
+        // Act
+        var result = _orderController.PlaceOrder(orderDto);
 
-//            // Assert
-//            var noContentResult = Assert.IsType<NoContentResult>(result);
-//            Assert.Equal((int)HttpStatusCode.NoContent, noContentResult.StatusCode);
-//        }
+        // Assert
+        Assert.NotNull(result);
+        // Additional assertions as per your requirements
+    }
 
-//        [Fact]
-//        public async Task DeleteOrder_ValidOrderId_ReturnsNoContentResult()
-//        {
-//            // Arrange
-//            int orderId = 123;
-//            var command = new DeleteOrderCommand { OrderId = orderId };
+    [Fact]
+    public void PlaceOrder_WithInvalidOrderDto_ReturnsBadRequest()
+    {
+        // Arrange
+        OrderDto invalidOrderDto = null;
 
-//            // Act
-//            var result = await _controller.DeleteOrder(orderId);
+        // Act
+        var result = _orderController.PlaceOrder(invalidOrderDto);
 
-//            // Assert
-//            var noContentResult = Assert.IsType<NoContentResult>(result);
-//            Assert.Equal((int)HttpStatusCode.NoContent, noContentResult.StatusCode);
-//        }
-//    }
+        // Assert
+        Assert.IsType<BadRequestResult>(result);
+    }
+}
+
+
 
 

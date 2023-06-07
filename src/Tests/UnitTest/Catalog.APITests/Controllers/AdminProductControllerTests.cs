@@ -123,48 +123,7 @@ namespace Catalog.API.Controllers.Tests
             result.Result.Should().BeOfType<NoContentResult>().Which.StatusCode.Should().Be(204);
         }
 
-        //[Fact()]
-        //public void UpdateProductTestChangePriceEvent_ReturnOkResult()
-        //{
-        //    // Arrange
-        //    var oldproduct = ProductData.GetPreconfiguredProducts().First(); //200
-        //    var newproduct = ProductData.GetPreconfiguredProducts().ElementAt(2); //2030
-
-        //    _IProductRepositoryR.Setup(x => x.GetProductById(oldproduct.Id))
-        //                        .ReturnsAsync(oldproduct);
-
-        //    _IProductRepositoryW.Setup(x => x.UpdateProduct(newproduct))
-        //            .ReturnsAsync(true);
-
-        //    // Act
-
-        //    if (oldproduct.SubCategory.Product.UnitPrice != newproduct.SubCategory.Product.UnitPrice)
-        //    {
-        //        CatalogItemPriceChangeEvent catalogItemPriceChangeEvent = new CatalogItemPriceChangeEvent
-        //        {
-        //            ProductId = newproduct.Id,
-        //            OldUnitPrice = oldproduct.SubCategory.Product.UnitPrice,
-        //            UnitPrice = newproduct.SubCategory.Product.UnitPrice
-        //        };
-
-        //        _logger.LogInformation($"Publishing CatalogItemPriceChangeEvent for product Id : " +
-        //            $"{catalogItemPriceChangeEvent.ProductId}");
-
-        //    }
-        //    AdminProductController apc = new AdminProductController(_IProductRepositoryR.Object,
-        //    _IProductRepositoryW.Object, _ICSV2Category.Object, _logger, _publishEndpoint);
-
-        //    var result = apc.UpdateProduct(newproduct);
-
-
-
-        //    // Assert
-
-        //    result.Result.Should().BeOfType<NoContentResult>().Which.StatusCode.Should().Be(204);
-
-        //}
-
-
+       
         [Fact()]
         public void UpdateProductTest_ReturnNotFound()
         {

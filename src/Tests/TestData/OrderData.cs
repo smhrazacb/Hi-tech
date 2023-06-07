@@ -18,8 +18,7 @@ namespace TestData
 {
     public static class OrderData
     {
-       public static string UserName = "TestUser";
-       public static List<OrderQueryModel> Order()
+       public static List<OrderQueryModel> Orders()
         {
             return new List<OrderQueryModel>()
             {
@@ -68,10 +67,55 @@ namespace TestData
 
                 }
 
-                } 
+                },
+                new OrderQueryModel() {
+                OrderId = 1,
+                UserId = "Test1",
+
+                TotalPrice = 1000,
+                FirstName = "Test",
+                LastName = "Test",
+                EmailAddress = "Test@test.com",
+                AddressLine = "Test",
+                Country = "Test",
+                State = "Test",
+                ZipCode = "Test",
+                CardName = "Test",
+                CardNumber = "Test",
+                Expiration = "Test",
+                CVV = "Test",
+                PaymentMethod = 1,
+                ShoppingItems = new List<GetOrderItem>()
+                {
+                     new GetOrderItem()
+                    {
+                        ProductId = "11",
+                        PictureUrl = "11",
+                        ProductNameShortdesc = "11",
+                        Quantity = 11,
+                        UnitPrice = 11
+                    },
+                    new GetOrderItem()
+                    {
+                        ProductId = "22",
+                        PictureUrl = "22",
+                        ProductNameShortdesc = "22",
+                        Quantity = 22,
+                        UnitPrice = 22
+                    }
+                },
+                OrderStatuses = new List<GetOrderStatus>()
+                {
+                    new GetOrderStatus()
+                    {
+                        Status = EOrderStatus.Initiated,
+                    }
+
+                }
+
+                }
             };
         }
-
     }
 
 }

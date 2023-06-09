@@ -31,10 +31,10 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
     }
     public class UpdateOrderCommandOrderStatus 
     {
-        public EOrderStatus Status { get; set; }
+        public string Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
-        public UpdateOrderCommandOrderStatus(string updatedBy, EOrderStatus status)
+        public UpdateOrderCommandOrderStatus(string updatedBy, string status)
         {
             UpdatedBy = updatedBy;
             Status = status;

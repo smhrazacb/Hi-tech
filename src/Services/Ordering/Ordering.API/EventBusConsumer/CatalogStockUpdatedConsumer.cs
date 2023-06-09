@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventBus.Messages.Events.Catalog;
 using EventBus.Messages.Events.Order;
+using EventBus.Messages.Models;
 using MassTransit;
 using MediatR;
 using Ordering.API.Services;
@@ -29,7 +30,7 @@ namespace Ordering.API.EventBusConsumer
         public async Task Consume(ConsumeContext<CatalogStockUpdatedEvent> context)
         {
             var command = _mapper.Map<UpdateOrderStatusCommand>(context.Message);
-            command.OrderStatus = new(_IdentityService.GetUserIdentity(), EOrderStatus.Confirmed);
+            command.OrderStatus = new(_IdentityService.GetUserIdentity(), EventEOrderStatus.Confirmed.ToString());
             var updatedOrder = await _mediator.Send(command);
 
 

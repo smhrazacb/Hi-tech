@@ -27,7 +27,7 @@ namespace Ordering.Infrastructure
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Added due to 
             //Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
             return services;
         }
     }

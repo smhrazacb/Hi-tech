@@ -8,7 +8,6 @@ namespace Ordering.Infrastructure.Persistence
     {
         public OrderContext(DbContextOptions<OrderContext> options) : base(options)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }

@@ -37,7 +37,7 @@ namespace Ordering.API.EventBusConsumer
                 command = _mapper.Map<CheckoutOrderCommand>(context.Message);
                 command.OrderStatuses = new List<CheckoutOrderCommandOrderStatus>()
                 { new CheckoutOrderCommandOrderStatus
-                (_IdentityService.GetUserIdentity(), EOrderStatus.Initiated)
+                (_IdentityService.GetUserIdentity(), EventEOrderStatus.Initiated.ToString())
                 };
 
                 command.OrderId = await _mediator.Send(command);
@@ -65,7 +65,7 @@ namespace Ordering.API.EventBusConsumer
                 var failedevent = _mapper.Map<OrderStatusChangedEvent>(context.Message);
                 _logger.LogError($"UserId Id : {context.Message.UserId} Error {ex.Message}");
                 failedevent.OrderStatuses.Add(new EventOrderStatus(
-                    _IdentityService.GetUserIdentity(), EventEOrderStatus.Failed, ex.Message)
+                    _IdentityService.GetUserIdentity(), EventEOrderStatus.Failed.ToString(), ex.Message)
                 );
                 await _publishEndpoint.Publish(failedevent);
             }

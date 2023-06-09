@@ -31,7 +31,7 @@ namespace Ordering.Application.Features.Orders.Queries
     }
     public class GetOrderStatus
     {
-        public EOrderStatus Status { get; set; }
+        public string Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
     }

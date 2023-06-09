@@ -21,17 +21,17 @@ namespace EventBus.Messages.Models
     }
     public class EventOrderStatus
     {
-        public EventEOrderStatus Status { get;}
+        public string Status { get;}
         public DateTime DateTimeStamp { get; } = DateTime.UtcNow;
         public string UpdatedBy { get;}
         public string  ErrorMessage { get; set; }
 
-        public EventOrderStatus( string updatedBy, EventEOrderStatus status)
+        public EventOrderStatus( string updatedBy, string status)
         {
             Status = status;
             UpdatedBy = updatedBy;
         }
-        public EventOrderStatus(string updatedBy, EventEOrderStatus status, string error)
+        public EventOrderStatus(string updatedBy, string status, string error)
         {
             Status = status;
             UpdatedBy = updatedBy;

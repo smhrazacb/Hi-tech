@@ -30,11 +30,11 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
     }
     public class CheckoutOrderCommandOrderStatus
     {
-        public EOrderStatus Status { get; set; }
+        public string Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
 
-        public CheckoutOrderCommandOrderStatus(string updatedBy, EOrderStatus status)
+        public CheckoutOrderCommandOrderStatus(string updatedBy, string status)
         {
             UpdatedBy = updatedBy;
             Status = status;

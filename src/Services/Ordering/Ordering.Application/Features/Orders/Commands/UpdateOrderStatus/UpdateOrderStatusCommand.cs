@@ -12,10 +12,10 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrderStatus
     }
     public class UpdateOrderStatusCommandOrderStatus
     {
-        public EOrderStatus Status { get; set; }
+        public string Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
         public string UpdatedBy { get; set; }
-        public UpdateOrderStatusCommandOrderStatus(string updatedBy, EOrderStatus status)
+        public UpdateOrderStatusCommandOrderStatus(string updatedBy, string status)
         {
             UpdatedBy = updatedBy;
             Status = status;

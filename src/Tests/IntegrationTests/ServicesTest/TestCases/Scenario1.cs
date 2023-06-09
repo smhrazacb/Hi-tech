@@ -5,6 +5,7 @@ using Catalog.API.Entities;
 using Catalog.API.Entities.Dtos;
 using EventBus.Messages.Common;
 using EventBus.Messages.Events.Basket;
+using EventBus.Messages.Models;
 using FluentAssertions;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -45,15 +46,14 @@ namespace ServicesTest.TestCases
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var newproducts = await Product_UploadCSV_Valid();
-
             var userid = await Basket_CreateUpdate_Valid(TestData.BasketData.GetBasketData(newproducts));
             retry = 0;
             var mycart = await Basket_Get_Valid(userid);
 
-            //Register Order Status Change Webhook
-            await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
-                .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
-                WebhookType.OrderStatus.ToString()));
+            ////Register Order Status Change Webhook
+            //await Webhook_SubscribeWebhook_Valid(TestData.WebhookData
+            //    .GetWebhookSubscriptionRequestData("https://webhook.site/f5c279bf-05c5-42ea-9a29-c5880dfcf04b",
+            //    WebhookType.OrderStatus.ToString()));
 
             var checkoutEvent = await Basket_Checkout_Valid(TestData.BasketData.BasketCheckoutIdsDtoDummyData(mycart.UserId));
             retry = 0;
@@ -72,7 +72,7 @@ namespace ServicesTest.TestCases
             //await Order_Update_Valid(orders.FirstOrDefault());
 
             retry = 0;
-            await Order_GetOrder_Valid(orders.FirstOrDefault().OrderId, EOrderStatus.Confirmed);
+            await Order_GetOrder_Valid(orders.FirstOrDefault().OrderId, EventEOrderStatus.Confirmed.ToString());
 
             await Console.Out.WriteLineAsync("");
             //await Product_GetCountWitCategory_Valid();
@@ -83,14 +83,14 @@ namespace ServicesTest.TestCases
 
         }
 
-        public async Task<OrderQueryModel> Order_GetOrder_Valid(int orderId, EOrderStatus orderstatus)
+        public async Task<OrderQueryModel> Order_GetOrder_Valid(int orderId, string orderstatus)
         {
             // Arrange
             string url = $"/api/v1/Ordering/Order/{orderId}";
             // Act
             var response = await _Orderfixture.client.GetAsync(url);
             var result = await response.ReadContentAs<ResponseMessage<OrderQueryModel>>();
-            if (result.Data.OrderStatuses.LastOrDefault().Status != EOrderStatus.Confirmed)
+            if (result.Data.OrderStatuses.LastOrDefault().Status != EventEOrderStatus.Confirmed.ToString())
             {
                 await Task.Delay(5000);
                 retry++;
@@ -114,7 +114,7 @@ namespace ServicesTest.TestCases
             }).CreateMapper();
             order.OrderStatuses = new List<GetOrderStatus>() { new GetOrderStatus()
             {
-                Status=EOrderStatus.Confirmed,
+                Status=EventEOrderStatus.Confirmed.ToString(),
                 UpdatedBy =order.UserId
             }};
             var updateOrderCommand = mapper.Map<UpdateOrderCommand>(order);

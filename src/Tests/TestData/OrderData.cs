@@ -1,8 +1,11 @@
 ﻿using Basket.API.Entities;
+using Basket.API.Entities.Dtos;
 using EventBus.Messages.Common;
+using EventBus.Messages.Events.Basket;
 using MassTransit.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Ordering.API.EventBusConsumer;
 using Ordering.Application.Features.Orders.Queries;
 using Ordering.Domain.Entities;
 using System;
@@ -116,7 +119,29 @@ namespace TestData
                 }
             };
         }
-    }
+
+        public static BasketCheckoutEvent GetBasketCheckoutConsumerDummyData(string userId)
+        {
+            return new BasketCheckoutEvent()
+            {
+                UserId = userId,
+                AddressLine = "Test",
+                CardName = "Test",
+                CardNumber = "Test",
+                Country = "Test",
+                CVV = "Test",
+                EmailAddress = "Test",
+                Expiration = "Test",
+                FirstName = "Test",
+                LastName = "Test",
+                PaymentMethod = 1,
+                State = "Test",
+                TotalPrice = 100,
+                ZipCode = "Test"
+            };
+
+
+        }
 
 }
 

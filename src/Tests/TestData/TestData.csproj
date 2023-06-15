@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Services\Basket\Basket.API\Basket.API.csproj" />
     <ProjectReference Include="..\..\Services\Catalog\Catalog.API\Catalog.API.csproj" />
+    <ProjectReference Include="..\..\Services\Ordering\Ordering.API\Ordering.API.csproj" />
     <ProjectReference Include="..\..\Services\Ordering\Ordering.Application\Ordering.Application.csproj" />
     <ProjectReference Include="..\..\Services\Ordering\Ordering.Domain\Ordering.Domain.csproj" />
     <ProjectReference Include="..\..\Services\Webhooks\Webhooks.API\Webhooks.API.csproj" />

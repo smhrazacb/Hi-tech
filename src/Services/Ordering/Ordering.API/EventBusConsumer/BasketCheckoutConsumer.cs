@@ -35,12 +35,15 @@ namespace Ordering.API.EventBusConsumer
             try
             {
                 command = _mapper.Map<CheckoutOrderCommand>(context.Message);
+
                 command.OrderStatuses = new List<CheckoutOrderCommandOrderStatus>()
-                { new CheckoutOrderCommandOrderStatus
+                { 
+                    new CheckoutOrderCommandOrderStatus
                 (_IdentityService.GetUserIdentity(), EOrderStatus.Initiated)
                 };
 
                 command.OrderId = await _mediator.Send(command);
+
                 _logger.LogInformation($"BasketCheckoutEvent consumed successfully. Created Order Id : {command.OrderId}");
 
                 var orderStatusChangedToIniatedEvent = _mapper.Map<OrderStatusChangedEvent>(command);

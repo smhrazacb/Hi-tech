@@ -1,27 +1,16 @@
 ﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ordering.API;
 using Ordering.API.Controllers;
 using EventBus.Messages.Common;
 using Microsoft.AspNetCore.Mvc;
-using Ordering.Application.Features.Orders.Commands.DeleteOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
 using Ordering.Application.Features.Orders.Queries.GetOrdersList;
 using Ordering.Application.Features.Orders.Queries;
-using System.Net;
 using TestData;
 using Ordering.API.Services;
 using FluentAssertions;
 using MediatR;
-using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
-using Basket.API.Entities;
-using Ordering.Domain.Entities;
-using StackExchange.Redis;
-using System.ComponentModel;
+using System.Net;
+using System.Collections.Generic;
 
 namespace Order.APITests.Controllers;
 
@@ -34,6 +23,45 @@ public class OrderControllerTests
     {
         _IIdentityService = new Mock<IIdentityService>();
         _mockMediator = new Mock<IMediator>();
+    }
+
+    [Fact]
+    public void DeleteOrder_WithOrderId_ReturnNoContent()
+    {
+        //Arrange
+        var dataValid = OrderData.Orders();
+        _mockMediator.Setup(x => x.Send(It.IsAny<GetOrdersListQuery>(), default))
+                  .Returns(Task.FromResult(dataValid));
+
+        //Act
+
+        var _orderController = new OrderingController(_mockMediator.Object);
+        var result = _orderController.DeleteOrder(dataValid.FirstOrDefault().OrderId);
+
+        //Assert
+
+        result.Result.Should().BeOfType<NoContentResult>();
+    }
+
+    [Fact]
+    public void UpdateOrder_ReturnNoContent()
+    {
+        //Arrange
+        var dataValid = OrderData.Orders();
+        _mockMediator.Setup(x => x.Send(It.IsAny<UpdateOrderCommand>(), default))
+                     .Returns(Task.FromResult(Unit.Value));
+
+        //Act
+
+        var _orderController = new OrderingController(_mockMediator.Object);
+        var result = _orderController.UpdateOrder(new UpdateOrderCommand());
+
+        //Assert
+
+        result.Result.Should().NotBeNull();
+        result.Result.Should().BeOfType<NoContentResult>();
+
+
     }
 
     [Fact]
@@ -58,6 +86,22 @@ public class OrderControllerTests
 
         result.Result
                  .Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Orders_IfEmpty_ReturnsNotFoundResponse()
+    {
+        //Arrange
+        var dataValid = Enumerable.Empty<OrderQueryModel>();
+        _mockMediator.Setup(x => x.Send(It.IsAny<GetOrdersListQuery>(), default))
+                     .Returns(Task.FromResult(dataValid.ToList()));
+
+        //Act
+        var _orderController = new OrderingController(_mockMediator.Object);
+        var result = _orderController.Orders("Test");
+
+        //Assert
+        Assert.Equal(null, result.Result.Value.Data);
 
     }
 
@@ -66,8 +110,8 @@ public class OrderControllerTests
     {
         //Arrange
         var dataValid = OrderData.Orders();
-        _mockMediator.Setup(x => x.Send(It.IsAny<GetOrdersListQuery>(), default))
-                  .Returns(Task.FromResult(dataValid));
+        _mockMediator.Setup(x => x.Send(It.IsAny<GetOrder>(), default))
+                  .Returns(Task.FromResult(dataValid.FirstOrDefault()));
 
         //Act
 
@@ -76,53 +120,25 @@ public class OrderControllerTests
 
         //Assert
 
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<ActionResult<ResponseMessage<OrderQueryModel>>>();
 
+        result.Result.Value.Should().BeOfType<ResponseMessage<OrderQueryModel>>();
     }
 
     [Fact]
-    public void DeleteOrder_WithOrderId_ReturnNoContent()
+    public void Order_IfOrdersNull_ReturnNotFound()
     {
         //Arrange
-        var dataValid = OrderData.Orders();
-        _mockMediator.Setup(x => x.Send(It.IsAny<GetOrdersListQuery>(), default))
-                  .Returns(Task.FromResult(dataValid));
+        _mockMediator.Setup(x => x.Send(It.IsAny<GetOrder>(), default))
+                     .Returns(Task.FromResult<OrderQueryModel>(null));
 
         //Act
 
         var _orderController = new OrderingController(_mockMediator.Object);
-        var result = _orderController.DeleteOrder(dataValid.FirstOrDefault().OrderId);
+        var result = _orderController.Order(1);
 
         //Assert
-
-        result.Result.Should().BeOfType<NoContentResult>();
-
-
+        Assert.Equal(null, result.Result.Value.Data);
     }
-
-    [Fact]
-    public void UpdateOrder_ReturnNoContent()
-    {
-        //Arrange
-        var dataValid = OrderData.Orders();
-        _mockMediator.Setup(x => x.Send(It.IsAny<UpdateOrderCommand>(), default))
-                  .Returns(Task.FromResult(Unit.Value));
-
-        //Act
-
-        var _orderController = new OrderingController(_mockMediator.Object);
-        var result = _orderController.UpdateOrder(new UpdateOrderCommand());
-
-        //Assert
-
-        result.Result.Should().NotBeNull();
-        result.Result.Should().BeOfType<NoContentResult>();
-
-
-    }
-
-
 }
 
 

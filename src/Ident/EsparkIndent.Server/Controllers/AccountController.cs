@@ -194,11 +194,7 @@ public class AccountController : Controller
     ///     If result Required 2FA  -> return sendcode and 
     ///     If result lockedout     -> return view of Lockedout
     ///     else                    -> Redirect to URL, check the provider info in DB, return View
-    /// 
     /// Returns the Key/Code after successfull Login
-    /// 
-    /// 
-    /// 
     /// </returns>
     // GET: /Account/ExternalLoginCallback
     [HttpGet]
@@ -286,7 +282,10 @@ public class AccountController : Controller
         return View(result.Succeeded ? "ConfirmEmail" : "Error");
     }
 
-    //
+    /// <summary>
+    /// View Action for Forget Password
+    /// </summary>
+    /// <returns></returns>
     // GET: /Account/ForgotPassword
     [HttpGet]
     [AllowAnonymous]
@@ -295,7 +294,11 @@ public class AccountController : Controller
         return View();
     }
 
-    //
+    /// <summary>
+    /// HTTP POST action for Forgot Password
+    /// </summary>
+    /// <param name="model">validate the model with database</param>
+    /// <returns>Return View Action for Recover Pass</returns>
     // POST: /Account/ForgotPassword
     [HttpPost]
     [AllowAnonymous]
@@ -324,7 +327,10 @@ public class AccountController : Controller
         return View(model);
     }
 
-    //
+    /// <summary>
+    /// View Action for Cofirmation Forgot Password
+    /// </summary>
+    /// <returns></returns>
     // GET: /Account/ForgotPasswordConfirmation
     [HttpGet]
     [AllowAnonymous]
@@ -333,7 +339,14 @@ public class AccountController : Controller
         return View();
     }
 
-    //
+    /// <summary>
+    /// HTTP GET request for Reset Password
+    /// </summary>
+    /// <param name="code">code from model</param>
+    /// <returns>
+    ///     if code is nul -> return "ERROR"
+    ///     if code is not null -> return View
+    /// </returns>
     // GET: /Account/ResetPassword
     [HttpGet]
     [AllowAnonymous]
@@ -342,7 +355,15 @@ public class AccountController : Controller
         return code is null ? View("Error") : View();
     }
 
-    //
+    /// <summary>
+    /// HTTP POST Action for Resetting Password
+    /// </summary>
+    /// <param name="model">model of the user</param>
+    /// <returns>
+    ///     if ModelState Valid     --> Return View
+    ///     if user is null         --> Redirect to account Reset Pass Confirmation View
+    ///     if result is suceeded   --> Redirect to account Reset Pass Confirmation View
+    /// </returns>
     // POST: /Account/ResetPassword
     [HttpPost]
     [AllowAnonymous]

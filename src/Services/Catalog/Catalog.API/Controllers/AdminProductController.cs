@@ -97,16 +97,11 @@ namespace Catalog.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
-
-
         /// <summary>
         /// Update a Product
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
-        /// 
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -121,8 +116,6 @@ namespace Catalog.API.Controllers
             }
             return BadRequest();
         }
-
-
         /// <summary>
         /// Delete a Product if Id matched
         /// </summary>

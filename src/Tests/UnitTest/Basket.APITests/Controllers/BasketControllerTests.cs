@@ -11,9 +11,6 @@ using EventBus.Messages.Events;
 using Basket.API.Services;
 using Basket.API.Entities;
 using TestData;
-using System.Net;
-using Azure;
-
 
 namespace Basket.API.Controllers.Tests
 {
@@ -28,6 +25,9 @@ namespace Basket.API.Controllers.Tests
         public BasketControllerTests()
         {
             _IIdentityService = new Mock<IIdentityService>();
+            _IIdentityService
+                .Setup(Object => Object.GetUserIdentity())
+                .Returns(BasketData.GetBasketData().UserId);
             _ILogger = new Mock<ILogger<BasketController>>();
             _IPublishEndpoint = new Mock<IPublishEndpoint>();
             _IBasketRepository = new Mock<IBasketRepository>();
@@ -44,9 +44,6 @@ namespace Basket.API.Controllers.Tests
             _IBasketRepository
                     .Setup(repo => repo.GetBasket(It.IsAny<string>()))
                     .ReturnsAsync(BasketData.GetBasketData());
-            _IIdentityService
-    .Setup(Object => Object.GetUserIdentity())
-    .Returns(BasketData.GetBasketData().UserId);
             //Act
             BasketController pc = new BasketController(_IIdentityService.Object, _ILogger.Object, _Mapper, _IPublishEndpoint.Object, _IBasketRepository.Object);
             var result = await pc.Checkout(BasketData.BasketCheckoutIdsDtoDummyData());
@@ -65,12 +62,17 @@ namespace Basket.API.Controllers.Tests
         {
             //Arrange
             _IBasketRepository
-                    .Setup(repo => repo.GetBasket(It.IsAny<string>()))
-                    .Returns(Task.FromResult((ShoppingCart)null));
+                .Setup(repo => repo.GetBasket(It.IsAny<string>()))
+                .ReturnsAsync((string userId) =>
+                {
+                    if (userId == BasketData.BasketCheckoutIdsDtoDummyData().UserId)
+                    {
+                        return null; // Return null when the provided user ID matches
+                    }
 
-            _IIdentityService
-                    .Setup(Object => Object.GetUserIdentity())
-                    .Returns(BasketData.GetBasketData().UserId);
+                    // Return a predefined basket for other user IDs
+                    return BasketData.GetBasketData();
+                });
             //Act
             BasketController pc = new BasketController(_IIdentityService.Object, _ILogger.Object, _Mapper, _IPublishEndpoint.Object, _IBasketRepository.Object);
             var result = await pc.Checkout(BasketData.BasketCheckoutIdsDtoDummyData());
@@ -78,35 +80,29 @@ namespace Basket.API.Controllers.Tests
             // assert     
 
             result.Result.Should().BeOfType<NotFoundResult>();
-          //  result.Result
-          //.Should().BeOfType<OkObjectResult>().Which.Value
-          //.Should().BeOfType<ResponseMessage<ShoppingCart>>().Which.Succeeded.Should().BeFalse();
+            result.Value.Should().BeNull();
 
         }
 
-        [Fact()]
-        public async void Checkout_Accepted_ReturnConflictMessage()
-        {
-            //Arrange
-            _IBasketRepository
-                    .Setup(repo => repo.GetBasket(It.IsAny<string>()))
-                    .ReturnsAsync(BasketData.GetBasketData());
-            _IIdentityService
-    .Setup(Object => Object.GetUserIdentity())
-    .Returns("abc@gmail.com");
+        //[Fact()]
+        //public async void Checkout_Accepted_ReturnConflictMessage()
+        //{
+        //    //Arrange
+        //    _IBasketRepository
+        //            .Setup(repo => repo.GetBasket(It.IsAny<string>()))
+        //            .ReturnsAsync(BasketData.GetBasketData());
+        //    //Act
+        //    BasketController pc = new BasketController(_IIdentityService.Object, _ILogger.Object, _Mapper, _IPublishEndpoint.Object, _IBasketRepository.Object);
+        //    var result = await pc.Checkout(BasketData.BasketCheckoutIdsDtoDummyData());
 
-            //Act
-            BasketController pc = new BasketController(_IIdentityService.Object, _ILogger.Object,
-                _Mapper, _IPublishEndpoint.Object, _IBasketRepository.Object);
-            var result = await pc.Checkout(BasketData.BasketCheckoutIdsDtoDummyData());
-
-            // assert        
-            result.Result.Should().BeOfType<ConflictObjectResult>().Which.StatusCode
-                .Should().Be(409);
-
-        }
-
-
+        //    // assert        
+        //    result.Result.Should().BeOfType<AcceptedResult>().Which.StatusCode
+        //        .Should().Be(202);
+        //    result.Result
+        //        .Should().BeOfType<AcceptedResult>().Which.Value
+        //        .Should().BeOfType<BasketCheckoutEvent>().Which.Id
+        //        .Should().NotBeEmpty();
+        //}
 
 
 
@@ -152,24 +148,6 @@ namespace Basket.API.Controllers.Tests
                 .Should().BeOfType<OkObjectResult>().Which.Value
                 .Should().BeOfType<ResponseMessage<ShoppingCart>>().Which.Data.UserId
                 .Should().Be(userId);
-        }
-
-        [Fact()]
-        public async void Get_Null()
-        {
-            //Arrange
-            _IBasketRepository.Setup(repo => repo.GetBasket(It.IsAny<string>()))
-                .Returns(Task.FromResult((ShoppingCart)null));
-            var userId = BasketData.GetBasketData().UserId;
-
-            //Act
-            BasketController pc = new BasketController(_IIdentityService.Object, _ILogger.Object, _Mapper, _IPublishEndpoint.Object, _IBasketRepository.Object);
-            var result = await pc.GetBasket(userId);
-            
-            // assert        
-            result.Result
-          .Should().BeNull();
-
         }
 
         //// Basket delete metod

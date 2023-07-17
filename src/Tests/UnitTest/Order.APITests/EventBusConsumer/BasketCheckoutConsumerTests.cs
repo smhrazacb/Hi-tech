@@ -101,7 +101,7 @@ namespace Order.APITests.EventBusConsumer
             checkOutOrderCommand.OrderStatuses = new List<CheckoutOrderCommandOrderStatus>()
                 {
                     new CheckoutOrderCommandOrderStatus
-                (_IdentityService.Object.GetUserIdentity(), EOrderStatus.Initiated)
+                (_IdentityService.Object.GetUserIdentity(),EventEOrderStatus.Initiated.ToString())
                 };
 
             //checkOutOrderCommand.OrderId = await _mediator.Send(_mediator.Object);

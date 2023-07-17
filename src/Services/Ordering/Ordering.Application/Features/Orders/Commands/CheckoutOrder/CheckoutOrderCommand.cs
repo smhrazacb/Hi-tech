@@ -31,7 +31,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
     public class CheckoutOrderCommandOrderStatus
     {
         public string Status { get; set; }
-        public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
+        public DateTime DateTimeStamp { get; private set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
         public string UpdatedBy { get; set; }
 
         public CheckoutOrderCommandOrderStatus(string updatedBy, string status)

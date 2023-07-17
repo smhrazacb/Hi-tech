@@ -67,7 +67,7 @@ namespace TestData
                 {
                     new GetOrderStatus()
                     {
-                        Status = EOrderStatus.Initiated,
+                        Status = EventEOrderStatus.Initiated.ToString(),
                     }
 
                 }
@@ -113,7 +113,7 @@ namespace TestData
                 {
                     new GetOrderStatus()
                     {
-                        Status = EOrderStatus.Initiated,
+                        Status = EventEOrderStatus.Initiated.ToString(),
                     }
 
                 }

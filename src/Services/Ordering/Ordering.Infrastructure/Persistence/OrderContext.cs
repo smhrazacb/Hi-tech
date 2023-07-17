@@ -20,10 +20,10 @@ namespace Ordering.Infrastructure.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedDate = DateTime.Now;
+                        entry.Entity.CreatedDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedDate = DateTime.Now;
+                        entry.Entity.LastModifiedDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
                         break;
                 }
             }

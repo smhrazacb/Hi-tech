@@ -11,7 +11,6 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
 using Ordering.Application.Features.Orders.Queries;
-using Ordering.Domain.Entities;
 using RabbitMQ.Client;
 using ServicesTest.Extensions;
 using ServicesTest.Mapper;
@@ -145,7 +144,7 @@ namespace ServicesTest.TestCases
             // Assert
             response.Should().HaveStatusCode(System.Net.HttpStatusCode.OK);
             result.Succeeded.Should().Be(true);
-            result.Data.FirstOrDefault().UserId.Should().Be(TestData.BasketData.GetBasketData().UserId);
+            result.Data.FirstOrDefault().UserId.Should().Be(BasketData.GetBasketData().UserId);
             return result.Data;
         }
         public async Task<BasketCheckoutEvent> Basket_Checkout_Valid(BasketCheckoutIdsDto data)

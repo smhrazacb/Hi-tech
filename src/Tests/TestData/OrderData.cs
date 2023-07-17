@@ -1,8 +1,13 @@
 ﻿using Basket.API.Entities;
+using Basket.API.Entities.Dtos;
 using EventBus.Messages.Common;
+using EventBus.Messages.Events.Basket;
+using EventBus.Messages.Models;
 using MassTransit.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Ordering.API.EventBusConsumer;
+using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Queries;
 using Ordering.Domain.Entities;
 using System;
@@ -18,7 +23,7 @@ namespace TestData
 {
     public static class OrderData
     {
-       public static List<OrderQueryModel> Orders()
+        public static List<OrderQueryModel> Orders()
         {
             return new List<OrderQueryModel>()
             {
@@ -116,7 +121,61 @@ namespace TestData
                 }
             };
         }
-    }
 
+        public static List<OrderQueryModel> OrdersNull()
+        {
+            return new List<OrderQueryModel>()
+            {
+                
+            };
+        }
+
+        public static CheckoutOrderCommand GetBasketCheckoutConsumerDummyData()
+        {
+            return new CheckoutOrderCommand()
+            {   
+                OrderId = 1,
+                UserId = "testId",
+                AddressLine = "Test",
+                CardName = "Test",
+                CardNumber = "Test",
+                Country = "Test",
+                CVV = "Test",
+                EmailAddress = "Test",
+                Expiration = "Test",
+                FirstName = "Test",
+                LastName = "Test",
+                PaymentMethod = 1,
+                State = "Test",
+                TotalPrice = 100,
+                ZipCode = "Test",
+
+                ShoppingItems = new List<CheckoutOrderCommandItems>()
+                {
+                     new CheckoutOrderCommandItems()
+                    {
+                        ProductId = "11",
+                        PictureUrl = "11",
+                        ProductNameShortdesc = "11",
+                        Quantity = 11,
+                        UnitPrice = 11
+                    },
+                    new CheckoutOrderCommandItems()
+                    {
+                        ProductId = "22",
+                        PictureUrl = "22",
+                        ProductNameShortdesc = "22",
+                        Quantity = 22,
+                        UnitPrice = 22
+                    }
+                },
+
+
+        };
+
+
+        }
+
+    }
 }
 

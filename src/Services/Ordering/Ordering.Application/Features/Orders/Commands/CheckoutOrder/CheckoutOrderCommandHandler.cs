@@ -17,10 +17,10 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 
         public CheckoutOrderCommandHandler(IOrderRepository orderRepository, IMapper mapper, IEmailService emailService, ILogger<CheckoutOrderCommandHandler> logger)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _orderRepository = orderRepository;
+            _mapper = mapper;
+            _emailService = emailService;
+            _logger = logger;
         }
 
         public async Task<int> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             Order order;
             var orderEntity = _mapper.Map<Order>(request);
             //check duplicate 
-            var duplicateOrder = await _orderRepository.GetOrdersByShoppingCart(orderEntity.UserId);
+            var duplicateOrder = await _orderRepository.GetOrdersByUserId(orderEntity.UserId);
             if (duplicateOrder.Count() != 0)
             {
                 order = duplicateOrder.FirstOrDefault();

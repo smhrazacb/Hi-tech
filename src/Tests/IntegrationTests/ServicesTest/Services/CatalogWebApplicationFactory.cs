@@ -1,8 +1,11 @@
 ﻿using Catalog.API.Data;
+using EventBus.Messages.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
+using System.Reflection;
 
 namespace ServicesTest.Services
 {

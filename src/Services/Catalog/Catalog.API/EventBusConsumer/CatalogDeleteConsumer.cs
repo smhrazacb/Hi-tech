@@ -1,21 +1,32 @@
-﻿using Catalog.API.Entities.Dtos;
+﻿using AutoMapper;
+using Catalog.API.Entities.Dtos;
 using Catalog.API.Repositories.Interfaces;
-using EventBus.Messages.Events;
+using Catalog.API.Services;
+using EventBus.Messages.Events.Catalog;
+using EventBus.Messages.Events.Order;
+using EventBus.Messages.Models;
 using MassTransit;
+using MassTransit.Transports;
 
 namespace Catalog.API.EventBusConsumer
 {
     public class CatalogDeleteConsumer : IConsumer<CatalogStockDelEvent>
     {
         private readonly ILogger<CatalogDeleteConsumer> _logger;
+        private readonly IMapper _mapper;
         private readonly IProductRepositoryW _repositoryW;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IProductRepositoryR _repositoryR;
+        private readonly IIdentityService _IdentityService;
 
-        public CatalogDeleteConsumer(ILogger<CatalogDeleteConsumer> logger, IProductRepositoryW repositoryW, IProductRepositoryR repositoryR)
+        public CatalogDeleteConsumer(ILogger<CatalogDeleteConsumer> logger, IMapper mapper, IProductRepositoryW repositoryW, IPublishEndpoint publishEndpoint, IProductRepositoryR repositoryR, IIdentityService identityService)
         {
             _logger = logger;
+            _mapper = mapper;
             _repositoryW = repositoryW;
+            _publishEndpoint = publishEndpoint;
             _repositoryR = repositoryR;
+            _IdentityService = identityService;
         }
 
         public async Task Consume(ConsumeContext<CatalogStockDelEvent> context)
@@ -44,11 +55,16 @@ namespace Catalog.API.EventBusConsumer
                 {
                     category.SubCategory.Product.Quantity = (uint)(category.SubCategory.Product.Quantity - item.Quantity);
                     await _repositoryW.UpdateProduct(category);
-                    var tmsg = $"Productid {item.ProductId} available stock : {category.SubCategory.Product.Quantity} ({category.SubCategory.Product.Quantity + item.Quantity})";
+                    var tmsg = $"Productid {item.ProductId} available stock :" +
+                        $" {category.SubCategory.Product.Quantity} ({category.SubCategory.Product.Quantity + item.Quantity})";
                     _logger.LogInformation(tmsg);
                 }
             }
             _logger.LogInformation($"CatalogStockDelEvent consumed successfully for orderID : {context.Message.OrderId}");
+            
+            var eventDeleted = _mapper.Map<CatalogStockUpdatedEvent>(context.Message);
+            _logger.LogError($"Publishing CatalogStockUpdated Event OrderID {eventDeleted.OrderId}");
+            await _publishEndpoint.Publish(eventDeleted);
         }
     }
 }

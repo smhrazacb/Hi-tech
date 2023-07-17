@@ -1,11 +1,12 @@
-﻿namespace Ordering.Application.Features.Orders.Queries.GetOrdersList
+﻿using EventBus.Messages.Models;
+
+namespace EventBus.Messages.Events.Basket
 {
-    public class OrdersVm
+    public class BasketCheckoutEvent : IntegrationBaseEvent
     {
-        public int OrderId { get; set; }
+        public IEnumerable<EventCartItem> ShoppingItems { get; set; }
         public string UserId { get; set; }
         public decimal TotalPrice { get; set; }
-        public IEnumerable<OrderVmItem> ShoppingItems { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
@@ -22,14 +23,5 @@
         public string Expiration { get; set; }
         public string CVV { get; set; }
         public int PaymentMethod { get; set; }
-    }
-    public class OrderVmItem
-    {
-        public string ProductId { get; set; }
-        public string ProductNameShortdesc { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal OldUnitPrice { get; set; }
-        public int Quantity { get; set; }
-        public string? PictureUrl { get; set; }
     }
 }

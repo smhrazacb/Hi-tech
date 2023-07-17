@@ -37,7 +37,10 @@ namespace Catalog.API
                 // ignore omitted parameters on models to enable optional params (e.g. User update)
                 x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
-
+            // For username 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            // Add services to the container.
+            services.AddTransient<IIdentityService, IdentityService>();
             services.AddEndpointsApiExplorer();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddSwaggerGen(options =>

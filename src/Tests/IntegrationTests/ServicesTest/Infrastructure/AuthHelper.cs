@@ -21,8 +21,8 @@ namespace ServicesTest.Infrastructure
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = configuration.TokenEndpoint,
-                Scope = "openid email profile offline_access order_api basket_api catalog_api",
-                ClientId = "shopping_aggrigator_server",
+                Scope = "openid email profile offline_access order_api basket_api catalog_api webhook_api",
+                ClientId = "TestId",
                 ClientSecret = "secret", 
             });
 

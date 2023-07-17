@@ -71,11 +71,11 @@ namespace TestData
             };
         }
         // BasketCheckoutIdsDto dummy data
-        public static BasketCheckoutIdsDto BasketCheckoutIdsDtoDummyData()
+        public static BasketCheckoutIdsDto BasketCheckoutIdsDtoDummyData(string userId)
         {
             return new BasketCheckoutIdsDto()
             {
-                UserId = "admin@admin.com",
+                UserId = userId,
                 AddressLine = "Test",
                 CardName = "Test",
                 CardNumber = "Test",

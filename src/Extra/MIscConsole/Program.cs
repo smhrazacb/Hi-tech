@@ -8,7 +8,8 @@ string[] _outDir =
     "../../../../../ident/EsparkIndent.Server/",
     "../../../../../Services/Catalog/Catalog.API/",
     "../../../../../Services/Basket/Basket.API/",
-    "../../../../../Services/Ordering/Ordering.API/"
+    "../../../../../Services/Ordering/Ordering.API/",
+    "../../../../../Services/Webhooks/Webhooks.API/",
 };
 GenerateEncryptionertificate(_outDir);
 GenerateSigingCertificate(_outDir);

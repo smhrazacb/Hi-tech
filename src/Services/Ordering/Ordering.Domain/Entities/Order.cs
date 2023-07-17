@@ -5,8 +5,7 @@ namespace Ordering.Domain.Entities
     public class Order : EntityBase
     {
         public decimal TotalPrice { get; set; }
-        public virtual IEnumerable<OrderItem> ShoppingItems { get; set; }
-        public string UserId { get; set; }
+       
 
         // BillingAddress
         public string FirstName { get; set; }

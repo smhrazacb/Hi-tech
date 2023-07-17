@@ -50,7 +50,7 @@ namespace Basket.API
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(configRoot["EventBusSettings:HostAddress"]);
-                    cfg.ReceiveEndpoint(EventBusConstants.OrderCompleteQueue, c =>
+                    cfg.ReceiveEndpoint(EventBusConstants.BasketDeleteQueue, c =>
                     {
                         c.ConfigureConsumer<BasketDeleteConsumer>(ctx);
                     });

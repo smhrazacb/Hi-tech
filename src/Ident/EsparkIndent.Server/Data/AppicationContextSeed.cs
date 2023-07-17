@@ -53,6 +53,7 @@ namespace EsparkIndent.Server.Entities
                         Permissions.Prefixes.Scope + "order_api",
                         Permissions.Prefixes.Scope + "catalog_api",
                         Permissions.Prefixes.Scope + "basket_api",
+                        Permissions.Prefixes.Scope + "webhook_api",
                     },
                     Requirements =
                     {
@@ -82,9 +83,45 @@ namespace EsparkIndent.Server.Entities
                         Permissions.Prefixes.Scope + "basket_api",                    }
                 });
             }
+            if (await manager.FindByClientIdAsync("TestId") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "TestId",
+                    ClientSecret = "secret",
+                    ConsentType = ConsentTypes.Explicit,
+
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.GrantTypes.ClientCredentials,
+
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + "order_api",
+                        Permissions.Prefixes.Scope + "catalog_api",
+                        Permissions.Prefixes.Scope + "webhook_api",
+                        Permissions.Prefixes.Scope + "basket_api",                    }
+                });
+            }
             // Note: when using introspection instead of local token validation,
             // an application entry MUST be created to allow the resource server
             // to communicate with OpenIddict's introspection endpoint.
+
+            if (await manager.FindByClientIdAsync("webhook_server") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "webhook_server",
+                    ClientSecret = "80B552BB-4CD8-48DA-946E-0815E0147DD9",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Introspection,
+                    }
+                });
+            }
             if (await manager.FindByClientIdAsync("catalog_server") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
@@ -126,6 +163,18 @@ namespace EsparkIndent.Server.Entities
         {
             var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
 
+            if (await manager.FindByNameAsync("webhook_api") is null)
+            {
+                await manager.CreateAsync(new OpenIddictScopeDescriptor
+                {
+                    DisplayName = "Webhook API access",
+                    Name = "webhook_api",
+                    Resources =
+                    {
+                        "webhook_server"
+                    }
+                });
+            }
             if (await manager.FindByNameAsync("catalog_api") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor

@@ -3,10 +3,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using MongoDB.Driver.Core.Configuration;
+using Moq;
 using Npgsql;
+using Ordering.API.Services;
 using Ordering.Infrastructure.Persistence;
+using ServicesTest.Infrastructure;
 using System.Data.Common;
+using TestData;
 
 namespace ServicesTest.Services
 {
@@ -24,13 +29,19 @@ namespace ServicesTest.Services
 
                 services.Remove(oderContext);
 
+                services.Replace(ServiceDescriptor.Scoped(_ =>
+                {
+                    var _IIdentityService = new Mock<IIdentityService>();
+                    _IIdentityService.Setup(Object => Object.GetUserIdentity()).Returns(BasketData.GetBasketData().UserId);
+                    return _IIdentityService.Object;
+                }));
+
                 var scope = services.BuildServiceProvider().GetService<IConfiguration>();
                 ConnectionString = scope.GetSection("ConnectionStrings:OrderingConnectionString").Value;
                 //delete old database
                 DropDatabase();
                 services.AddDbContext<OrderContext>(options =>
                 options.UseNpgsql(ConnectionString));
-
             });
             builder.UseEnvironment("Development");
         }

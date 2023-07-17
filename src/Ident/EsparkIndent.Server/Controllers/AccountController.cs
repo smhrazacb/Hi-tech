@@ -9,6 +9,9 @@ using System.Security.Claims;
 
 namespace EsparkIndent.Server.Controllers;
 
+/// <summary>
+/// Controller responsible for Account Registration, Authentication and Authorization.
+/// </summary>
 [Authorize]
 public class AccountController : Controller
 {
@@ -33,7 +36,11 @@ public class AccountController : Controller
         _applicationDbContext = applicationDbContext;
     }
 
-    //
+    /// <summary>
+    /// HTTP GET action for displaying the login view.
+    /// </summary>
+    /// <param name="returnUrl">The URL to redirect to after successful login.</param>
+    /// <returns>The login view.</returns>
     // GET: /Account/Login
     [HttpGet]
     [AllowAnonymous]
@@ -43,7 +50,17 @@ public class AccountController : Controller
         return View();
     }
 
-    //
+    /// <summary>
+    /// HTTP POST action for login.
+    /// </summary>
+    /// <param name="model">model is passed to validate with database</param>
+    /// <param name="returnUrl">The URL to redirect to after validation.</param>
+    /// <returns>
+    ///     If result Succeeded     -> return desired Url
+    ///     If result Required 2FA  -> return sendcode and 
+    ///     If result lockedout     -> return view of Lockedout
+    ///     else                    -> Invalid login attempt
+    /// </returns>
     // POST: /Account/Login
     [HttpPost]
     [AllowAnonymous]
@@ -80,7 +97,11 @@ public class AccountController : Controller
         return View(model);
     }
 
-    //
+    /// <summary>
+    /// HTTP GET action for Registration
+    /// </summary>
+    /// <param name="returnUrl"> The URl to redirect after successful registration</param>
+    /// <returns>The Registration View</returns>
     // GET: /Account/Register
     [HttpGet]
     [AllowAnonymous]
@@ -90,7 +111,16 @@ public class AccountController : Controller
         return View();
     }
 
-    //
+    /// <summary>
+    /// HTTP POST action for registration
+    /// </summary>
+    /// <param name="model">Model credentials send for storing in DB</param>
+    /// <param name="returnUrl">The Url after successful registration</param>
+    /// <returns>
+    ///     If modelstateValid && result succeeded -> Create user and logged in
+    ///     else                                   -> AddErrors and display
+    ///     
+    /// </returns>
     // POST: /Account/Register
     [HttpPost]
     [AllowAnonymous]
@@ -115,13 +145,17 @@ public class AccountController : Controller
                 return RedirectToLocal(returnUrl);
             }
             AddErrors(result);
+            
         }
 
         // If we got this far, something failed, redisplay form
         return View(model);
     }
 
-    //
+    /// <summary>
+    /// HTTP Post action for Logoff
+    /// </summary>
+    /// <returns>Return to HomePage after Singing Out</returns>
     // POST: /Account/LogOff
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -131,7 +165,12 @@ public class AccountController : Controller
         return RedirectToAction(nameof(HomeController.Index), "Home");
     }
 
-    //
+    /// <summary>
+    /// HTTP POST action for external Login
+    /// </summary>
+    /// <param name="provider">User credentials who is trying to login</param>
+    /// <param name="returnUrl">Redirect to URL (uses External Login Callback method for Key)</param>
+    /// <returns>Successfully Login the user</returns>
     // POST: /Account/ExternalLogin
     [HttpPost]
     [AllowAnonymous]
@@ -145,7 +184,18 @@ public class AccountController : Controller
         return new ChallengeResult(provider, properties);
     }
 
-    //
+    /// <summary>
+    /// HTTP GET action for ExternalLogin (used a helper function taking arguments from ExternalLogin method)
+    /// </summary>
+    /// <param name="returnUrl">redirects to the URL</param>
+    /// <returns>
+    ///     If info is Null         -> Return to Login Page
+    ///     If result Succeeded     -> return desired Url (with sucessfully Login the user)
+    ///     If result Required 2FA  -> return sendcode and 
+    ///     If result lockedout     -> return view of Lockedout
+    ///     else                    -> Redirect to URL, check the provider info in DB, return View
+    /// Returns the Key/Code after successfull Login
+    /// </returns>
     // GET: /Account/ExternalLoginCallback
     [HttpGet]
     [AllowAnonymous]
@@ -232,7 +282,10 @@ public class AccountController : Controller
         return View(result.Succeeded ? "ConfirmEmail" : "Error");
     }
 
-    //
+    /// <summary>
+    /// View Action for Forget Password
+    /// </summary>
+    /// <returns></returns>
     // GET: /Account/ForgotPassword
     [HttpGet]
     [AllowAnonymous]
@@ -241,7 +294,11 @@ public class AccountController : Controller
         return View();
     }
 
-    //
+    /// <summary>
+    /// HTTP POST action for Forgot Password
+    /// </summary>
+    /// <param name="model">validate the model with database</param>
+    /// <returns>Return View Action for Recover Pass</returns>
     // POST: /Account/ForgotPassword
     [HttpPost]
     [AllowAnonymous]
@@ -270,7 +327,10 @@ public class AccountController : Controller
         return View(model);
     }
 
-    //
+    /// <summary>
+    /// View Action for Cofirmation Forgot Password
+    /// </summary>
+    /// <returns></returns>
     // GET: /Account/ForgotPasswordConfirmation
     [HttpGet]
     [AllowAnonymous]
@@ -279,7 +339,14 @@ public class AccountController : Controller
         return View();
     }
 
-    //
+    /// <summary>
+    /// HTTP GET request for Reset Password
+    /// </summary>
+    /// <param name="code">code from model</param>
+    /// <returns>
+    ///     if code is nul -> return "ERROR"
+    ///     if code is not null -> return View
+    /// </returns>
     // GET: /Account/ResetPassword
     [HttpGet]
     [AllowAnonymous]
@@ -288,7 +355,15 @@ public class AccountController : Controller
         return code is null ? View("Error") : View();
     }
 
-    //
+    /// <summary>
+    /// HTTP POST Action for Resetting Password
+    /// </summary>
+    /// <param name="model">model of the user</param>
+    /// <returns>
+    ///     if ModelState Valid     --> Return View
+    ///     if user is null         --> Redirect to account Reset Pass Confirmation View
+    ///     if result is suceeded   --> Redirect to account Reset Pass Confirmation View
+    /// </returns>
     // POST: /Account/ResetPassword
     [HttpPost]
     [AllowAnonymous]

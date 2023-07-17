@@ -97,14 +97,14 @@ namespace Ordering.Infrastructure.Migrations
 
             modelBuilder.Entity("Ordering.Domain.Entities.OrderItem", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OrderId1")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<string>("PictureUrl")
@@ -124,26 +124,65 @@ namespace Ordering.Infrastructure.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("numeric");
 
-                    b.HasKey("OrderId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("OrderId1");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Ordering.Domain.Entities.OrderStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateTimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderStatus");
+                });
+
             modelBuilder.Entity("Ordering.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("Ordering.Domain.Entities.Order", "Order")
+                    b.HasOne("Ordering.Domain.Entities.Order", null)
                         .WithMany("ShoppingItems")
-                        .HasForeignKey("OrderId1")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Order");
+            modelBuilder.Entity("Ordering.Domain.Entities.OrderStatus", b =>
+                {
+                    b.HasOne("Ordering.Domain.Entities.Order", null)
+                        .WithMany("OrderStatuses")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ordering.Domain.Entities.Order", b =>
                 {
+                    b.Navigation("OrderStatuses");
+
                     b.Navigation("ShoppingItems");
                 });
 #pragma warning restore 612, 618

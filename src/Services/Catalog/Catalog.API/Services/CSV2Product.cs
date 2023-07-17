@@ -27,10 +27,6 @@ namespace Catalog.API.Services
                 {
                     try
                     {
-                        if (cSVDto.NewProducts.Count == 28)
-                        {
-                            Console.WriteLine();
-                        }
                         // Create a new instance of your custom class
                         Category obj = new Category();
 

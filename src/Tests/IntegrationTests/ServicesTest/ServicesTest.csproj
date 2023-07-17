@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="IdentityModel" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.5" />
@@ -37,6 +38,7 @@
     <ProjectReference Include="..\..\..\Services\Basket\Basket.API\Basket.API.csproj" />
     <ProjectReference Include="..\..\..\Services\Catalog\Catalog.API\Catalog.API.csproj" />
     <ProjectReference Include="..\..\..\Services\Ordering\Ordering.API\Ordering.API.csproj" />
+    <ProjectReference Include="..\..\..\Services\Webhooks\Webhooks.API\Webhooks.API.csproj" />
     <!--<ProjectReference Include="..\..\..\Services\Catalog\Catalog.API\Catalog.API.csproj" />-->
     <ProjectReference Include="..\..\TestData\TestData.csproj" />
   </ItemGroup>

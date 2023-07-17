@@ -4,9 +4,11 @@ using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using Ordering.API.EventBusConsumer;
 using Ordering.API.Extensions;
+using Ordering.API.Services;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
+using Quartz;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
@@ -29,6 +31,7 @@ namespace Ordering.API
             // For username 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Add services to the container.
+            services.AddTransient<IIdentityService, IdentityService>();
             services.AddApplicationServices();
             services.AddInfrastructureServices(configRoot);
             // Add RabitMQ Configuration 
@@ -36,6 +39,7 @@ namespace Ordering.API
             services.AddMassTransit(config =>
             {
                 config.AddConsumer<BasketCheckoutConsumer>();
+                config.AddConsumer<CatalogStockUpdatedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -43,6 +47,10 @@ namespace Ordering.API
                     cfg.ReceiveEndpoint(EventBusConstants.BasketCheckoutQueue, c =>
                     {
                         c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
+                    });
+                    cfg.ReceiveEndpoint(EventBusConstants.CatalogStockUpdatedQueue, c =>
+                    {
+                        c.ConfigureConsumer<CatalogStockUpdatedConsumer>(ctx);
                     });
                 });
             });

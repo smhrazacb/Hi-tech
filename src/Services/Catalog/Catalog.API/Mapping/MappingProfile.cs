@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Catalog.API.Entities;
+using EventBus.Messages.Events.Catalog;
 
 namespace Catalog.API.Mapper
 {
@@ -7,8 +8,8 @@ namespace Catalog.API.Mapper
     {
         public MappingProfile()
         {
-            CreateMap<Category, CategoryDto>()
-                .ReverseMap();
+            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<CatalogStockUpdatedEvent, CatalogStockDelEvent>().ReverseMap();
         }
     }
 }

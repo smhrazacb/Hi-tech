@@ -29,9 +29,7 @@ namespace Ordering.API
         public void ConfigureServices(IServiceCollection services)
         {
             // For username 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Add services to the container.
-            services.AddTransient<IIdentityService, IdentityService>();
             services.AddApplicationServices();
             services.AddInfrastructureServices(configRoot);
             // Add RabitMQ Configuration 
@@ -96,6 +94,8 @@ namespace Ordering.API
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityService, IdentityService>();
             services.AddSwaggerGen(options =>
             {
                 options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
@@ -154,7 +154,7 @@ namespace Ordering.API
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             //Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp
-            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

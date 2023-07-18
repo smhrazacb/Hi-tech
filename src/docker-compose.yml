@@ -43,14 +43,14 @@ services:
   #    context: .
   #    dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
   
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-
   #shoppingaggregator:
   #  image: ${DOCKER_REGISTRY-}shoppingaggregator
   #  build:
   #    context: .
   #    dockerfile: ApiGateways/ShoppingAggregator/Dockerfile
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
 
 volumes:
   mongo_data:

@@ -56,7 +56,7 @@ services:
   #    - aspnetcore_urls=http://+:80
   #    - "databasesettings:connectionstring=mongodb://catalogdb:27017"
   #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
-  #    - "identityurl=http://host.docker.internal:8000"
+  #    - "identityurl=http://localhost:8000"
   #  ports:
   #    - "8001:80"
   #  volumes:
@@ -67,7 +67,7 @@ services:
   #    - ASPNETCORE_ENVIRONMENT=Development
   #    - "CacheSettings:ConnectionString=basketdb:6379"
   #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
-  #    - "identityurl=http://host.docker.internal:8000"
+  #    - "identityurl=http://localhost:8000"
   #  ports:
   #    - "8002:80"
 
@@ -76,7 +76,7 @@ services:
   #    - ASPNETCORE_ENVIRONMENT=Development
   #    - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
   #    - "ConnectionStrings:OrderingConnectionString=Server=orderdbs;Port=5432;Database=orderdb;User Id=admin;Password=admin1234;"
-  #    - "identityurl=http://host.docker.internal:8000"
+  #    - "identityurl=http://localhost:8000"
   #    - "EmailSettings: FromAddress=ezozkme@gmail.com; ApiKey=sdfsdfsdfsd; FromName=Mehmet;"
   #  ports:
   #    - "8003:80"

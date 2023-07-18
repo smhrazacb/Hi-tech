@@ -101,7 +101,7 @@ namespace Order.APITests.EventBusConsumer
             checkOutOrderCommand.OrderStatuses = new List<CheckoutOrderCommandOrderStatus>()
                 {
                     new CheckoutOrderCommandOrderStatus
-                (_IdentityService.Object.GetUserIdentity(),EventEOrderStatus.Initiated.ToString())
+                (EventEOrderStatus.Initiated.ToString())
                 };
 
             //checkOutOrderCommand.OrderId = await _mediator.Send(_mediator.Object);
@@ -114,7 +114,7 @@ namespace Order.APITests.EventBusConsumer
 
 
             //Act
-            var basketCheckoutConsumer = new BasketCheckoutConsumer(_mediator.Object, _Mapper, _publishEndpoint.Object, _IdentityService.Object, _logger.Object);
+            var basketCheckoutConsumer = new BasketCheckoutConsumer(_mediator.Object, _Mapper, _publishEndpoint.Object, _logger.Object);
 
             var result =  basketCheckoutConsumer.Consume(context.Object);
 

@@ -54,7 +54,6 @@ namespace Basket.API.Controllers
             // Validate basket price with current product price
             var shoppingItems = _mapper.Map<IEnumerable<EventCartItem>>(basket.ShoppingItems);
             var basketCheckoutEvent = _mapper.Map<BasketCheckoutEvent>(basketCheckoutIdsDto);
-            var aa = _IIdentityService.GetUserName();
             basketCheckoutEvent.UserId = _IIdentityService.GetUserIdentity();
 
             if (basket.UserId != basketCheckoutEvent.UserId)
@@ -66,11 +65,6 @@ namespace Basket.API.Controllers
             _logger.LogInformation($"Publishing BasketCheckoutEvent for basket Id : {basket.UserId}");
 
             return Accepted(basketCheckoutEvent);
-        }
-
-        public Task Checkout(ShoppingCart shoppingCart)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

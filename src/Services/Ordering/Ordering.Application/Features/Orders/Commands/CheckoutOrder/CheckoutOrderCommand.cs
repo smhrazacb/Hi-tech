@@ -32,11 +32,9 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
     {
         public string Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
-        public string UpdatedBy { get; set; }
 
-        public CheckoutOrderCommandOrderStatus(string updatedBy, string status)
+        public CheckoutOrderCommandOrderStatus(string status)
         {
-            UpdatedBy = updatedBy;
             Status = status;
         }
     }

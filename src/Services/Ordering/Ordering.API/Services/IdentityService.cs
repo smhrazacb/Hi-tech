@@ -15,7 +15,7 @@ namespace Ordering.API.Services
 
         public string GetUserIdentity()
         {
-            return _IHttpContextAccessor.HttpContext.User.FindFirst(OpenIddictConstants.Claims.Subject).Value;
+            return _IHttpContextAccessor.HttpContext.User.FindFirst(OpenIddictConstants.Claims.Username).Value;
         }
 
         public string GetUserName()

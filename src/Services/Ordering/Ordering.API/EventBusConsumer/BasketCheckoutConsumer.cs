@@ -17,15 +17,13 @@ namespace Ordering.API.EventBusConsumer
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
-        private readonly IIdentityService _IdentityService;
         private readonly ILogger<BasketCheckoutConsumer> _logger;
 
-        public BasketCheckoutConsumer(IMediator mediator, IMapper mapper, IPublishEndpoint publishEndpoint, IIdentityService identityService, ILogger<BasketCheckoutConsumer> logger)
+        public BasketCheckoutConsumer(IMediator mediator, IMapper mapper, IPublishEndpoint publishEndpoint, ILogger<BasketCheckoutConsumer> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
-            _IdentityService = identityService;
             _logger = logger;
         }
 
@@ -36,8 +34,8 @@ namespace Ordering.API.EventBusConsumer
             {
                 command = _mapper.Map<CheckoutOrderCommand>(context.Message);
                 command.OrderStatuses = new List<CheckoutOrderCommandOrderStatus>()
-                { new CheckoutOrderCommandOrderStatus
-                (_IdentityService.GetUserIdentity(), EventEOrderStatus.Initiated.ToString())
+                {
+                    new CheckoutOrderCommandOrderStatus (EventEOrderStatus.Initiated.ToString())
                 };
 
                 command.OrderId = await _mediator.Send(command);
@@ -64,8 +62,7 @@ namespace Ordering.API.EventBusConsumer
             {
                 var failedevent = _mapper.Map<OrderStatusChangedEvent>(context.Message);
                 _logger.LogError($"UserId Id : {context.Message.UserId} Error {ex.Message}");
-                failedevent.OrderStatuses.Add(new EventOrderStatus(
-                    _IdentityService.GetUserIdentity(), EventEOrderStatus.Failed.ToString(), ex.Message)
+                failedevent.OrderStatuses.Add(new EventOrderStatus(EventEOrderStatus.Failed.ToString(), ex.Message)
                 );
                 await _publishEndpoint.Publish(failedevent);
             }

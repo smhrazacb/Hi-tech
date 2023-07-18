@@ -30,7 +30,7 @@ namespace Ordering.API.EventBusConsumer
         public async Task Consume(ConsumeContext<CatalogStockUpdatedEvent> context)
         {
             var command = _mapper.Map<UpdateOrderStatusCommand>(context.Message);
-            command.OrderStatus = new(_IdentityService.GetUserIdentity(), EventEOrderStatus.Confirmed.ToString());
+            command.OrderStatus = new(EventEOrderStatus.Confirmed.ToString());
             var updatedOrder = await _mediator.Send(command);
 
 

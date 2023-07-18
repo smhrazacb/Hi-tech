@@ -14,10 +14,8 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrderStatus
     {
         public string Status { get; set; }
         public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
-        public string UpdatedBy { get; set; }
-        public UpdateOrderStatusCommandOrderStatus(string updatedBy, string status)
+        public UpdateOrderStatusCommandOrderStatus(string status)
         {
-            UpdatedBy = updatedBy;
             Status = status;
         }
     }

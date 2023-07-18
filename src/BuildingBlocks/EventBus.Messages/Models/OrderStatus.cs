@@ -23,18 +23,15 @@ namespace EventBus.Messages.Models
     {
         public string Status { get; }
         public DateTime DateTimeStamp { get; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
-        public string UpdatedBy { get; }
         public string ErrorMessage { get; set; }
 
-        public EventOrderStatus(string updatedBy, string status)
+        public EventOrderStatus(string status)
         {
             Status = status;
-            UpdatedBy = updatedBy;
         }
-        public EventOrderStatus(string updatedBy, string status, string error)
+        public EventOrderStatus(string status, string error)
         {
             Status = status;
-            UpdatedBy = updatedBy;
             ErrorMessage = error;
         }
     }

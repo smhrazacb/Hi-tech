@@ -1,14 +1,4 @@
-﻿using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace EventBus.Messages.Models
+﻿namespace EventBus.Messages.Models
 {
     public enum EventEOrderStatus
     {
@@ -21,19 +11,9 @@ namespace EventBus.Messages.Models
     }
     public class EventOrderStatus
     {
-        public string Status { get; }
-        public DateTimeOffset DateTimeStamp { get; } = DateTimeOffset.UtcNow;
-        public string ErrorMessage { get; set; }
-
-        public EventOrderStatus(string status)
-        {
-            Status = status;
-        }
-        public EventOrderStatus(string status, string error)
-        {
-            Status = status;
-            ErrorMessage = error;
-        }
+        public string Status { get; set; }
+        public DateTimeOffset DateTimeStamp { get; set; } = DateTimeOffset.UtcNow;
+        public string? ErrorMessage { get; set; }
     }
 
 

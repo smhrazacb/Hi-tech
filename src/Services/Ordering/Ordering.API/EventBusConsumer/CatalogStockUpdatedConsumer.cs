@@ -8,6 +8,7 @@ using Ordering.API.Services;
 using Ordering.Application.Features.Orders.Commands.UpdateOrderStatus;
 using Ordering.Domain.Entities;
 
+
 namespace Ordering.API.EventBusConsumer
 {
     public class CatalogStockUpdatedConsumer : IConsumer<CatalogStockUpdatedEvent>
@@ -36,10 +37,8 @@ namespace Ordering.API.EventBusConsumer
             command.OrderStatus = new(EventEOrderStatus.Confirmed.ToString());
             var updatedOrder = await _mediator.Send(command);
 
-
             _logger.LogInformation($"CatalogStockUpdatedEvent consumed successfully. " +
                 $"Updated Order Id : {command.OrderId} Status : {updatedOrder.OrderStatuses.LastOrDefault().Status}");
-
 
             var orderStatusChangedToIniatedEvent = _mapper.Map<OrderStatusChangedEvent>(updatedOrder);
             await _publishEndpoint.Publish(orderStatusChangedToIniatedEvent);
@@ -52,7 +51,6 @@ namespace Ordering.API.EventBusConsumer
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }

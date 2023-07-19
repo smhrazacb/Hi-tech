@@ -157,9 +157,7 @@ namespace EsparkIndent.Server
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Newtonsoftjson added due to "a cycle or if the object depth is larger than the maximum allowed depth of 32"
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            ); ;
+            services.AddControllers();
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

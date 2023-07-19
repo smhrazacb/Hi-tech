@@ -50,6 +50,19 @@ namespace Webhooks.API
 
             // Add RabitMQ Configuration 
             // MassTransit-RabbitMQ Configuration
+            //services.AddMassTransit(config =>
+            //{
+            //    config.AddConsumer<OrderStatusChangedConsumer>();
+
+            //    config.UsingRabbitMq((ctx, cfg) =>
+            //    {
+            //        cfg.Host(configRoot["EventBusSettings:HostAddress"]);
+            //        cfg.ReceiveEndpoint(EventBusConstants.OrderStatus, c =>
+            //        {
+            //            c.ConfigureConsumer<OrderStatusChangedConsumer>(ctx);
+            //        });
+            //    });
+            //});
             services.AddMassTransit(config =>
             {
                 //config.AddConsumer<CatalogItemPriceChangeConsumer>();

@@ -4,7 +4,7 @@ namespace Webhooks.API.Entities;
 
 public class WebhookData
 {
-    public DateTime When { get; }
+    public DateTimeOffset When { get; }
 
     public string Payload { get; }
 
@@ -12,7 +12,7 @@ public class WebhookData
 
     public WebhookData(WebhookType hookType, object data)
     {
-        When = DateTime.UtcNow;
+        When = DateTimeOffset.UtcNow;
         Type = hookType.ToString();
         Payload = JsonSerializer.Serialize(data);
     }

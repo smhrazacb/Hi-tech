@@ -60,7 +60,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 //register delegating handlers
 builder.Services.AddTransient<HttpClientAuthorizationDelegatingHandler>();

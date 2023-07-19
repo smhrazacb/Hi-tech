@@ -61,10 +61,17 @@ namespace Ordering.API.EventBusConsumer
             catch (Exception ex)
             {
                 var failedevent = _mapper.Map<OrderStatusChangedEvent>(context.Message);
-                _logger.LogError($"UserId Id : {context.Message.UserId} Error {ex.Message}");
-                failedevent.OrderStatuses.Add(new EventOrderStatus(EventEOrderStatus.Failed.ToString(), ex.Message)
-                );
+                failedevent.OrderStatuses.Add(new EventOrderStatus()
+                {
+                    Status = EventEOrderStatus.Failed.ToString(),
+                    ErrorMessage = ex.Message
+                });
                 await _publishEndpoint.Publish(failedevent);
+                _logger.LogInformation
+                    ($"Publishing OrderStatusChangedEvent for " +
+                    $"User Id : {context.Message.UserId}" +
+                    $" Status : {EventEOrderStatus.Failed}");
+                _logger.LogError($"UserId Id : {context.Message.UserId} Error {ex.Message}");
             }
         }
     }

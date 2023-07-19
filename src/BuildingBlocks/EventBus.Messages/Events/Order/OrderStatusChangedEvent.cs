@@ -11,10 +11,6 @@ namespace EventBus.Messages.Events.Order
     {
         public int OrderId { get; set; }
         public string UserId { get; set; }
-        public IList<EventOrderStatus> OrderStatuses { get; set; }
-        public OrderStatusChangedEvent()
-        {
-            OrderStatuses = new List<EventOrderStatus>();
-        }
+        public List<EventOrderStatus> OrderStatuses { get; set; } = new List<EventOrderStatus>();
     }
 }

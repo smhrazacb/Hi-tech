@@ -8,6 +8,6 @@ namespace Catalog.API.Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public DateTime ModifiedDate { get; private set; } = DateTime.Now;
+        public DateTimeOffset ModifiedDate { get; private set; } = DateTimeOffset.UtcNow;
     }
 }

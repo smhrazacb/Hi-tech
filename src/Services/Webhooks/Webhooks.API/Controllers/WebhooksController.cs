@@ -59,7 +59,7 @@ namespace Webhooks.API.Controllers
             {
                 var subscription = new WebhookSubscription()
                 {
-                    Date = DateTime.UtcNow,
+                    DateTimeStamp = DateTimeOffset.UtcNow,
                     DestUrl = request.Url,
                     Token = request.Token,
                     Type = Enum.Parse<WebhookType>(request.Event, ignoreCase: true),

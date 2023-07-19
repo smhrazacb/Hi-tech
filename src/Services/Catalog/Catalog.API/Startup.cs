@@ -29,14 +29,7 @@ namespace Catalog.API
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
-            services.AddControllers().AddJsonOptions(x =>
-            {
-                // serialize enums as strings in api responses (e.g. Role)
-                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-
-                // ignore omitted parameters on models to enable optional params (e.g. User update)
-                x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            });
+            services.AddControllers().AddNewtonsoftJson();
             // For username 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Add services to the container.

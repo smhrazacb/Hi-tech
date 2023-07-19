@@ -32,7 +32,7 @@ namespace Ordering.Application.Features.Orders.Queries
     public class GetOrderStatus
     {
         public string Status { get; set; }
-        public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
+        public DateTimeOffset DateTimeStamp { get; private set; } = DateTimeOffset.UtcNow;
         public string UpdatedBy { get; set; }
     }
     public class GetOrderItem

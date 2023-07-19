@@ -6,8 +6,8 @@ namespace Ordering.Domain.Common
     {
         public int OrderId { get; protected set; }
         public string UserId { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? LastModifiedDate { get; set; }
         public virtual IEnumerable<OrderItem> ShoppingItems { get; set; }
         public virtual IList<OrderStatus> OrderStatuses { get; set; }
     }

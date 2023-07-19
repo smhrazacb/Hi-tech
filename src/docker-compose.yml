@@ -19,35 +19,35 @@ services:
       context: .
       dockerfile: Ident/EsparkIndent.Server/Dockerfile
 
-  catalog.api:
-    image: ${DOCKER_REGISTRY-}catalogapi
-    build:
-      context: .
-      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+  #catalog.api:
+  #  image: ${DOCKER_REGISTRY-}catalogapi
+  #  build:
+  #    context: .
+  #    dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
-  basket.api:
-    image: ${DOCKER_REGISTRY-}basketapi
-    build:
-      context: .
-      dockerfile: Services/Basket/Basket.API/Dockerfile
+  #basket.api:
+  #  image: ${DOCKER_REGISTRY-}basketapi
+  #  build:
+  #    context: .
+  #    dockerfile: Services/Basket/Basket.API/Dockerfile
 
-  ordering.api:
-    image: ${DOCKER_REGISTRY-}orderingapi
-    build:
-      context: .
-      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+  #ordering.api:
+  #  image: ${DOCKER_REGISTRY-}orderingapi
+  #  build:
+  #    context: .
+  #    dockerfile: Services/Ordering/Ordering.API/Dockerfile
 
-  ocelotapigw:
-    image: ${DOCKER_REGISTRY-}ocelotapigw
-    build:
-      context: .
-      dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
+  #ocelotapigw:
+  #  image: ${DOCKER_REGISTRY-}ocelotapigw
+  #  build:
+  #    context: .
+  #    dockerfile: ApiGateways/OcelotApiGw/OcelotApiGw/Dockerfile
   
-  shoppingaggregator:
-    image: ${DOCKER_REGISTRY-}shoppingaggregator
-    build:
-      context: .
-      dockerfile: ApiGateways/ShoppingAggregator/Dockerfile
+  #shoppingaggregator:
+  #  image: ${DOCKER_REGISTRY-}shoppingaggregator
+  #  build:
+  #    context: .
+  #    dockerfile: ApiGateways/ShoppingAggregator/Dockerfile
 
   rabbitmq:
     image: rabbitmq:3-management-alpine

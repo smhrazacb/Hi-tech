@@ -12,8 +12,8 @@ using Ordering.Infrastructure.Persistence;
 namespace Ordering.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20230609040058_anymousaa")]
-    partial class anymousaa
+    [Migration("20230719051638_addeddto")]
+    partial class addeddto
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,7 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("EmailAddress")
@@ -68,7 +68,7 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("LastModifiedDate")
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LastName")
@@ -143,17 +143,10 @@ namespace Ordering.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateTimeStamp")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
 

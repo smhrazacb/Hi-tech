@@ -24,7 +24,7 @@ namespace Ordering.Infrastructure.Repositories
                                  .Include(o => o.ShoppingItems)
                                  .Include(o => o.OrderStatuses)
                                  .FirstOrDefaultAsync();
-        }
+                }
 
         public async Task<IEnumerable<Order>> GetOrdersByUserName(string createdBy)
         {

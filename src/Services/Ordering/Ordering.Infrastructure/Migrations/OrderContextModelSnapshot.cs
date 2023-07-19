@@ -50,7 +50,7 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("EmailAddress")
@@ -65,7 +65,7 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("LastModifiedDate")
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LastName")
@@ -140,7 +140,7 @@ namespace Ordering.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateTimeStamp")
+                    b.Property<DateTimeOffset>("DateTimeStamp")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("OrderId")

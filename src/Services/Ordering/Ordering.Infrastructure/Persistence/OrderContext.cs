@@ -8,6 +8,8 @@ namespace Ordering.Infrastructure.Persistence
     {
         public OrderContext(DbContextOptions<OrderContext> options) : base(options)
         {
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            //AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -20,10 +22,10 @@ namespace Ordering.Infrastructure.Persistence
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+                        entry.Entity.CreatedDate = DateTimeOffset.UtcNow;
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+                        entry.Entity.LastModifiedDate = DateTimeOffset.UtcNow;
                         break;
                 }
             }

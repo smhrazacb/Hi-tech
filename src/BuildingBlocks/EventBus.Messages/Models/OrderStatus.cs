@@ -22,7 +22,7 @@ namespace EventBus.Messages.Models
     public class EventOrderStatus
     {
         public string Status { get; }
-        public DateTime DateTimeStamp { get; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+        public DateTimeOffset DateTimeStamp { get; } = DateTimeOffset.UtcNow;
         public string ErrorMessage { get; set; }
 
         public EventOrderStatus(string status)

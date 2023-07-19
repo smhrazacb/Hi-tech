@@ -29,6 +29,9 @@ namespace Ordering.API.EventBusConsumer
 
         public async Task Consume(ConsumeContext<CatalogStockUpdatedEvent> context)
         {
+            try
+            {
+
             var command = _mapper.Map<UpdateOrderStatusCommand>(context.Message);
             command.OrderStatus = new(EventEOrderStatus.Confirmed.ToString());
             var updatedOrder = await _mediator.Send(command);
@@ -46,6 +49,12 @@ namespace Ordering.API.EventBusConsumer
                 $" Status : {orderStatusChangedToIniatedEvent.OrderStatuses.LastOrDefault().Status}" +
                 $"Date Time : {orderStatusChangedToIniatedEvent.OrderStatuses.LastOrDefault().DateTimeStamp}"
                 );
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

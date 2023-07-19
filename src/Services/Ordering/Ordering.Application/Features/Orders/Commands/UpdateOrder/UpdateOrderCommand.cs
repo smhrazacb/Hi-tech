@@ -32,7 +32,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
     public class UpdateOrderCommandOrderStatus 
     {
         public string Status { get; set; }
-        public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
+        public DateTimeOffset DateTimeStamp { get; } = DateTimeOffset.UtcNow;
         public UpdateOrderCommandOrderStatus(string status)
         {
             Status = status;

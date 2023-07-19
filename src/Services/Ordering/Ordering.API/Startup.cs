@@ -154,7 +154,7 @@ namespace Ordering.API
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             //Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

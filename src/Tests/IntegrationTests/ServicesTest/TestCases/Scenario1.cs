@@ -33,16 +33,16 @@ namespace ServicesTest.TestCases
         List<string> productId = new();
         public Scenario1()
         {
+            QueueCleanup();
             _WebhookService = new WebhookService(new WebhookWebApplicationFactory<Webhooks.API.Startup>());
             _Catalogfixture = new CatalogService(new CatalogWebApplicationFactory<Catalog.API.Startup>());
             _Basketfixture = new BasketService(new BasketWebApplicationFactory<Basket.API.Startup>());
             _Orderfixture = new OrderService(new OrderWebApplicationFactory<Ordering.API.Startup>());
-            QueueCleanup();
         }
         [Fact]
         public async void Scenario_checkout_Valid()
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var newproducts = await Product_UploadCSV_Valid();
             var userid = await Basket_CreateUpdate_Valid(TestData.BasketData.GetBasketData(newproducts));
@@ -335,8 +335,16 @@ namespace ServicesTest.TestCases
                     var properties = typeof(EventBusConstants).GetFields();
                     foreach (var item in properties)
                     {
-                        channel.QueueDelete(item.GetValue(null).ToString());
-                        channel.QueueDelete(item.GetValue(null).ToString()+"_error");
+                        try
+                        {
+                            channel.QueueDelete(item.GetValue(null).ToString());
+                            channel.QueueDelete(item.GetValue(null).ToString() + "_error");
+                        }
+                        catch (Exception )
+                        {
+
+                        }
+                       
                     }
                 }
             }

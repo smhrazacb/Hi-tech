@@ -13,7 +13,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrderStatus
     public class UpdateOrderStatusCommandOrderStatus
     {
         public string Status { get; set; }
-        public DateTime DateTimeStamp { get; private set; } = DateTime.UtcNow;
+        public DateTimeOffset DateTimeStamp { get; } = DateTimeOffset.UtcNow;
         public UpdateOrderStatusCommandOrderStatus(string status)
         {
             Status = status;

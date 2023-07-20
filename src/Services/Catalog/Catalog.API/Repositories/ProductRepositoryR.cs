@@ -4,7 +4,10 @@ using Catalog.API.Entities.Dtos;
 using Catalog.API.Extensions;
 using Catalog.API.Filter;
 using Catalog.API.Repositories.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections.Generic;
 
 namespace Catalog.API.Repositories
 {
@@ -56,10 +59,36 @@ namespace Catalog.API.Repositories
                 if (filtersdef.Count != 0)
                     filters = Builders<Category>.Filter.And(filtersdef);
             }
-            var (a, b)=  await _context.CategoryList
+            var (a, b) = await _context.CategoryList
                 .AggregateByPage(filters, sortDefinition, page: pagefilter.PageNumber, pageSize: pagefilter.PageSize);
-            return new FilterResult() {TotalRecords=a, Items=b }; 
+
+            var additionalFieldsgroup = await GetAdditionalData(filters);
+
+            return new FilterResult() { TotalRecords = a, Items = b, AdditionalFilters = additionalFieldsgroup };
         }
+
+        private async Task<Dictionary<string, int>> GetAdditionalData(FilterDefinition<Category> filters)
+        {
+            // exclude id, return only gender and date of birth
+            var additionalFieldsProjection = Builders<Category>.Projection
+                .Exclude(e => e.Id)
+                .Include(u => u.SubCategory.Product.AdditionalFields);
+
+            // Get results
+            var additionalFields = await _context.CategoryList
+                .Find(filters)
+                .Project(additionalFieldsProjection) // projection stage
+                .As<Category>()
+                .ToListAsync();
+
+            var additionalFieldsgroup = additionalFields
+                .SelectMany(a => a.SubCategory.Product.AdditionalFields)
+                .ToList()
+                .GroupBy(ii => ii.Key)
+                .ToDictionary(group => group.Key, group => group.Count());
+            return additionalFieldsgroup;
+        }
+
         public async Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf)
         {
             var filter1 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.ManufacturerPartNo, mfp);
@@ -67,5 +96,12 @@ namespace Catalog.API.Repositories
             var res = await _context.CategoryList.Find(filter1 & filter2).ToListAsync();
             return res;
         }
+    }
+    public class UnwindData
+    {
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        public DateTimeOffset ModifiedDate { get; set; }
+        public Dictionary<string, string> AdditionalFields { get; set; }
     }
 }

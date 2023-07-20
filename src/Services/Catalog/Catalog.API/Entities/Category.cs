@@ -4,6 +4,5 @@
     {
         public string CategoryName { get; set; }
         public SubCategory SubCategory { get; set; }
-
     }
 }

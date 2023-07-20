@@ -1,16 +1,18 @@
 ﻿using Catalog.API.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Catalog.API.Data
 {
     public class ProductContextSeed
     {
-        public static void SeedData(IMongoCollection<Category> productCollection)
+        public static async void SeedData(IMongoCollection<Category> productCollection)
         {
-            bool existProduct = productCollection.Find(p => true).Any();
-            if (!existProduct)
+            if (productCollection.Find(p => true).Count() != GetPreconfiguredProducts().Count())
             {
-                productCollection.InsertManyAsync(GetPreconfiguredProducts());
+                var filter = new BsonDocument();
+                await productCollection.DeleteManyAsync(filter);
+                await productCollection.InsertManyAsync(GetPreconfiguredProducts());
             }
         }
         public static IEnumerable<Category> GetPreconfiguredProducts()
@@ -28,7 +30,58 @@ namespace Catalog.API.Data
                                 new Product()
                             {
                                 Name = "Diode",
-                                AdditionalFields= new Dictionary<string, string>() { { "Color", "Red" } },
+                                AdditionalFields= new Dictionary<string, string>() {
+                                    { "Color", "Red" } ,
+                                    {"Mounting", "Surface Mount" }
+                                },
+                                Manufacturer= "ABC",
+                                ManufacturerPartNo = "1n4001",
+                                Packaging = "Per Piece",
+                                UnitPrice = 200,
+                                Series = "Automotive",
+                                Quantity = 9
+                            }
+                        }
+                },  
+                new Category()
+                {
+                    CategoryName = "Electronics",
+                    SubCategory =
+                        new SubCategory()
+                        {
+                            SubCategoryName = "Component",
+                            Product =
+                                new Product()
+                            {
+                                Name = "Diode",
+                                AdditionalFields= new Dictionary<string, string>() {
+                                    { "Color", "Red" } ,
+                                    {"Mounting", "Surface Mount" }
+                                },
+                                Manufacturer= "ABC",
+                                ManufacturerPartNo = "1n4001",
+                                Packaging = "Per Piece",
+                                UnitPrice = 200,
+                                Series = "Automotive",
+                                Quantity = 9
+                            }
+                        }
+                }, 
+                new Category()
+                {
+                    CategoryName = "Electronics",
+                    SubCategory =
+                        new SubCategory()
+                        {
+                            SubCategoryName = "Component",
+                            Product =
+                                new Product()
+                            {
+                                Name = "Diode",
+                                AdditionalFields= new Dictionary<string, string>() {
+                                    { "Color", "Red" } ,
+                                    {"Mounting", "Surface Mount" }
+                                },
                                 Manufacturer= "ABC",
                                 ManufacturerPartNo = "1n4001",
                                 Packaging = "Per Piece",
@@ -49,7 +102,59 @@ namespace Catalog.API.Data
                                 new Product()
                             {
                                 Name = "Transistor",
-                                AdditionalFields = new Dictionary<string, string>() { { "Color", "Blue" } },
+                                AdditionalFields = new Dictionary<string, string>() {
+                                    { "Color", "Blue" },
+                                    {"Mounting", "Surface Mount" },
+                                    { "Operating Temperature", "45 celcius"}
+                                },
+                                Manufacturer = "ABC",
+                                ManufacturerPartNo = "tn4001",
+                                Packaging = "Per Piece",
+                                UnitPrice = 100,
+                                Series = "Automotive",
+                                Quantity = 50
+                            }
+                        }
+                },new Category()
+                {
+                    CategoryName = "Electronics",
+                    SubCategory =
+                        new SubCategory()
+                        {
+                            SubCategoryName = "Component",
+                            Product =
+                                new Product()
+                            {
+                                Name = "Transistor",
+                                AdditionalFields = new Dictionary<string, string>() {
+                                    { "Color", "Blue" },
+                                    {"Mounting", "Surface Mount" },
+                                    { "Operating Temperature", "45 celcius"}
+                                },
+                                Manufacturer = "ABC",
+                                ManufacturerPartNo = "tn4001",
+                                Packaging = "Per Piece",
+                                UnitPrice = 100,
+                                Series = "Automotive",
+                                Quantity = 50
+                            }
+                        }
+                },new Category()
+                {
+                    CategoryName = "Electronics",
+                    SubCategory =
+                        new SubCategory()
+                        {
+                            SubCategoryName = "Component",
+                            Product =
+                                new Product()
+                            {
+                                Name = "Transistor",
+                                AdditionalFields = new Dictionary<string, string>() {
+                                    { "Color", "Blue" },
+                                    {"Mounting", "Surface Mount" },
+                                    { "Operating Temperature", "45 celcius"}
+                                },
                                 Manufacturer = "ABC",
                                 ManufacturerPartNo = "tn4001",
                                 Packaging = "Per Piece",
@@ -87,7 +192,7 @@ namespace Catalog.API.Data
                         Product = new Product()
                         {
                             Name = "Drill Bit",
-                            AdditionalFields = new Dictionary<string, string>() { { "Color", "Blue" } },
+                            AdditionalFields = new Dictionary<string, string>() { { "Body", "Solid" } },
                             Manufacturer = "ABC",
                             ManufacturerPartNo = "tn4fgf001",
                             Packaging = "Per Piece",

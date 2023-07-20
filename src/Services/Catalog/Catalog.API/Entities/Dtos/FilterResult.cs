@@ -4,5 +4,7 @@
     {
         public long TotalRecords { get; set; }
         public IEnumerable<Category> Items { get; set; }
+        public Dictionary<string, int> AdditionalFilters { get; set; }
+
     }
 }

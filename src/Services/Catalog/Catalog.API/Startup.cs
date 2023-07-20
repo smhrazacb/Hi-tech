@@ -107,7 +107,8 @@ namespace Catalog.API
             new DbContextSettings(
                 configRoot.GetValue<string>("DatabaseSettings:ConnectionString"),
                 configRoot.GetValue<string>("DatabaseSettings:DatabaseName"),
-                configRoot.GetValue<string>("DatabaseSettings:CollectionName")
+                configRoot.GetValue<string>("DatabaseSettings:CollectionName"),
+                configRoot.GetValue<string>("DatabaseSettings:ECollectionName")
                 ));
             // Add RabitMQ Configuration 
             // MassTransit-RabbitMQ Configuration
@@ -156,7 +157,7 @@ namespace Catalog.API
         }
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment()| app.Environment.IsEnvironment("local"))
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Catalog API"); });

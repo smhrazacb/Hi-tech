@@ -1,0 +1,62 @@
+Product erd
+	GetAllProduct()
+		CategoryName
+			SubCategoryName, itemCount
+	GetProduct(CategoryName)
+		SubCategoryName, itemCount
+	GetProduct(SubCategoryName)
+		ItemName,
+			Manufacturer
+			ManufacturerpartNo
+			Price
+			Stock
+			Packaging
+	
+	Item Details
+		Manufactuer
+			CategoryName
+				SubCategoryName
+					ItemID
+						Series
+						ItemName
+						Price
+						Stock
+						Packaging
+						Price
+					
+					
+					
+User Erd
+	User
+		ID
+			Type
+			Name
+			Email
+			Password
+			Country
+			State
+			City
+			ContactNo 
+			Address
+			ShippingAddress
+			Status
+			DateCreated
+			DateLastModified
+	
+	UserPayment
+		ID
+			UserID
+			AccountNumber
+			Provider
+			AccountName
+			AccountType
+			Expiry
+			DateCreated
+			DateLastModified
+			
+
+
+
+	
+	getAll
+		category, sub category, item name[csv], price, Packaging, stock

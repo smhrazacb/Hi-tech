@@ -1,0 +1,83 @@
+﻿@model RegisterViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" data-n-head="%7B%22lang%22:%7B%22ssr%22:%22en%22%7D%7D">
+<head>
+    <title>Login</title>
+    <link data-n-head="ssr" rel="stylesheet" id="bootstrap-link" class="nuxt-bootstrap" href="~/css/main_purified.css">
+</head>
+<body data-new-gr-c-s-check-loaded="14.1102.0" data-gr-ext-installed="">
+    <div id="__nuxt">
+        <!----><div id="__layout">
+            <div>
+                <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+                    <div class="login-section">
+                        <div asp-validation-summary="All" class="materialContainer">
+                            <div class="box">
+                                <div class="login-title"><h2>Register</h2></div>
+                                <div class="input">
+                                    <label asp-for="Email" for="email" style="line-height: 18px;">Email</label>
+                                    <input asp-for="Email" type="email" name="email" id="email" required="required">
+                                    <span asp-validation-for="Email" class="spin" style="width: 100%;"></span>
+                                    <div class="valid-feedback">Please fill the name</div>
+                                </div>
+                                <div class="input">
+                                    <label asp-for="Password" for="password" style="line-height: 18px;">Password</label>
+                                    <input asp-for="Password" type="password" name="password" id="password">
+                                    <span asp-validation-for="Password" class="spin" style="width: 100%;"></span>
+                                    <div class="valid-feedback">Please fill the name</div>
+                                </div>
+                                <div class="input">
+                                    <label asp-for="ConfirmPassword" for="confirm password" style="line-height: 18px;">Confirm Password</label>
+                                    <input asp-for="ConfirmPassword" type="password" name="confirmPassword" id="confirmPassword">
+                                    <span asp-validation-for="ConfirmPassword" class="spin" style="width: 100%;"></span>
+                                    <div class="valid-feedback">Please fill the name</div>
+                                </div>
+                                <div class="button login">
+                                    <button href="javascript:void(0)" type="submit">
+                                        <span>Sign Up</span>
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                </div> <p class="sign-category">
+                                    <span>Or sign up with</span>
+                                </p>
+                                <div class="row gx-md-3 gy-3">
+                                    <div class="col-md-6">
+                                        <div class="social-media fb-media">
+                                            <img src="~/images/facebook.fa9cb8f.png" alt="" class="img-fluid">
+                                            <h6>Facebook</h6>
+                                        </div>
+                                        </>
+                                    </div> <div class="col-md-6">
+                                        <div class="social-media google-media">
+                                            <img src="~/images/google.3b44a32.png" alt="" class="img-fluid">
+                                            <h6>Google</h6>
+                                        </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <p>
+                                    <a asp-controller="Account" asp-action="Login" class="theme-color">Already have an account?</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div> <div class="tap-to-top"><a><i class="fas fa-chevron-up"></i></a></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="pt-ext-root"></div>
+    <div></div>
+    <vercel-live-feedback style="position: absolute; top: 0px; left: 0px; z-index: 2147483647;"></vercel-live-feedback>
+
+</body>
+</html>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

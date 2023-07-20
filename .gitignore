@@ -326,5 +326,9 @@ ASALocalRun/
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
 
-# MFractors (Xamarin productivity tool) working folder 
-.mfractor/
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+src/Services/Catalog/Catalog.API/uploads/
+src/Services/Catalog/Catalog.API/upload/
+src/Services/Catalog/Catalog.API/dockerEnv/

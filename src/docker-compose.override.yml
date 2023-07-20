@@ -1,0 +1,108 @@
+version: '3.4'
+
+services:
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    ports:
+        - "27017:27017"
+    volumes:
+        - mongo_data:/data/db
+
+  identdb:
+    container_name: identdb
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=identdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_ident:/var/lib/postgresql/data/
+
+  orderdbs:
+    container_name: orderdbs
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=orderdb
+    ports:
+      - "6432:5432"
+    volumes:
+      - postgres_data_order:/var/lib/postgresql/data/
+
+  basketdb:
+    container_name: basketdb
+    restart: always    
+    ports:
+        - "6379:6379"
+    volumes:
+        - redis_data:/data
+
+  ident.server:
+    container_name: identserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8000
+      - "ConnectionStrings:IdentConnectionString=Server=identdb;Port=5432;Database=userDb;User Id=admin;Password=admin1234;"
+    ports:
+      - "8000:8000"
+
+  catalog.api:
+    environment:
+      - aspnetcore_environment=development
+      - aspnetcore_urls=http://+:80
+      - "databasesettings:connectionstring=mongodb://catalogdb:27017"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "identityurl=http://192.168.18.214:8000"
+    ports:
+      - "8001:80"
+    volumes:
+      - ./Services/Catalog/Catalog.API/dockerEnv/:/root
+  
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=basketdb:6379"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "identityurl=http://192.168.18.214:8000"
+    ports:
+      - "8002:80"
+
+  ordering.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "ConnectionStrings:OrderingConnectionString=Server=orderdbs;Port=5432;Database=orderdb;User Id=admin;Password=admin1234;"
+      - "identityurl=http://192.168.18.214:8000"
+      - "EmailSettings: FromAddress=ezozkme@gmail.com; ApiKey=sdfsdfsdfsd; FromName=Mehmet;"
+    ports:
+      - "8003:80"
+
+  shoppingaggregator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+  ocelotapigw:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+        - catalog.api
+        - basket.api
+    ports:
+      - "8010:80"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+
+
+

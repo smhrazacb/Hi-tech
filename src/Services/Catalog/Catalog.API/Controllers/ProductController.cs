@@ -64,10 +64,18 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(PagedResponse<IEnumerable<Category>>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<PagedResponse<IEnumerable<Category>>>> GetFileteredProducts([FromBody] GetbyItemDto requestDto)
         {
-            var validFilter = new PaginationFilter(requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
-            var filterResult = await _repository.GetFilteredProducts(validFilter, requestDto.FilterSortdto);
+            var validFilter = new PaginationFilter(
+                requestDto.Paginationfilter.PageNumber, requestDto.Paginationfilter.PageSize);
+            var filterResult = await _repository.GetFilteredProducts(
+                validFilter, requestDto.FilterSortdto);
             var route = Request.Path.Value;
-            var pagedReponse = PaginationHelper.CreatePagedReponse(filterResult.Items, validFilter, filterResult.TotalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse(
+                filterResult.Items,
+                validFilter, 
+                filterResult.TotalRecords, 
+                filterResult.FiltersMeta,
+                _uriService, 
+                route);
             
             if (filterResult.TotalRecords == 0)
                 return NotFound(pagedReponse);

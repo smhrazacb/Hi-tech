@@ -8,12 +8,12 @@ namespace Catalog.API.Data
     {
         public static async void SeedData(IMongoCollection<Category> productCollection)
         {
-            if (productCollection.Find(p => true).Count() != GetPreconfiguredProducts().Count())
-            {
-                var filter = new BsonDocument();
-                await productCollection.DeleteManyAsync(filter);
-                await productCollection.InsertManyAsync(GetPreconfiguredProducts());
-            }
+            //if (productCollection.Find(p => true).Count() != GetPreconfiguredProducts().Count())
+            //{
+            var filter = new BsonDocument();
+            await productCollection.DeleteManyAsync(filter);
+            await productCollection.InsertManyAsync(GetPreconfiguredProducts());
+            //}
         }
         public static IEnumerable<Category> GetPreconfiguredProducts()
         {
@@ -42,7 +42,7 @@ namespace Catalog.API.Data
                                 Quantity = 9
                             }
                         }
-                },  
+                },
                 new Category()
                 {
                     CategoryName = "Electronics",
@@ -62,11 +62,11 @@ namespace Catalog.API.Data
                                 ManufacturerPartNo = "1n4001",
                                 Packaging = "Per Piece",
                                 UnitPrice = 200,
-                                Series = "Automotive",
+                                Series = "Industrial",
                                 Quantity = 9
                             }
                         }
-                }, 
+                },
                 new Category()
                 {
                     CategoryName = "Electronics",

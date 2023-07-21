@@ -25,7 +25,6 @@ namespace Catalog.API.Extensions
                 PipelineStageDefinitionBuilder.Limit<TDocument>(pageSize),
                 }));
 
-
             var aggregation = await collection.Aggregate()
                 .Match(filterDefinition)
                 .Facet(countFacet, dataFacet)

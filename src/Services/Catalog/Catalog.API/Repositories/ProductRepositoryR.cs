@@ -4,7 +4,17 @@ using Catalog.API.Entities.Dtos;
 using Catalog.API.Extensions;
 using Catalog.API.Filter;
 using Catalog.API.Repositories.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using MongoDB.Bson.Serialization;
+using Newtonsoft.Json.Linq;
+using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Amazon.Runtime.Internal.Transform;
+using MassTransit.Internals;
+using System.Linq;
 
 namespace Catalog.API.Repositories
 {
@@ -56,10 +66,63 @@ namespace Catalog.API.Repositories
                 if (filtersdef.Count != 0)
                     filters = Builders<Category>.Filter.And(filtersdef);
             }
-            var (a, b)=  await _context.CategoryList
+            var (a, b) = await _context.CategoryList
                 .AggregateByPage(filters, sortDefinition, page: pagefilter.PageNumber, pageSize: pagefilter.PageSize);
-            return new FilterResult() {TotalRecords=a, Items=b }; 
+
+            var additionalFieldsgroup = await GetAdditionalData(filters);
+
+            return new FilterResult() { TotalRecords = a, Items = b, FiltersMeta = additionalFieldsgroup };
         }
+
+        private async Task<Dictionary<string, Dictionary<string, int>>> GetAdditionalData(FilterDefinition<Category> filters)
+        {
+            // exclude id, return only gender and date of birth
+            var projection = Builders<Category>.Projection
+                .Exclude(e => e.Id)
+                .Include(u => u.SubCategory.Product.AdditionalFields)
+                .Include(u => u.SubCategory.Product.Series)
+                .Include(u => u.SubCategory.Product.Packaging)
+                ;
+
+            // Get results
+            var projectedData = await _context.CategoryList
+                .Find(filters)
+                .Project(projection) // projection stage
+                .ToListAsync()
+                ;
+
+            var categories = projectedData.Select(v => BsonSerializer.Deserialize<Category>(v)).ToList();
+
+            Dictionary<string, Dictionary<string, int>> filtersWithCount = new();
+
+            var additionalFields = categories
+               .SelectMany(a => a.SubCategory.Product.AdditionalFields)
+               .GroupBy(a => a.Key)
+               .ToList()
+               ;
+
+            var series = categories
+                  .Select(a => a.SubCategory.Product.Series)
+                  .ToList()
+                  .GroupBy(ii => ii.ToString())
+                  .ToDictionary(group => group.Key, group => group.Count());
+
+            var packagings = categories
+             .Select(a => a.SubCategory.Product.Packaging)
+             .ToList()
+             .GroupBy(ii => ii.ToString())
+             .ToDictionary(group => group.Key, group => group.Count());
+
+            filtersWithCount.Add("SeriesFilter", series);
+            filtersWithCount.Add("PackagingFilter", packagings);
+
+            foreach (var item in additionalFields)
+                filtersWithCount.Add(item.Key, item.GroupBy(a => a.Value).ToDictionary(a => a.Key, a => a.Count()));
+            
+
+            return filtersWithCount;
+        }
+
         public async Task<IEnumerable<Category>> GetProductsByMFP(string mfp, string mf)
         {
             var filter1 = Builders<Category>.Filter.Eq(x => x.SubCategory.Product.ManufacturerPartNo, mfp);
@@ -67,5 +130,12 @@ namespace Catalog.API.Repositories
             var res = await _context.CategoryList.Find(filter1 & filter2).ToListAsync();
             return res;
         }
+    }
+    public class UnwindData
+    {
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        public DateTimeOffset ModifiedDate { get; set; }
+        public Dictionary<string, string> AdditionalFields { get; set; }
     }
 }

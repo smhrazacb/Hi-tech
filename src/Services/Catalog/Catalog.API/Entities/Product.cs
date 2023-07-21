@@ -21,4 +21,5 @@ namespace Catalog.API.Entities
         public string? DataSheetUrl { get; set; }
         public string? ImageUrl { get; set; }
     }
+    
 }
